@@ -1,0 +1,45 @@
+Umfang 1. Präsentation:
+
+Dokumentation:
+-IP Konzept Dual-Stack
+-Bedrohungsmodell mit Problembeschreibung und Priorisierung
+-Lösungsbeschreibung und Umsetzung gegen Bedrohung --> Firewall Roules
+
+Simulation:
+-Netz simuliert
+-Dual-Stack mit IPv4 und IPv6
+-VTP !!
+-VLAN's für IPv4 und IPv6 pro Abteilung (Server, Admin, Entwicklung, Verkauf)
+-static routing
+-NAT für IPv4
+-ACL's (Verkauf/Entwicklung High Security, Server Medium Security, , Admin Low Security)
+--> Zugriff Internet -> DMZ (bestimmte Ports, Webserver Port 80,443,20/21)
+--> Zugriff Internet -> LAN (deny any any log)
+--> Zugriff DMZ -> Internet (established, Windows Updates, Antivirus Port 80,443)
+--> Zugriff DMZ -> LAN (deny any any log)
+--> Zugriff LAN -> DMZ (bestimmte Ports z.B: Webserver Port 80,443,20/21)
+--> Zugriff LAN -> Internet (bestimmte Ports, Port 80,443,20/21)  --> High Security
+
+Admin ACL zusätzlich:
+--> Zugriff LAN -> DMZ (22)
+--> Zugriff LAN -> Internet (allow any any)
+
+VM's:
+1x Webserver Internet (Windows Server 2008 R2 mit IIS --> HTTP, HTTP, FTP, SMTP? / Telnet-Server)
+1x Webserver DMZ (Windows Server 2008 R2 mit IIS --> HTTP, HTTP, FTP, SMTP? /  Telnet-Server)
+1x Telnet-Server LAN (Windows Server 2008 R2 mit Telnet-Server)
+
+___________________________________________________________________________________________________________________
+
+Umfang 2. Präsentation:
+
+Umsetzung Labor:
+dito Simulation
+-VPN
+--> Zugriff DMZ -> Internet (established, Windows Updates, Antivirus Port 80,443, DNS Port 53)
+--> Zugriff DMZ -> LAN (LDAP Port 389)
+--> Zugriff LAN -> DMZ (bestimmte Ports z.B: Webserver Port 80 / SMTP eingehend & ausgehend Port 25)
+
+Server ACL zusätzlich:
+--> Zugriff LAN -> Internet (25,53)  --> High Security
+

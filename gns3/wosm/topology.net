@@ -1,0 +1,126 @@
+autostart = False
+version = 0.8.3.1
+[127.0.0.1:7200]
+    workingdir = working
+    udp = 10000
+    [[3725]]
+        image = D:\FHNW\6. Semester\wosm\c3725-advipservicesk9-mz124-25.image
+        ram = 128
+        idlepc = 0x604b28f4
+        sparsemem = True
+        ghostios = True
+    [[ROUTER Core]]
+        model = 3725
+        console = 2001
+        aux = 2501
+        cnfg = configs\Core.cfg
+        f0/0 = R1 f1/0
+        slot1 = NM-16ESW
+        f1/0 = NIO_udp:30000:127.0.0.1:20000
+        f1/1 = NIO_udp:30001:127.0.0.1:20001
+        f1/2 = NIO_udp:30002:127.0.0.1:20002
+        f1/3 = NIO_udp:30003:127.0.0.1:20003
+        symbol = EtherSwitch router
+        x = -44.5
+        y = -18.5
+        z = 1.0
+    [[ETHSW DMZSW]]
+        1 = access 1 R1 f0/1
+        2 = access 1 NIO_udp:30004:127.0.0.1:20004
+        x = -245.5
+        y = -227.0
+        z = 1.0
+    [[ROUTER R1]]
+        model = 3725
+        console = 2003
+        aux = 2503
+        cnfg = configs\R1.cfg
+        f0/0 = INETSW 1
+        f0/1 = DMZSW 1
+        slot1 = NM-1FE-TX
+        f1/0 = Core f0/0
+        x = -51.0
+        y = -245.0
+        z = 1.0
+    [[ETHSW INETSW]]
+        1 = access 1 R1 f0/0
+        2 = access 1 NIO_udp:30005:127.0.0.1:20005
+        3 = access 1 NIO_udp:30006:127.0.0.1:20006
+        x = 142.5
+        y = -223.0
+        z = 1.0
+[GNS3-DATA]
+    configs = configs
+    workdir = working
+    [[NOTE 1]]
+        text = "LAN"
+        x = -300.0
+        y = -32.0
+    [[NOTE 2]]
+        text = "DMZ"
+        x = -272.0
+        y = -290.0
+    [[NOTE 3]]
+        text = "Internet"
+        x = 148.0
+        y = -320.0
+    [[Cloud C7]]
+        symbol = computer
+        x = 395.5
+        y = -190.5
+        z = 1.0
+        connections = INETSW:3:NIO_udp:30006:127.0.0.1:20006
+    [[Cloud C6]]
+        symbol = computer
+        x = 367.5
+        y = -308.5
+        z = 1.0
+        connections = INETSW:2:NIO_udp:30005:127.0.0.1:20005
+    [[Cloud C5]]
+        symbol = computer
+        x = -462.5
+        y = -260.5
+        z = 1.0
+        connections = DMZSW:2:NIO_udp:30004:127.0.0.1:20004
+    [[Cloud C4]]
+        symbol = computer
+        x = 203.5
+        y = 141.5
+        z = 1.0
+        connections = Core:f1/3:NIO_udp:30003:127.0.0.1:20003
+    [[Cloud C3]]
+        symbol = computer
+        x = 71.5
+        y = 139.5
+        z = 1.0
+        connections = Core:f1/2:NIO_udp:30002:127.0.0.1:20002
+    [[Cloud C2]]
+        symbol = computer
+        x = -122.5
+        y = 135.5
+        z = 1.0
+        connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
+    [[Cloud C1]]
+        symbol = computer
+        x = -284.5
+        y = 133.5
+        z = 1.0
+        connections = Core:f1/0:NIO_udp:30000:127.0.0.1:20000
+    [[SHAPE 1]]
+        type = rectangle
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
+    [[SHAPE 2]]
+        type = rectangle
+        x = 98.0
+        y = -335.0
+        width = 436.0
+        height = 220.0
+    [[SHAPE 3]]
+        type = rectangle
+        x = -348.0
+        y = -53.0
+        width = 656.0
+        height = 282.0
