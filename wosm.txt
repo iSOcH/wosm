@@ -43,3 +43,13 @@ dito Simulation
 Server ACL zusätzlich:
 --> Zugriff LAN -> Internet (25,53)  --> High Security
 
+___________________________________________________________________________________________________________________
+
+Server-Konzept:
+LAN:
+-DHCP
+-DNS
+-Fileserver
+-AD / LDAP
+DMZ:
+-Webserver
