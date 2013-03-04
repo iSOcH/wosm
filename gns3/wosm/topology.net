@@ -4,37 +4,35 @@ version = 0.8.3.1
     workingdir = working
     udp = 10000
     [[3725]]
-        image = /home/iso/docs/schule/fh/wosm/c3725-advipservicesk9-mz124-25.image
+        image = D:\FHNW\6. Semester\wosm\c3725-advipservicesk9-mz124-25.image
         ram = 128
-        idlepc = 0x60a8a2e8
+        idlepc = 0x604b28f4
         sparsemem = True
         ghostios = True
     [[ROUTER Core]]
         model = 3725
         console = 2001
         aux = 2501
-        cnfg = configs/Core.cfg
+        cnfg = configs\Core.cfg
         f0/0 = R1 f1/0
         slot1 = NM-16ESW
         f1/0 = NIO_udp:30000:127.0.0.1:20000
         f1/1 = NIO_udp:30001:127.0.0.1:20001
         f1/2 = NIO_udp:30002:127.0.0.1:20002
         f1/3 = NIO_udp:30003:127.0.0.1:20003
+        f1/10 = WOSMGR1LANSRV e2
+        f1/11 = WOSMGR1LANAdmin e2
+        f1/12 = WOSMGR1LANEntwicklung e2
+        f1/13 = WOSMGR1LANVerkauf e2
         symbol = EtherSwitch router
         x = -44.5
         y = -18.5
-        z = 1.0
-    [[ETHSW DMZSW]]
-        1 = access 1 R1 f0/1
-        2 = access 1 NIO_udp:30004:127.0.0.1:20004
-        x = -245.5
-        y = -227.0
         z = 1.0
     [[ROUTER R1]]
         model = 3725
         console = 2003
         aux = 2503
-        cnfg = configs/R1.cfg
+        cnfg = configs\R1.cfg
         f0/0 = INETSW 1
         f0/1 = DMZSW 1
         slot1 = NM-1FE-TX
@@ -46,81 +44,139 @@ version = 0.8.3.1
         1 = access 1 R1 f0/0
         2 = access 1 NIO_udp:30005:127.0.0.1:20005
         3 = access 1 NIO_udp:30006:127.0.0.1:20006
+        4 = access 1 WOSMGR1INETSRV e2
+        5 = access 1 WOSMGR1INETPC e2
         x = 142.5
         y = -223.0
+        z = 1.0
+    [[ETHSW DMZSW]]
+        1 = access 1 R1 f0/1
+        2 = access 1 NIO_udp:30004:127.0.0.1:20004
+        3 = access 1 WOSMGR1DMZSRV e2
+        x = -245.5
+        y = -227.0
+        z = 1.0
+[vbox 127.0.0.1:11525]
+    workingdir = working
+    udp = 20900
+    [[VBoxDevice]]
+        image = WOSMGR1LANAdmin
+        nics = 2
+    [[VBOX WOSMGR1LANVerkauf]]
+        image = WOSMGR1LANVerkauf
+        e2 = Core f1/13
+        x = 395.5
+        y = 234.5
+        z = 1.0
+    [[VBOX WOSMGR1INETSRV]]
+        image = WOSMGR1INETSRV
+        e2 = INETSW 4
+        x = 387.5
+        y = -281.5
+        z = 1.0
+    [[VBOX WOSMGR1LANEntwicklung]]
+        image = WOSMGR1LANEntwicklung
+        e2 = Core f1/12
+        x = 37.5
+        y = 252.5
+        z = 1.0
+    [[VBOX WOSMGR1LANSRV]]
+        image = WOSMGR1LANSRV
+        e2 = Core f1/10
+        x = -466.5
+        y = 228.5
+        z = 1.0
+    [[VBOX WOSMGR1DMZSRV]]
+        image = WOSMGR1DMZSRV
+        e2 = DMZSW 3
+        x = -458.5
+        y = -225.5
+        z = 1.0
+    [[VBOX WOSMGR1INETPC]]
+        image = WOSMGR1INETPC
+        e2 = INETSW 5
+        x = 387.5
+        y = -194.5
+        z = 1.0
+    [[VBOX WOSMGR1LANAdmin]]
+        e2 = Core f1/11
+        x = -146.5
+        y = 251.5
         z = 1.0
 [GNS3-DATA]
     configs = configs
     workdir = working
+    m11 = 1.0
+    m22 = 1.0
     [[NOTE 1]]
         text = "LAN"
         x = -300.0
         y = -32.0
     [[NOTE 2]]
-        text = "DMZ"
-        x = -272.0
-        y = -290.0
-    [[NOTE 3]]
         text = "Internet"
         x = 148.0
         y = -320.0
-    [[Cloud AdminPC2]]
-        symbol = computer
-        x = -130.5
-        y = 129.5
-        z = 1.0
-        connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
+    [[NOTE 3]]
+        text = "DMZ"
+        x = -272.0
+        y = -290.0
     [[Cloud InetSrvPC6]]
         symbol = computer
-        x = 367.5
-        y = -308.5
+        x = 266.5
+        y = -313.5
         z = 1.0
         connections = INETSW:2:NIO_udp:30005:127.0.0.1:20005
-    [[Cloud InetClientPC7]]
-        symbol = computer
-        x = 395.5
-        y = -190.5
-        z = 1.0
-        connections = INETSW:3:NIO_udp:30006:127.0.0.1:20006
     [[Cloud EntwicklerPC3]]
         symbol = computer
-        x = 29.5
-        y = 125.5
+        x = 79.5
+        y = 160.5
         z = 1.0
         connections = Core:f1/2:NIO_udp:30002:127.0.0.1:20002
+    [[Cloud AdminPC2]]
+        symbol = computer
+        x = -186.5
+        y = 152.5
+        z = 1.0
+        connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
+    [[Cloud InetClientPC7]]
+        symbol = computer
+        x = 267.5
+        y = -146.5
+        z = 1.0
+        connections = INETSW:3:NIO_udp:30006:127.0.0.1:20006
     [[Cloud VerkaufPC4]]
         symbol = computer
-        x = 192.5
-        y = 119.5
+        x = 395.5
+        y = 144.5
         z = 1.0
         connections = Core:f1/3:NIO_udp:30003:127.0.0.1:20003
-    [[Cloud DMZSrvPC5]]
-        symbol = computer
-        x = -462.5
-        y = -260.5
-        z = 1.0
-        connections = DMZSW:2:NIO_udp:30004:127.0.0.1:20004
     [[Cloud ServerPC1]]
         symbol = computer
-        x = -284.5
+        x = -466.5
         y = 133.5
         z = 1.0
         connections = Core:f1/0:NIO_udp:30000:127.0.0.1:20000
+    [[Cloud DMZSrvPC5]]
+        symbol = computer
+        x = -356.5
+        y = -279.5
+        z = 1.0
+        connections = DMZSW:2:NIO_udp:30004:127.0.0.1:20004
     [[SHAPE 1]]
         type = rectangle
-        x = -494.0
-        y = -303.0
-        width = 364.0
-        height = 154.0
+        x = -516.0
+        y = -54.0
+        width = 1050.0
+        height = 385.0
     [[SHAPE 2]]
         type = rectangle
         x = 98.0
         y = -335.0
         width = 436.0
-        height = 220.0
+        height = 265.0
     [[SHAPE 3]]
         type = rectangle
-        x = -347.0
-        y = -54.0
-        width = 656.0
-        height = 282.0
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
