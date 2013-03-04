@@ -1,0 +1,23 @@
+remark dmzsrv-intsrv_ldap
+permit tcp 172.16.0.11 0.0.0.0 10.0.10.11 0.0.0.0 eq 389
+
+remark dmzsw-adm-sshrespond
+permit tcp 172.16.0.2 0.0.0.0 eq 22 10.0.20.0 0.0.0.255 established
+
+remark dmzsrv-respond
+permit tcp 172.16.0.11 0.0.0.0 eq 80 0.0.0.0 255.255.255.255 established
+permit tcp 172.16.0.11 0.0.0.0 eq 443 0.0.0.0 255.255.255.255 established
+permit tcp 172.16.0.11 0.0.0.0 eq 20 0.0.0.0 255.255.255.255 established
+permit tcp 172.16.0.11 0.0.0.0 eq 21 0.0.0.0 255.255.255.255 established
+permit tcp 172.16.0.11 0.0.0.0 gt 48999 0.0.0.0 255.255.255.255 established
+permit tcp 172.16.0.11 0.0.0.0 lt 50000 0.0.0.0 255.255.255.255 established
+
+remark dmz-nolan
+deny ip 172.16.0.0 0.0.0.255 10.0.0.0 0.0.255.255 log
+
+remark dmzsrv-inet
+permit tcp 172.16.0.11 0.0.0.0 0.0.0.0 255.255.255.255 eq 80
+permit tcp 172.16.0.11 0.0.0.0 0.0.0.0 255.255.255.255 eq 443
+permit tcp 172.16.0.11 0.0.0.0 0.0.0.0 255.255.255.255 eq 20
+permit tcp 172.16.0.11 0.0.0.0 0.0.0.0 255.255.255.255 eq 21
+permit udp 172.16.0.11 0.0.0.0 0.0.0.0 255.255.255.255 eq 53

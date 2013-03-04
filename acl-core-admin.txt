@@ -1,0 +1,24 @@
+remark admin-intsrv
+permit ip 10.0.20.0 0.0.0.255 10.0.10.11 0.0.0.0
+
+remark admin-intsrv-end
+deny ip 10.0.20.0 0.0.0.255 10.0.10.0 0.0.0.255
+
+remark admin-dmzsrv
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 80
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 443
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 20
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 21
+
+remark admin-dmzsrv-ftppasv
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.11 0.0.0.0 gt 48999
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.11 0.0.0.0 lt 50000
+
+remark admin-dmzsw
+permit tcp 10.0.20.0 0.0.0.255 172.16.0.2 0.0.0.0 eq 22
+
+remark admin-dmz-end
+deny ip 10.0.20.0 0.0.0.255 172.16.0.0 0.0.0.255
+
+remark admin-inet
+permit tcp 10.0.20.0 0.0.0.255 0.0.0.0 255.255.255.255

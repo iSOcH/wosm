@@ -1,0 +1,12 @@
+remark wan-lan-respond
+permit tcp 0.0.0.0 255.255.255.255 10.0.0.0 0.0.255.255 established
+
+remark wan-dmzsrv
+permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 eq 80
+permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 eq 443
+permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 eq 20
+permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 eq 21
+
+remark wan-dmzsrv-ftppasv
+permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 gt 48999
+permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 lt 50000
