@@ -16,6 +16,10 @@ permit tcp 10.0.10.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 443
 permit tcp 10.0.10.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 20
 permit tcp 10.0.10.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 21
 
+remark admin-dmzsrv-ftppasv
+permit tcp 10.0.10.0 0.0.0.255 172.16.0.11 0.0.0.0 gt 48999
+deny tcp 10.0.10.0 0.0.0.255 172.16.0.11 0.0.0.0 gt 49999
+
 remark intsrv-dmzsrv-respond-radius
 permit tcp 10.0.10.11 0.0.0.0 eq 389 172.16.0.11 0.0.0.0 established
 

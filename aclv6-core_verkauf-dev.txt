@@ -31,7 +31,7 @@ permit tcp 2005:2013:ff:a30::/64 2005:2013:ff:b0::11/128 eq 21
 
 remark dev-dmzsrv-ftppasv
 permit tcp 2005:2013:ff:a30::/64 2005:2013:ff:b0::11/128 gt 48999
-permit tcp 2005:2013:ff:a30::/64 2005:2013:ff:b0::11/128 lt 50000
+deny tcp 2005:2013:ff:a30::/64 2005:2013:ff:b0::11/128 gt 49999
 
 remark dev-dmzsrv-end
 deny ip 2005:2013:ff:a30::/64 2005:2013:ff:b0::/64

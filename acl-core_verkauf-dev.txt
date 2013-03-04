@@ -12,7 +12,7 @@ permit tcp 10.0.40.0 0.0.0.255 172.16.0.11 0.0.0.0 eq 21
 
 remark verkauf-dmzsrv-ftppasv
 permit tcp 10.0.40.0 0.0.0.255 172.16.0.11 0.0.0.0 gt 48999
-permit tcp 10.0.40.0 0.0.0.255 172.16.0.11 0.0.0.0 lt 50000
+deny tcp 10.0.40.0 0.0.0.255 172.16.0.11 0.0.0.0 gt 49999
 
 remark verkauf-dmzsrv-end
 deny ip 10.0.40.0 0.0.0.255 172.16.0.0 0.0.0.255
