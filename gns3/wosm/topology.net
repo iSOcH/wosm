@@ -4,16 +4,16 @@ version = 0.8.3.1
     workingdir = working
     udp = 10000
     [[3725]]
-        image = D:\FHNW\6. Semester\wosm\c3725-advipservicesk9-mz124-25.image
+        image = /home/iso/docs/schule/fh/wosm/c3725-advipservicesk9-mz124-25.image
         ram = 128
-        idlepc = 0x604b28f4
+        idlepc = 0x60a8a2e8
         sparsemem = True
         ghostios = True
     [[ROUTER Core]]
         model = 3725
         console = 2001
         aux = 2501
-        cnfg = configs\Core.cfg
+        cnfg = configs/Core.cfg
         f0/0 = R1 f1/0
         slot1 = NM-16ESW
         f1/0 = NIO_udp:30000:127.0.0.1:20000
@@ -34,7 +34,7 @@ version = 0.8.3.1
         model = 3725
         console = 2003
         aux = 2503
-        cnfg = configs\R1.cfg
+        cnfg = configs/R1.cfg
         f0/0 = INETSW 1
         f0/1 = DMZSW 1
         slot1 = NM-1FE-TX
@@ -52,55 +52,157 @@ version = 0.8.3.1
 [GNS3-DATA]
     configs = configs
     workdir = working
+    m11 = 1.0
+    m22 = 1.0
     [[NOTE 1]]
         text = "LAN"
         x = -300.0
         y = -32.0
     [[NOTE 2]]
-        text = "DMZ"
-        x = -272.0
-        y = -290.0
-    [[NOTE 3]]
         text = "Internet"
         x = 148.0
         y = -320.0
-    [[Cloud C7]]
+    [[NOTE 3]]
+        text = "DMZ"
+        x = -272.0
+        y = -290.0
+    [[NOTE 4]]
+        text = "1"
+        x = -4.3673846329
+        y = 12.7455196218
+        interface = INETSW 1
+    [[NOTE 5]]
+        text = "3"
+        x = 74.8396022925
+        y = 23.2384868218
+        interface = INETSW 3
+    [[NOTE 6]]
+        text = "2"
+        x = 73.548912758
+        y = 3.6598120785
+        interface = INETSW 2
+    [[NOTE 7]]
+        text = "f0/1"
+        x = -6.92210313932
+        y = 24.4951314462
+        interface = R1 f0/1
+    [[NOTE 8]]
+        text = "f0/0"
+        x = 72.8673846329
+        y = 25.2544803782
+        interface = R1 f0/0
+    [[NOTE 9]]
+        text = "f1/0"
+        x = 32.8245630909
+        y = 61.9996152718
+        interface = R1 f1/0
+    [[NOTE 10]]
+        text = "1"
+        x = 75.4221031393
+        y = 13.5048685538
+        interface = DMZSW 1
+    [[NOTE 11]]
+        text = "2"
+        x = -4.33572825871
+        y = 12.3785701583
+        interface = DMZSW 2
+    [[NOTE 12]]
+        text = "f1/3"
+        x = 59.9482985078
+        y = 43.8301433816
+        interface = Core f1/3
+    [[NOTE 13]]
+        text = "f1/2"
+        x = 44.5059565894
+        y = 58.6962159063
+        interface = Core f1/2
+    [[NOTE 14]]
+        text = "f1/1"
+        x = 10.7293008279
+        y = 60.6729262497
+        interface = Core f1/1
+    [[NOTE 15]]
+        text = "f1/0"
+        x = -7.60610262496
+        y = 45.9496318229
+        interface = Core f1/0
+    [[NOTE 16]]
+        text = "f0/0"
+        x = 25.6754369091
+        y = -16.4996152718
+        interface = Core f0/0
+    [[NOTE 17]]
+        text = "NIO_udp:30006:127.0.0.1:20006"
+        x = -6.83960229248
+        y = 22.2615131782
+        interface = C7 NIO_udp:30006:127.0.0.1:20006
+    [[Cloud InetClientPC7]]
         symbol = computer
         x = 395.5
         y = -190.5
         z = 1.0
         connections = INETSW:3:NIO_udp:30006:127.0.0.1:20006
-    [[Cloud C6]]
+    [[NOTE 18]]
+        text = "NIO_udp:30005:127.0.0.1:20005"
+        x = -5.54891275795
+        y = 41.8401879215
+        interface = C6 NIO_udp:30005:127.0.0.1:20005
+    [[Cloud InetSrvPC6]]
         symbol = computer
         x = 367.5
         y = -308.5
         z = 1.0
         connections = INETSW:2:NIO_udp:30005:127.0.0.1:20005
-    [[Cloud C5]]
+    [[NOTE 19]]
+        text = "NIO_udp:30004:127.0.0.1:20004"
+        x = 72.3357282587
+        y = 33.1214298417
+        interface = C5 NIO_udp:30004:127.0.0.1:20004
+    [[Cloud DMZSrvPC5]]
         symbol = computer
         x = -462.5
         y = -260.5
         z = 1.0
         connections = DMZSW:2:NIO_udp:30004:127.0.0.1:20004
-    [[Cloud C4]]
+    [[NOTE 20]]
+        text = "NIO_udp:30003:127.0.0.1:20003"
+        x = -1.94829850779
+        y = 9.16985661835
+        interface = VerkaufPC4 NIO_udp:30003:127.0.0.1:20003
+    [[Cloud VerkaufPC4]]
         symbol = computer
-        x = 203.5
-        y = 141.5
+        x = 192.5
+        y = 119.5
         z = 1.0
         connections = Core:f1/3:NIO_udp:30003:127.0.0.1:20003
-    [[Cloud C3]]
+    [[NOTE 21]]
+        text = "NIO_udp:30002:127.0.0.1:20002"
+        x = 13.4940434106
+        y = -5.69621590629
+        interface = EntwicklerPC3 NIO_udp:30002:127.0.0.1:20002
+    [[Cloud EntwicklerPC3]]
         symbol = computer
-        x = 71.5
-        y = 139.5
+        x = 29.5
+        y = 125.5
         z = 1.0
         connections = Core:f1/2:NIO_udp:30002:127.0.0.1:20002
-    [[Cloud C2]]
+    [[NOTE 22]]
+        text = "NIO_udp:30001:127.0.0.1:20001"
+        x = 47.2706991721
+        y = -7.67292624973
+        interface = ServerPC2 NIO_udp:30001:127.0.0.1:20001
+    [[Cloud AdminPC2]]
         symbol = computer
-        x = -122.5
-        y = 135.5
+        x = -130.5
+        y = 129.5
         z = 1.0
         connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
-    [[Cloud C1]]
+    [[NOTE 23]]
+        text = "NIO_udp:30000:127.0.0.1:20000"
+        x = 65.606102625
+        y = 7.05036817706
+        interface = ServerPC1 NIO_udp:30000:127.0.0.1:20000
+    [[Cloud ServerPC1]]
         symbol = computer
         x = -284.5
         y = 133.5
@@ -108,10 +210,10 @@ version = 0.8.3.1
         connections = Core:f1/0:NIO_udp:30000:127.0.0.1:20000
     [[SHAPE 1]]
         type = rectangle
-        x = -494.0
-        y = -303.0
-        width = 364.0
-        height = 154.0
+        x = -347.0
+        y = -54.0
+        width = 656.0
+        height = 282.0
     [[SHAPE 2]]
         type = rectangle
         x = 98.0
@@ -120,7 +222,7 @@ version = 0.8.3.1
         height = 220.0
     [[SHAPE 3]]
         type = rectangle
-        x = -348.0
-        y = -53.0
-        width = 656.0
-        height = 282.0
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
