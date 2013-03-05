@@ -106,20 +106,18 @@ version = 0.8.3.1
 [GNS3-DATA]
     configs = configs
     workdir = working
-    m11 = 1.0
-    m22 = 1.0
     [[NOTE 1]]
         text = "LAN"
         x = -300.0
         y = -32.0
     [[NOTE 2]]
-        text = "Internet"
-        x = 148.0
-        y = -320.0
-    [[NOTE 3]]
         text = "DMZ"
         x = -272.0
         y = -290.0
+    [[NOTE 3]]
+        text = "Internet"
+        x = 148.0
+        y = -320.0
     [[Cloud InetSrvPC6]]
         symbol = computer
         x = 266.5
@@ -132,12 +130,6 @@ version = 0.8.3.1
         y = 160.5
         z = 1.0
         connections = Core:f1/2:NIO_udp:30002:127.0.0.1:20002
-    [[Cloud AdminPC2]]
-        symbol = computer
-        x = -186.5
-        y = 152.5
-        z = 1.0
-        connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
     [[Cloud InetClientPC7]]
         symbol = computer
         x = 267.5
@@ -162,12 +154,18 @@ version = 0.8.3.1
         y = -279.5
         z = 1.0
         connections = DMZSW:2:NIO_udp:30004:127.0.0.1:20004
+    [[Cloud AdminPC2]]
+        symbol = computer
+        x = -186.5
+        y = 152.5
+        z = 1.0
+        connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
     [[SHAPE 1]]
         type = rectangle
-        x = -516.0
-        y = -54.0
-        width = 1050.0
-        height = 385.0
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
     [[SHAPE 2]]
         type = rectangle
         x = 98.0
@@ -176,7 +174,7 @@ version = 0.8.3.1
         height = 265.0
     [[SHAPE 3]]
         type = rectangle
-        x = -494.0
-        y = -303.0
-        width = 364.0
-        height = 154.0
+        x = -516.0
+        y = -54.0
+        width = 1050.0
+        height = 385.0
