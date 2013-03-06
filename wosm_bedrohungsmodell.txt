@@ -1,0 +1,60 @@
+Bedrohungen
+1. TCP DoS (Syn-Flooding)
+2. ICMP ‘smurf attack’: Denial of Service
+3. Viren / Würmer / Trojaner
+DNS Cache poisoning
+Phishing
+
+interne Bedrohungen:
+4. MAC flooding
+5. ARP spoofing
+6. zusätzlicher DHCP Server eines Users im LAN
+
+
+Lösungen:
+
+TCP Denial of Service: defence
+1.Block SYN packets at the firewall with an ACL (Access Control List) which stops SYN packets from random IP addresses outside a legitimate range. Works well for host not directly exposed to the Internet.
+2.But how to deal with Web servers or mail servers directly connected to the Internet? The options are not so clear cut as in the previous case:
+! Increase the size of the connection queue on the host (SYN ACK queue).
+! Decrease the time-out waiting for the three-ways-handshake.
+! SYN cookies.
+
+
+Defence against DoS (ICMP ‘smurf attack’)
+As we already have shown defence against TCP Denial
+of Service is hard. Even more virulent is the Distributed
+Denial of Service (DDoS) attack that launches DoS from
+many hosts simultaneously. Possible cures:
+! Aggressively age incomplete TCP connections?
+! Use firewall/IDS to detect attack in progress.
+! Use relationship with IP service provider to investigate and shut down DoS traffic.
+! Smurf: drop most external ICMP traffic at boundary firewall. There are other good reasons to do this: ICMP can be used as tool by hacker to investigate your network…
+
+
+Defence against Viren,...
+-Antivirus Software
+
+
+Defence against MAC flooding
+1.Physically secure the switch. Switches under lock prevent threat of illegitimate use.
+2.Switches should fail to a safe state (point 5 Sa-Sc) when flooded, i.e.: disallow all.
+! But now new threat: Denial of Service.
+3.Use Warpath: it monitors MAC to IP address mappings.
+4.Switch with port locking of MAC addresses:
+–Prevents ARP spoofing,
+–But reduces flexibility (adding new host requires reconfiguration of switch)
+
+
+Defence against ARP spoofing
+-Port Security on Switch
+
+
+Defence against DHCP
+67/UDP (Server oder Relay-Agent)
+68/UDP (Client)
+ACL's:
+--DHCP Client Request an Server zulassen
+--DHCP Client Request an VLAN 20, 30 und 40 verhindern
+--DHCP Server Response an VLAN 20, 30 und 40 zulassen
+--DHCP Server Response an Server verhindern
