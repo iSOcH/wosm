@@ -1,0 +1,130 @@
+: Saved
+:
+ASA Version 8.4(2)
+!
+hostname ciscoasa
+enable password 8Ry2YjIyt7RRXU24 encrypted
+passwd 2KFQnbNIdI.2KYOU encrypted
+names
+!
+interface GigabitEthernet0
+ nameif outside
+ security-level 0
+ ip address 209.165.50.1 255.255.255.0
+ ipv6 address 2005:209:165:50::1/64
+!
+interface GigabitEthernet1
+ nameif dmz
+ security-level 50
+ ip address 172.16.0.1 255.255.255.0
+ ipv6 address 2005:2013:ff:b0::1/64
+!
+interface GigabitEthernet2
+ nameif inside
+ security-level 100
+ ip address 10.100.0.2 255.255.255.252
+ ipv6 address 2005:2013:ff:a0::2/64
+!
+interface GigabitEthernet3
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet4
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+interface GigabitEthernet5
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
+ftp mode passive
+access-list inside extended permit ip any any
+access-list outside extended permit ip any any
+access-list dmz extended permit ip any any
+pager lines 24
+mtu outside 1500
+mtu dmz 1500
+mtu inside 1500
+ip local pool vpnpool 10.0.99.1-10.0.99.100 mask 255.255.255.0
+ipv6 route inside 2005:2013:ff:a10::/64 2005:2013:ff:a0::1
+ipv6 route inside 2005:2013:ff:a20::/64 2005:2013:ff:a0::1
+ipv6 route inside 2005:2013:ff:a30::/64 2005:2013:ff:a0::1
+ipv6 route inside 2005:2013:ff:a40::/64 2005:2013:ff:a0::1
+no failover
+icmp unreachable rate-limit 1 burst-size 1
+icmp permit any outside
+icmp permit any dmz
+icmp permit any inside
+no asdm history enable
+arp timeout 14400
+access-group outside in interface outside
+access-group dmz in interface dmz
+access-group inside in interface inside
+route inside 10.0.0.0 255.255.0.0 10.100.0.1 1
+timeout xlate 3:00:00
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+dynamic-access-policy-record DfltAccessPolicy
+user-identity default-domain LOCAL
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps snmp authentication linkup linkdown coldstart warmstart
+crypto ipsec ikev1 transform-set ESP-3DES-SHA esp-3des esp-sha-hmac
+crypto dynamic-map outside_dyn_map 10 set ikev1 transform-set ESP-3DES-SHA
+crypto dynamic-map outside_dyn_map 10 set security-association lifetime seconds 288000
+crypto dynamic-map outside_dyn_map 10 set reverse-route
+crypto map outside_map 10 ipsec-isakmp dynamic outside_dyn_map
+crypto map outside_map interface outside
+crypto ikev1 enable outside
+crypto ikev1 policy 65535
+ authentication pre-share
+ encryption aes-256
+ hash sha
+ group 2
+ lifetime 43200
+telnet timeout 5
+ssh timeout 5
+console timeout 0
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+group-policy wosm internal
+group-policy wosm attributes
+ dns-server value 10.0.10.21
+ vpn-tunnel-protocol ikev1 ikev2
+ default-domain value wosm
+username cisco password 3USUcOPFUiMCO4Jk encrypted
+tunnel-group wosm type remote-access
+tunnel-group wosm general-attributes
+ address-pool vpnpool
+ default-group-policy wosm
+tunnel-group wosm ipsec-attributes
+ ikev1 pre-shared-key *****
+!
+!
+prompt hostname context
+no call-home reporting anonymous
+call-home
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+crashinfo save disable
+Cryptochecksum:0d6307b6b6540a01b98df13c7f302ddf
+: end
