@@ -51,7 +51,7 @@ pager lines 24
 mtu outside 1500
 mtu dmz 1500
 mtu inside 1500
-ip local pool vpnpool 10.0.99.1-10.0.99.100 mask 255.255.255.0
+ip local pool vpnpool 10.0.99.1-10.0.99.254 mask 255.255.255.0
 ipv6 route inside 2005:2013:ff:a10::/64 2005:2013:ff:a0::1
 ipv6 route inside 2005:2013:ff:a20::/64 2005:2013:ff:a0::1
 ipv6 route inside 2005:2013:ff:a30::/64 2005:2013:ff:a0::1
