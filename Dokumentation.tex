@@ -79,10 +79,57 @@ Interne Hosts: dynamisches NAT overload: interner Range: 10.0.0.0 255.255.0.0 - 
 \subsection{Spanning-Tree}
 \subsection{VPN IPsec Remote Access}
 \subsection{Server}
+Name					OS					IP			Gateway		Services\\
+WOSMGR1LANSRV			Windows Server 2008 R2		10.0.10.21		10.0.10.1		AD / DNS / DHCP / Fileserver\\
+WOSMGR1LANAdmin		Windows 7				10.0.20.21		10.0.20.1\\
+WOSMGR1LANEntwicklung		Windows 7				10.0.30.21		10.0.30.1\\
+WOSMGR1LANVerkauf		Windows 7				10.0.40.21		10.0.40.1\\
+WOSMGR1DMZSRV			Windows Server 2008 R2		172.16.0.21		172.16.0.1		HTTP / HTTPS / FTP\\
+WOSMGR1INETSRV			Windows Server 2008 R2		209.165.50.21	209.165.50.1	HTTP / HTTPS / FTP\\
+WOSMGR1INETPC			Windows 7				209.165.50.22	209.165.50.1\\
 
 \section{Sicherheit}
-\subsection{Firewall}
-\subsection{Bedrohungsmodel}
+\subsection{Konzept}
+Bei der Konfiguration des Firewalls sollten Sie sich besonders überlegen und explizit begründen:\\
+a) Welche Dienste allen authentifizierten VLAN-Benutzern zur Verfügung stehen sollten;\\
+b) Welche Teile der Firewall-Konfiguration dem Switch 3560 delegiert werden dürfen;\\
+c) Nach welchem Prinzip (stateless/stateful) der Firewall konzipiert werden soll;\\
+d) Welche Bedrohung mit welcher Firewall-Konfiguration abgewehrt werden soll.\\
+\\
+--- Low, Mediam und High Security\\
 
+\subsection{Firewall}
+ACL's
+\section{Bedrohungsmodel}
+\subsection{TCP DoS (Syn-Flooding)}
+\subsubsection{Bedrohung}
+Ein Angreifer sendet eine Broadcast Anfrage
+\subsubsection{Gegenmassnahme}
+\subsection{ICMP ‘smurf attack’: Denial of Service}
+\subsubsection{Bedrohung}
+Ein Angreifer sendet ein ICMP Packet mit einer Echo-Anfrage an eine oder mehrere Broadcasts und verwendet als Absenderadresse die IP Adresse des Servers (Opfer). Die Broadcastanfrage wird an alle Hosts in betroffenen Netz weitergeleitet. Die Hosts senden daraufhin ein die Echo-Antwort an den Server (Opfer). Der Server empfängt nun tausende Echo Antworten und stürtzt ab.
+\subsubsection{Gegenmassnahme}
+Um diese Attacke abzuwehren, kann ICMP blockiert werden.
+\subsection{Viren / Würmer / Trojaner}
+\subsubsection{Bedrohung}
+Programme, welche vertrauliche Infomrationen stehlen, Schaden auf den Hosts anrichten oder die Kontrolle über einen Host übernehmen und ihn für eigene Zwecke einsetzen.
+\subsubsection{Gegenmassnahme}
+Um sich gegen Viren, Würmer und Trojaner zu schützen, muss ein Anti-Virenprogramm auf jedem Host installiert werden.
+\subsection{DNS Cache poisoning}
+\subsubsection{Bedrohung}
+\subsubsection{Gegenmassnahme}
+\subsection{Phishing}
+\subsubsection{Bedrohung}
+\subsubsection{Gegenmassnahme}
+\subsection{MAC flooding}
+\subsubsection{Bedrohung}
+\subsubsection{Gegenmassnahme}
+\subsection{ARP spoofing}
+\subsubsection{Bedrohung}
+\subsubsection{Gegenmassnahme}
+\subsection{DHCP}
+\subsubsection{Bedrohung}
+zusätzlicher DHCP Server eines Users im LAN
+\subsubsection{Gegenmassnahme}
 
 \end{document}
