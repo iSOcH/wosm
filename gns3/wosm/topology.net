@@ -1,20 +1,36 @@
 autostart = False
 version = 0.8.3.1
+[qemu 127.0.0.1:10525]
+    workingdir = working
+    udp = 40000
+    [[5520]]
+        netcard = e1000
+        options = -vnc none -vga none -m 1024 -icount auto -hdachs 980,16,32
+        initrd = C:\Users\root\FHNW\wosm\ASA842\asa842-initrd.gz
+        kernel = C:\Users\root\FHNW\wosm\ASA842\asa842-vmlinuz
+        kernel_cmdline = -append ide_generic.probe_mask=0x01 ide_core.chs=0.0:980,16,32 auto nousb console=ttyS0,9600 bigphysarea=65536
+    [[ASA ASA1]]
+        e0 = INETSW 6
+        e1 = DMZSW 4
+        e2 = Core f0/0
+        x = -49.9705627485
+        y = -242.61731573
+        z = 1.0
 [127.0.0.1:7200]
     workingdir = working
     udp = 10000
     [[3725]]
-        image = /home/iso/docs/schule/fh/wosm/c3725-advipservicesk9-mz124-25.image
-        ram = 128
-        idlepc = 0x60a8a2e8
+        image = C:\Users\root\FHNW\wosm\c3725-advipservicesk9-mz124-25.image
+        ram = 256
+        idlepc = 0x60a84ee0
         sparsemem = True
         ghostios = True
     [[ROUTER Core]]
         model = 3725
         console = 2001
         aux = 2501
-        cnfg = configs/Core.cfg
-        f0/0 = R1 f1/0
+        cnfg = configs\Core.cfg
+        f0/0 = ASA1 e2
         slot1 = NM-16ESW
         f1/0 = NIO_udp:30000:127.0.0.1:20000
         f1/1 = NIO_udp:30001:127.0.0.1:20001
@@ -32,13 +48,12 @@ version = 0.8.3.1
         model = 3725
         console = 2003
         aux = 2503
-        cnfg = configs/R1.cfg
+        cnfg = configs\R1.cfg
         f0/0 = INETSW 1
         f0/1 = DMZSW 1
         slot1 = NM-1FE-TX
-        f1/0 = Core f0/0
-        x = -51.0
-        y = -245.0
+        x = -59.4852813742
+        y = -411.87720036
         z = 1.0
     [[ETHSW INETSW]]
         1 = access 1 R1 f0/0
@@ -46,6 +61,7 @@ version = 0.8.3.1
         3 = access 1 NIO_udp:30006:127.0.0.1:20006
         4 = access 1 WOSMGR1INETSRV e2
         5 = access 1 WOSMGR1INETPC e2
+        6 = access 1 ASA1 e0
         x = 142.5
         y = -223.0
         z = 1.0
@@ -53,6 +69,7 @@ version = 0.8.3.1
         1 = access 1 R1 f0/1
         2 = access 1 NIO_udp:30004:127.0.0.1:20004
         3 = access 1 WOSMGR1DMZSRV e2
+        4 = access 1 ASA1 e1
         x = -245.5
         y = -227.0
         z = 1.0
@@ -113,13 +130,13 @@ version = 0.8.3.1
         x = -300.0
         y = -32.0
     [[NOTE 2]]
-        text = "Internet"
-        x = 148.0
-        y = -320.0
-    [[NOTE 3]]
         text = "DMZ"
         x = -272.0
         y = -290.0
+    [[NOTE 3]]
+        text = "Internet"
+        x = 148.0
+        y = -320.0
     [[Cloud InetSrvPC6]]
         symbol = computer
         x = 266.5
@@ -164,10 +181,10 @@ version = 0.8.3.1
         connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
     [[SHAPE 1]]
         type = rectangle
-        x = -516.0
-        y = -54.0
-        width = 1050.0
-        height = 385.0
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
     [[SHAPE 2]]
         type = rectangle
         x = 98.0
@@ -176,7 +193,7 @@ version = 0.8.3.1
         height = 265.0
     [[SHAPE 3]]
         type = rectangle
-        x = -494.0
-        y = -303.0
-        width = 364.0
-        height = 154.0
+        x = -516.0
+        y = -54.0
+        width = 1050.0
+        height = 385.0
