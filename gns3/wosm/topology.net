@@ -4,16 +4,16 @@ version = 0.8.3.1
     workingdir = working
     udp = 10000
     [[3725]]
-        image = D:\FHNW\6. Semester\wosm\c3725-advipservicesk9-mz124-25.image
+        image = /home/iso/docs/schule/fh/wosm/c3725-advipservicesk9-mz124-25.image
         ram = 128
-        idlepc = 0x604b28f4
+        idlepc = 0x60a8a2e8
         sparsemem = True
         ghostios = True
     [[ROUTER Core]]
         model = 3725
         console = 2001
         aux = 2501
-        cnfg = configs\Core.cfg
+        cnfg = configs/Core.cfg
         f0/0 = R1 f1/0
         slot1 = NM-16ESW
         f1/0 = NIO_udp:30000:127.0.0.1:20000
@@ -32,7 +32,7 @@ version = 0.8.3.1
         model = 3725
         console = 2003
         aux = 2503
-        cnfg = configs\R1.cfg
+        cnfg = configs/R1.cfg
         f0/0 = INETSW 1
         f0/1 = DMZSW 1
         slot1 = NM-1FE-TX
@@ -100,24 +100,26 @@ version = 0.8.3.1
         z = 1.0
     [[VBOX WOSMGR1LANAdmin]]
         e2 = Core f1/11
-        x = -146.5
-        y = 251.5
+        x = -136.600505063
+        y = 248.671572875
         z = 1.0
 [GNS3-DATA]
     configs = configs
     workdir = working
+    m11 = 0.707106781187
+    m22 = 0.707106781187
     [[NOTE 1]]
         text = "LAN"
         x = -300.0
         y = -32.0
     [[NOTE 2]]
-        text = "DMZ"
-        x = -272.0
-        y = -290.0
-    [[NOTE 3]]
         text = "Internet"
         x = 148.0
         y = -320.0
+    [[NOTE 3]]
+        text = "DMZ"
+        x = -272.0
+        y = -290.0
     [[Cloud InetSrvPC6]]
         symbol = computer
         x = 266.5
@@ -162,10 +164,10 @@ version = 0.8.3.1
         connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
     [[SHAPE 1]]
         type = rectangle
-        x = -494.0
-        y = -303.0
-        width = 364.0
-        height = 154.0
+        x = -516.0
+        y = -54.0
+        width = 1050.0
+        height = 385.0
     [[SHAPE 2]]
         type = rectangle
         x = 98.0
@@ -174,7 +176,7 @@ version = 0.8.3.1
         height = 265.0
     [[SHAPE 3]]
         type = rectangle
-        x = -516.0
-        y = -54.0
-        width = 1050.0
-        height = 385.0
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
