@@ -9,13 +9,13 @@ names
 !
 interface GigabitEthernet0
  nameif outside
- security-level 0
+ security-level 100
  ip address 209.165.50.1 255.255.255.0
  ipv6 address 2005:209:165:50::1/64
 !
 interface GigabitEthernet1
  nameif dmz
- security-level 50
+ security-level 100
  ip address 172.16.0.1 255.255.255.0
  ipv6 address 2005:2013:ff:b0::1/64
 !
@@ -44,9 +44,32 @@ interface GigabitEthernet5
  no ip address
 !
 ftp mode passive
+object-group service dmzsrv2inet_UDPPorts udp
+ port-object eq domain
+object-group service dmzsrv2inet_TCPPorts tcp
+ port-object eq www
+ port-object eq https
+ port-object eq ftp-data
+ port-object eq ftp
+object-group service inet2dmzsrv_TCPPorts tcp
+ port-object eq www
+ port-object eq https
+ port-object eq ftp-data
+ port-object eq ftp
+ port-object range 48999 49999
 access-list inside extended permit ip any any
 access-list outside extended permit ip any any
-access-list dmz extended permit ip any any
+access-list dmz_in remark dmzsrv-intsrv_ldap
+access-list dmz_in extended permit tcp host 172.16.0.11 host 10.0.10.11 eq ldap
+access-list dmz_in remark dmz-nolan-access
+access-list dmz_in extended deny ip 172.16.0.0 255.255.255.0 10.0.0.0 255.0.0.0 log
+access-list dmz_in remark dmzsrv-inet
+access-list dmz_in extended permit tcp host 172.16.0.11 any object-group dmzsrv2inet_TCPPorts
+access-list dmz_in extended permit udp host 172.16.0.11 any object-group dmzsrv2inet_UDPPorts
+access-list dmz_in extended deny ip any any log
+access-list outside_in remark wan-dmzsrv
+access-list outside_in extended permit tcp any host 172.16.0.11 object-group inet2dmzsrv_TCPPorts
+access-list outside_in extended deny ip any any log
 pager lines 24
 mtu outside 1500
 mtu dmz 1500
@@ -63,8 +86,8 @@ icmp permit any dmz
 icmp permit any inside
 no asdm history enable
 arp timeout 14400
-access-group outside in interface outside
-access-group dmz in interface dmz
+access-group outside_in in interface outside
+access-group dmz_in in interface dmz
 access-group inside in interface inside
 route inside 10.0.0.0 255.255.0.0 10.100.0.1 1
 timeout xlate 3:00:00
@@ -126,5 +149,5 @@ call-home
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
 crashinfo save disable
-Cryptochecksum:0d6307b6b6540a01b98df13c7f302ddf
+Cryptochecksum:389e6fac9bbc92d50bfdc1e435585a01
 : end

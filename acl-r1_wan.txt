@@ -10,3 +10,17 @@ permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 eq 21
 remark wan-dmzsrv-ftppasv
 permit tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 gt 48999
 deny tcp 0.0.0.0 255.255.255.255 172.16.0.11 0.0.0.0 gt 49999
+
+
+Access-listen für ASA
+
+object-group service inet2dmzsrv_TCPPorts tcp
+ port-object eq 80
+ port-object eq 443
+ port-object eq 20
+ port-object eq 21
+ port-object range 48999 49999
+
+access-list outside_in remark wan-dmzsrv
+access-list outside_in extended permit tcp any host 172.16.0.11 object-group inet2dmzsrv_TCPPorts
+access-list outside_in extended deny ip any any log
