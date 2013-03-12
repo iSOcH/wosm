@@ -112,8 +112,10 @@ ACL's!!
 \section{Bedrohungsmodel}
 \subsection{TCP DoS (Syn-Flooding)}
 \subsubsection{Bedrohung}
-Ein Angreifer sendet eine Broadcast Anfrage
+Beim TCP 3-Way Handshake wird zuerst eine Anfrage an einen Server gesendet, indem ein TCP Paket mit dem Flag SYN verschickt wird. Der Server als Empfänger dieses TCP SYN Pakets verarbeitet dieses und sendet ein TCP Paket mit den Falgs SYN und ACK zurück. Er merkt sich dabei in einer SYN-Liste, mit wem er ein 3-Way Handshake begonnen hat. Wenn derInitiator der Verbindung das TCP Paket mit den Flags SYN und ACK empfängt, verarbeitet er dieses und sendet zur Bestätigung ein Paket mit dem Flag ACK. Sobald der Server das Packet mit dem Flag ACK erhalten hat, wird der Eintrag in der SYN-Liste gelöscht.\\
+Ein Angreifer sendet 100 SYN-Anfragen pro Sekunde an einen bestimmten Server. Dabei setzt er eine andere Source IP Adresse, sodass die Antwort nicht zum Angreifer kommt. Da sich der Server merkt, mit wem er einen 3-Way Handshake begonnen, diese aber nicht abschliessen kann, da nie eine Bestätigung mit dem Flag ACK eintrifft, wird der Arbeitsspeicher des Server gefüllt. Sobald der Speicher gefüllt ist, kann dieser keine weiteren Verbindungen mehr aufnehmen oder stürtzt ab.
 \subsubsection{Gegenmassnahme}
+Um einen Webserver vor diesem Angriff zu schützen, kann die Anzahl der Verbindungen in der Warteschlange vergrössert werden. Zudem kann das Timeout reduziert werden um Speicher freizugeben.
 
 \subsection{ICMP ‘smurf attack’: Denial of Service}
 \subsubsection{Bedrohung}
@@ -129,19 +131,28 @@ Um sich gegen Viren, Würmer und Trojaner zu schützen, muss ein Anti-Virenprogr
 
 \subsection{DNS Cache poisoning}
 \subsubsection{Bedrohung}
-\subsubsection{Gegenmassnahme}
+Ein Angreifer bringt bei einem DNS Server gefälschte Daten in den Cash. Wenn nun ein Benutzer auf diese Daten zugreift, wird dieser auf manipulierte Seiten weitergeleitet. Der Angreifer kan nun mit Phishing Daten des Benutzer stehlen.
 
+\subsubsection{Gegenmassnahme}
+Der beste Schutz gegen diesen Angriff ist der Einsatz von DNSSEC, welcher mit Autentifizierung und Integrität arbeitet.
 \subsection{Phishing}
 \subsubsection{Bedrohung}
+Beim Phishing versucht ein Angreifer durch gefälschte Websiten, SPAM Mails oder andere Methoden an Daten eines Internet-Benutzer zu gelangen. So kann ein Angreifer an Kreditkarteninformationen oder weitere Daten kommen und einen erheblichen finanziellen Schaden anrichten.
 \subsubsection{Gegenmassnahme}
+Leider gibt es gegen diese Attacke keine effektive Schutzmassnahme. Um sich möglichst gut gegen diese Attacke zu schützen, müssen die Benutzer geschult werden. Zudem kann ein SPAM Filter Mails von potentiellen Angreifern löschen oder markieren, sodass sich der Benutzer dem Risiko bewusst ist.
 
 \subsection{MAC flooding}
 \subsubsection{Bedrohung}
+Ein Angreifer sendet viele ARP Antworten. Dabei setzt er immer eine andere MAC Adresse. Wenn die Index Tabelle des Switches voll ist, schaltet dieser in den Hub Modus um und sendet alle Packete jedem angeschlossenen Gerät. Nun kann der Anfreifer jegliche Kommunikation über diesen Switch mithören. 
 \subsubsection{Gegenmassnahme}
+Um sich gegen diese Attacke zu schützen, kann auf dem Switch definiert werden, dass er ausschalten soll, wenn die Index Tabelle voll ist. Dadurch ist zwar ein Unterbruch im Netz vorhanden, aber der Angreifer kann keine nicht mithören.\\
+Eine noch besserer Schutz ist, wenn die Port Security auf dem Switch aktiviert und konfiguriert wird. Dadurch hat kein Angreifer die Möglichkeit die Index Tabelle des Switches zu füllen.
 
 \subsection{ARP spoofing}
 \subsubsection{Bedrohung}
+Ein Agreifer sendet ARP Antworten mit den IP Adressen der Opfer und seiner eigenen MAC Adresse. Der Switch merkt sich nun dass die IP Adressen zur MAC Adresse des Angreifers gehören. Wenn nun ein Opfer ein Paket sendet, wird dieses vom Switch zum Angreifer weitergeleitet. Der Angreifer hat nun Einblick in die Daten, kann diese allenfalls verändern und leitet dieses schliesslich weiter zum effektiven Ziel, sodass niemand etwas davon mitbekommt.
 \subsubsection{Gegenmassnahme}
+Um sich gegen diese Attacke zu schützen, kann die Port Security auf dem Switch aktiviert werden, dadurch hat ein potentieller Anfreifer gar keine Möglichkeit sich ins interne Netz einzubinden.
 
 \subsection{DHCP}
 \subsubsection{Bedrohung}
@@ -150,7 +161,7 @@ Eine Person mit Zugriff auf ein Netzwerkkabel im internen Netz verbindet einen z
 Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (ausser vom offiziellen DHCP Server). Dadurch ist sichergestellt, dass kein zusätzlicher DHCP Server IP Adressen im interne Netz verteilen kann.
 
 \subsection{Überblick}
-Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierung und Markierung, gegen welche wir uns schützen:
+Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierung und Markierung, gegen welche wir uns schützen:\\
 !!!!Create Latex Table!!!!\\
 Ranking	Eintrittswahrscheinlichkeit		Schweregrad		Bedrohung					Schutz umgesetzt\\
 1		hoch					hoch			ICMP ‘smurf attack’: Denial of Service	ja\\
