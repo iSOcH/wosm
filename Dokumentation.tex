@@ -98,10 +98,10 @@ WOSMGR1INETPC			Windows 7				209.165.50.22	209.165.50.1\\
 \section{Sicherheit}
 \subsection{Konzept}
 Um die Sicherheit unseres Netzes zu gewähtleisten, haben wir uns entschieden verschiedene Sicherheitsstufen zu definieren. Dabei verfolgen wir eine High Security Strategie. Die höchste Sicherheitsstufe 'Stufe 1' gilt für die normalen User. Die zweite Sicherheitsstufe 'Stufe 2' gilt für die Server. Die dritte Sicherheitsstufe 'Stufe 3' gilt für die Administratoren.\\
-Bei der Sicherheitsstufe Stufe 1 wird nur das nötigste zugelassen und alles andere blockiert. Die User dürfen über Ports 80 und 443 im Internet surfen, sowie FTP Verbindungen über Port 21 und 22 öffnen. Zudem werden eingehende DHCP Antworten über den PortUDP  68 zugelassen.\\
-Bei der Sicherheitsstufe Stufe 2 wird alles zugelassen, was die Server benötigen. Dazu gehört Port 80, 443 und 21 / 22 ins Internet für Updates aller Programme. Zudem ist eingehend der Port UDP 67 für DHCP Anfragen zugelassen und ausgehend der Port UDP 68 für DHCP Antworten. Um auf die Dateiablage zugreifen zu können, muss der Port XX geöffnet sein.\\
-Bei der Sicherheitsstufe Stufe 3 wird zusätzlich zu den in Stufe 1 zugelassenen Ports noch der Port 22 im internen Netz und in die DMZ zur Verwaltung der Netzwerkgeräte zugelassen.\\
-Die definierten Sicherheitsstufen wurden mithilfe verschiedener ACL's umgesetzt. Die definierten Regeln (auflistung oben nicht abschliessend) der ACL's sind im folgenden Kapitel ersichtlich.\\
+Bei der Sicherheitsstufe Stufe 1 wird nur das nötigste zugelassen und alles andere blockiert. Die User dürfen über Ports 80 und 443 im Internet surfen, sowie FTP Verbindungen über Port 21 und 22 öffnen. Zudem werden eingehende DHCP Antworten über den Port UDP 68 zugelassen.\\
+Bei der Sicherheitsstufe Stufe 2 wird alles zugelassen, was die Server benötigen. Dabei wird aus den VLANs 20, 30 und 40 alles zugelassen. Aus der DMZ wird nur der Port 389 für LDAP zugelassen.\\
+Bei der Sicherheitsstufe Stufe 3 wird zusätzlich zu den in Stufe 1 zugelassenen Ports noch der Port 22 im internen Netz und in die DMZ zur Verwaltung der Netzwerkgeräte zugelassen. Zudem ist ist Internet für die Administratoren alles offen.\\
+Die definierten Sicherheitsstufen wurden mithilfe verschiedener ACL's umgesetzt. Die definierten Regeln (Auflistung oben nicht abschliessend) der ACL's sind im folgenden Kapitel ersichtlich.\\
 \\
 Die ACL's werden möglichst nahe an der Quelle angewendet. Somit sind alle ACL's welche den Zugriff der verschiedenen internen VLAN's in irgend ein anderes Netz regeln auf dem Core Switch auf den Interfaces in Richtung 'in' angewendet. Alle ACL's die den Zugriff in die DMZ, rsp. von der DMZ in ein anderes Netz regeln auf der ASA angewendet. Alle ACL's die den eingehenden Traffic aus dem Internet regeln sind ebenfalls auf der ASA angewendet.\\
 \\
@@ -114,31 +114,51 @@ ACL's!!
 \subsubsection{Bedrohung}
 Ein Angreifer sendet eine Broadcast Anfrage
 \subsubsection{Gegenmassnahme}
+
 \subsection{ICMP ‘smurf attack’: Denial of Service}
 \subsubsection{Bedrohung}
-Ein Angreifer sendet ein ICMP Packet mit einer Echo-Anfrage an eine oder mehrere Broadcasts und verwendet als Absenderadresse die IP Adresse des Servers (Opfer). Die Broadcastanfrage wird an alle Hosts in betroffenen Netz weitergeleitet. Die Hosts senden daraufhin ein die Echo-Antwort an den Server (Opfer). Der Server empfängt nun tausende Echo Antworten und stürtzt ab.
+Ein Angreifer sendet ein ICMP Packet mit einer Echo-Anfrage an eine oder mehrere Broadcasts und verwendet als Absenderadresse die IP Adresse des Servers (Opfer). Die Broadcastanfrage wird an alle Hosts in betroffenen Netz weitergeleitet. Die Hosts senden daraufhin ein die Echo-Antwort an den Server (Opfer). Der Server empfängt nun so viele Echo Antworten dass der Server nicht mehr reagiert und abstürtzt.
 \subsubsection{Gegenmassnahme}
-Um diese Attacke abzuwehren, kann ICMP blockiert werden.
+Um diese Attacke abzuwehren, kann ICMP blockiert werden. So ist sichergestellt, dass keine Echo Antworten den Server erreichen.
+
 \subsection{Viren / Würmer / Trojaner}
 \subsubsection{Bedrohung}
-Programme, welche vertrauliche Infomrationen stehlen, Schaden auf den Hosts anrichten oder die Kontrolle über einen Host übernehmen und ihn für eigene Zwecke einsetzen.
+Programme, welche vertrauliche Infomrationen stehlen, Schaden auf den Hosts anrichten oder die Kontrolle über einen Host übernehmen und ihn für eigene Zwecke einsetzen. Zudem können diese Programme zum Beispiel als SMTP Relay fungieren und SPAM Nachrichten versenden, wodurch die Public IP auf einer Blackliste gelistet werden kann.
 \subsubsection{Gegenmassnahme}
 Um sich gegen Viren, Würmer und Trojaner zu schützen, muss ein Anti-Virenprogramm auf jedem Host installiert werden.
+
 \subsection{DNS Cache poisoning}
 \subsubsection{Bedrohung}
 \subsubsection{Gegenmassnahme}
+
 \subsection{Phishing}
 \subsubsection{Bedrohung}
 \subsubsection{Gegenmassnahme}
+
 \subsection{MAC flooding}
 \subsubsection{Bedrohung}
 \subsubsection{Gegenmassnahme}
+
 \subsection{ARP spoofing}
 \subsubsection{Bedrohung}
 \subsubsection{Gegenmassnahme}
+
 \subsection{DHCP}
 \subsubsection{Bedrohung}
-zusätzlicher DHCP Server eines Users im LAN
+Eine Person mit Zugriff auf ein Netzwerkkabel im internen Netz verbindet einen zusätzlichen, nicht autorisierten DHCP Server. Wenn der zusätzliche DHCP Sever schnellere Antwortzeiten hat als der offizielle DHCP Server, erhalten die Clients nun eine IP des nicht autorisierten DHCP Server, wodurch diese nicht mehr auf die interne Infrastruktur zugreiffen können.
 \subsubsection{Gegenmassnahme}
+Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (ausser vom offiziellen DHCP Server). Dadurch ist sichergestellt, dass kein zusätzlicher DHCP Server IP Adressen im interne Netz verteilen kann.
 
+\subsection{Überblick}
+Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierung und Markierung, gegen welche wir uns schützen:
+!!!!Create Latex Table!!!!\\
+Ranking	Eintrittswahrscheinlichkeit		Schweregrad		Bedrohung					Schutz umgesetzt\\
+1		hoch					hoch			ICMP ‘smurf attack’: Denial of Service	ja\\
+2		hoch					mittel			Viren / Würmer / Trojaner			nein\\
+3		mittel					hoch			TCP DoS (Syn-Flooding)			ja\\
+4		mittel					hoch			DNS Cache poisoning			nein\\
+5		hoch					niedrig		Phishing					nein\\
+6		niedrig				hoch			DHCP						ja\\
+7		niedrig				mittel			MAC flooding					nein\\
+8		niedrig				mittel			ARP spoofing				nein\\
 \end{document}
