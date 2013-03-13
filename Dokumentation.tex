@@ -110,12 +110,12 @@ Mit einer Stateful Firewall ist ein höherer Konfigurationsaufwand verbunden, ab
 ACL's!!
 
 \section{Bedrohungsmodel}
-\subsection{TCP DoS (Syn-Flooding)}
+\subsection{TCP DoS (SYN-Flooding)}
 \subsubsection{Bedrohung}
 Beim TCP 3-Way Handshake wird zuerst eine Anfrage an einen Server gesendet, indem ein TCP Paket mit dem Flag SYN verschickt wird. Der Server als Empfänger dieses TCP SYN Pakets verarbeitet dieses und sendet ein TCP Paket mit den Falgs SYN und ACK zurück. Er merkt sich dabei in einer SYN-Liste, mit wem er ein 3-Way Handshake begonnen hat. Wenn derInitiator der Verbindung das TCP Paket mit den Flags SYN und ACK empfängt, verarbeitet er dieses und sendet zur Bestätigung ein Paket mit dem Flag ACK. Sobald der Server das Packet mit dem Flag ACK erhalten hat, wird der Eintrag in der SYN-Liste gelöscht.\\
 Ein Angreifer sendet 100 SYN-Anfragen pro Sekunde an einen bestimmten Server. Dabei setzt er eine andere Source IP Adresse, sodass die Antwort nicht zum Angreifer kommt. Da sich der Server merkt, mit wem er einen 3-Way Handshake begonnen, diese aber nicht abschliessen kann, da nie eine Bestätigung mit dem Flag ACK eintrifft, wird der Arbeitsspeicher des Server gefüllt. Sobald der Speicher gefüllt ist, kann dieser keine weiteren Verbindungen mehr aufnehmen oder stürtzt ab.
 \subsubsection{Gegenmassnahme}
-Um einen Webserver vor diesem Angriff zu schützen, kann die Anzahl der Verbindungen in der Warteschlange vergrössert werden. Zudem kann das Timeout reduziert werden um Speicher freizugeben.
+Um einen Webserver vor diesem Angriff zu schützen, kann die Anzahl der Verbindungen in der Warteschlange vergrössert werden. Zudem kann das Timeout reduziert werden um Speicher freizugeben. Weiter kann auf der ASA SYN Cookies oder SYN Cash aktiviert und limitiert werden. Dadurch sind die Server hinter der ASA vor SYN-Flooging Attacken geschützt.\\
 
 \subsection{ICMP ‘smurf attack’: Denial of Service}
 \subsubsection{Bedrohung}
@@ -166,7 +166,7 @@ Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierun
 Ranking	Eintrittswahrscheinlichkeit		Schweregrad		Bedrohung					Schutz umgesetzt\\
 1		hoch					hoch			ICMP ‘smurf attack’: Denial of Service	ja\\
 2		hoch					mittel			Viren / Würmer / Trojaner			nein\\
-3		mittel					hoch			TCP DoS (Syn-Flooding)			ja\\
+3		mittel					hoch			TCP DoS (SYN-Flooding)			ja\\
 4		mittel					hoch			DNS Cache poisoning			nein\\
 5		hoch					niedrig		Phishing					nein\\
 6		niedrig				hoch			DHCP						ja\\
