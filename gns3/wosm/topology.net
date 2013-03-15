@@ -106,8 +106,8 @@ version = 0.8.3.1
     [[VBOX WOSMGR1DMZSRV]]
         image = WOSMGR1DMZSRV
         e2 = DMZSW 3
-        x = -458.5
-        y = -225.5
+        x = -461.328427125
+        y = -219.843145751
         z = 1.0
     [[VBOX WOSMGR1INETPC]]
         image = WOSMGR1INETPC
