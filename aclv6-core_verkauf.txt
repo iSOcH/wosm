@@ -1,0 +1,35 @@
+permit icmp any ff02::/16 router-solicitation
+
+remark verkauf-dhcp
+permit udp fe80::/16 eq 546 ff02::1:2/128 eq 547
+
+remark verkauf-dns
+permit udp 2005:2013:ff:a40::/64 2005:2013:ff:a10::21/128 eq 53
+
+remark verkauf-intsrv
+permit ip 2005:2013:ff:a40::/64 2005:2013:ff:a10::21/128
+
+remark verkauf-intsrv-end
+deny ip 2005:2013:ff:a40::/64 2005:2013:ff:a10::/64
+
+remark verkauf-respondadmin
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:a20::/64 established
+
+remark verkauf-dmzsrv
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 eq 80
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 eq 443
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 eq 20
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 eq 21
+
+remark verkauf-dmzsrv-ftppasv
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 gt 48999
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 lt 50000
+
+remark verkauf-dmzsrv-end
+deny ip 2005:2013:ff:a40::/64 2005:2013:ff:b0::/64
+
+remark verkauf-inet
+permit tcp 2005:2013:ff:a40::/64 ::/0 eq 80
+permit tcp 2005:2013:ff:a40::/64 ::/0 eq 443
+permit tcp 2005:2013:ff:a40::/64 ::/0 eq 20
+permit tcp 2005:2013:ff:a40::/64 ::/0 eq 21

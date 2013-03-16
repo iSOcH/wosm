@@ -1,0 +1,40 @@
+remark intsrv-adm
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:a20::/64 established
+permit udp 2005:2013:ff:a10::/64 eq 53 2005:2013:ff:a20::/64
+permit udp 2005:2013:ff:a10::/64 eq 547 2005:2013:ff:a20::1/128 eq 547
+
+remark intsrv-dev
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:a30::/64 established
+permit udp 2005:2013:ff:a10::/64 eq 53 2005:2013:ff:a30::/64
+permit udp 2005:2013:ff:a10::/64 eq 547 2005:2013:ff:a30::1/128 eq 547
+
+remark intsrv-verkauf
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:a40::/64 established
+permit udp 2005:2013:ff:a10::/64 eq 53 2005:2013:ff:a40::/64
+permit udp 2005:2013:ff:a10::/64 eq 547 2005:2013:ff:a30::1/128 eq 547
+
+remark intsrv-lan-end
+deny ip 2005:2013:ff:a10::/64 2005:2013:ff:0a00::/56
+
+remark intsrv-dmzsrv
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:b0::21/128 eq 80
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:b0::21/128 eq 443
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:b0::21/128 eq 20
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:b0::21/128 eq 21
+
+remark admin-dmzsrv-ftppasv
+permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:b0::21/128 gt 48999
+deny tcp 2005:2013:ff:a10::/64 2005:2013:ff:b0::21/128 gt 49999
+
+remark intsrv-dmzsrv-respond-radius
+permit tcp 2005:2013:ff:a10::21/128 eq 389 2005:2013:ff:b0::11/128 established
+
+remark intsrv-dmzsrv-end
+deny ip 2005:2013:ff:a10::/64 2005:2013:ff:b0::/64
+
+remark intsrv-inet
+permit tcp 2005:2013:ff:a10::/64 any eq 80
+permit tcp 2005:2013:ff:a10::/64 any eq 443
+permit tcp 2005:2013:ff:a10::/64 any eq 20
+permit tcp 2005:2013:ff:a10::/64 any eq 21
+permit udp 2005:2013:ff:a10::/64 any eq 53
