@@ -32,11 +32,11 @@ object-group service dmzsrv2inet_TCPPorts tcp
  port-object eq ftp-data
  port-object eq ftp
 access-list dmz_in remark dmzsrv-intsrv_ldap
-access-list dmz_in extended permit tcp host 172.16.0.11 host 10.0.10.11 eq ldap
+access-list dmz_in extended permit tcp host 172.16.0.21 host 10.0.10.21 eq ldap
 access-list dmz_in remark dmz-nolan-access
 access-list dmz_in extended deny ip 172.16.0.0 255.255.255.0 10.0.0.0 255.0.0.0 log
 access-list dmz_in remark dmzsrv-inet
-access-list dmz_in extended permit tcp host 172.16.0.11 0.0.0.0 0.0.0.0 object-group dmzsrv2inet_TCPPorts
-access-list dmz_in extended permit udp host 172.16.0.11 0.0.0.0 0.0.0.0 object-group dmzsrv2inet_UDPPorts
+access-list dmz_in extended permit tcp host 172.16.0.21 0.0.0.0 0.0.0.0 object-group dmzsrv2inet_TCPPorts
+access-list dmz_in extended permit udp host 172.16.0.21 0.0.0.0 0.0.0.0 object-group dmzsrv2inet_UDPPorts
 access-list dmz_in extended deny ip any any log
 

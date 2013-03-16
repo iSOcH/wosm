@@ -22,5 +22,5 @@ object-group service inet2dmzsrv_TCPPorts tcp
  port-object range 48999 49999
 
 access-list outside_in remark wan-dmzsrv
-access-list outside_in extended permit tcp any host 209.165.50.2 object-group inet2dmzsrv_TCPPorts
+access-list outside_in extended permit tcp any host 172.16.0.21 object-group inet2dmzsrv_TCPPorts
 access-list outside_in extended deny ip any any log
