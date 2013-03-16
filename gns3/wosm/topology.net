@@ -6,8 +6,8 @@ version = 0.8.3.1
     [[5520]]
         netcard = e1000
         options = -vnc none -vga none -m 1024 -icount auto -hdachs 980,16,32
-        initrd = D:\FHNW\6. Semester\wosm\asa842-initrd.gz
-        kernel = D:\FHNW\6. Semester\wosm\asa842-vmlinuz
+        initrd = C:\Users\root\FHNW\wosm\ASA842\asa842-initrd.gz
+        kernel = C:\Users\root\FHNW\wosm\ASA842\asa842-vmlinuz
         kernel_cmdline = -append ide_generic.probe_mask=0x01 ide_core.chs=0.0:980,16,32 auto nousb console=ttyS0,9600 bigphysarea=65536
     [[ASA ASA1]]
         e0 = INETSW 6
@@ -20,9 +20,9 @@ version = 0.8.3.1
     workingdir = working
     udp = 10000
     [[3725]]
-        image = D:\FHNW\6. Semester\wosm\c3725-advipservicesk9-mz124-25.image
+        image = C:\Users\root\FHNW\wosm\c3725-advipservicesk9-mz124-25.image
         ram = 128
-        idlepc = 0x604b28f4
+        idlepc = 0x6023b564
         sparsemem = True
         ghostios = True
     [[ROUTER Core]]
@@ -117,7 +117,7 @@ version = 0.8.3.1
         z = 1.0
     [[VBOX WOSMGR1LANAdmin]]
         e2 = Core f1/11
-        x = -136.600505063
+        x = -145.085786437
         y = 248.671572875
         z = 1.0
 [GNS3-DATA]
@@ -130,13 +130,13 @@ version = 0.8.3.1
         x = -300.0
         y = -32.0
     [[NOTE 2]]
-        text = "Internet"
-        x = 148.0
-        y = -320.0
-    [[NOTE 3]]
         text = "DMZ"
         x = -272.0
         y = -290.0
+    [[NOTE 3]]
+        text = "Internet"
+        x = 148.0
+        y = -320.0
     [[Cloud InetSrvPC6]]
         symbol = computer
         x = 266.5
@@ -181,10 +181,10 @@ version = 0.8.3.1
         connections = Core:f1/1:NIO_udp:30001:127.0.0.1:20001
     [[SHAPE 1]]
         type = rectangle
-        x = -516.0
-        y = -54.0
-        width = 1050.0
-        height = 385.0
+        x = -494.0
+        y = -303.0
+        width = 364.0
+        height = 154.0
     [[SHAPE 2]]
         type = rectangle
         x = 98.0
@@ -193,7 +193,7 @@ version = 0.8.3.1
         height = 265.0
     [[SHAPE 3]]
         type = rectangle
-        x = -494.0
-        y = -303.0
-        width = 364.0
-        height = 154.0
+        x = -516.0
+        y = -54.0
+        width = 1050.0
+        height = 385.0
