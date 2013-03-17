@@ -1,0 +1,36 @@
+permit icmp any ff02::/16 router-solicitation
+
+remark admin-dhcp
+permit udp fe80::/16 eq 546 ff02::1:2/128 eq 547
+
+remark admin-dns
+permit udp 2005:2013:ff:a20::/64 2005:2013:ff:a10::21/128 eq 53
+
+remark admin-intsrv
+permit ip 2005:2013:ff:a20::/64 2005:2013:ff:a10::21/64
+
+remark admin-int
+permit ip 2005:2013:ff:a20::/64 2005:2013:ff:a30::/64
+permit ip 2005:2013:ff:a20::/64 2005:2013:ff:a40::/64
+
+remark admin-dmzsrv
+permit tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::21/128 eq 80
+permit tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::21/128 eq 443
+permit tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::21/128 eq 20
+permit tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::21/128 eq 21
+
+remark admin-dmzsrv-ftppasv
+permit tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::21/128 gt 48999
+deny tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::21/128 gt 49999
+
+remark admin-dmzsw
+permit tcp 2005:2013:ff:a20::/64 2005:2013:ff:b0::2/128 eq 22
+
+remark admin-dmz-end
+deny ip 2005:2013:ff:a20::/64 2005:2013:ff:b0::/64
+
+remark admin-network
+permit ip 2005:2013:ff:a20::/64 2005:2013:FF:A0::/64
+
+remark admin-inet
+permit tcp 2005:2013:ff:a20::/64 ::/0

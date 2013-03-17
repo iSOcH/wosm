@@ -1,0 +1,33 @@
+remark dev-dhcp
+permit udp 0.0.0.0 0.0.0.0 eq 68 255.255.255.255 0.0.0.0 eq 67
+
+remark dev-dns
+permit udp 10.0.30.0 0.0.0.255 10.0.10.21 0.0.0.0 eq 53
+
+remark dev-intsrv
+permit ip 10.0.30.0 0.0.0.255 10.0.10.21 0.0.0.0
+
+remark dev-intsrv-end
+deny ip 10.0.30.0 0.0.0.255 10.0.10.0 0.0.0.255
+
+remark dev-respondadmin
+permit tcp 10.0.30.0 0.0.0.255 10.0.20.0 0.0.0.255 established
+
+remark dev-dmzsrv
+permit tcp 10.0.30.0 0.0.0.255 172.16.0.21 0.0.0.0 eq 80
+permit tcp 10.0.30.0 0.0.0.255 172.16.0.21 0.0.0.0 eq 443
+permit tcp 10.0.30.0 0.0.0.255 172.16.0.21 0.0.0.0 eq 20
+permit tcp 10.0.30.0 0.0.0.255 172.16.0.21 0.0.0.0 eq 21
+
+remark dev-dmzsrv-ftppasv
+permit tcp 10.0.30.0 0.0.0.255 172.16.0.21 0.0.0.0 gt 48999
+deny tcp 10.0.30.0 0.0.0.255 172.16.0.21 0.0.0.0 gt 49999
+
+remark dev-dmzsrv-end
+deny ip 10.0.30.0 0.0.0.255 172.16.0.0 0.0.0.255
+
+remark dev-inet
+permit tcp 10.0.30.0 0.0.0.255 0.0.0.0 255.255.255.255 eq 80
+permit tcp 10.0.30.0 0.0.0.255 0.0.0.0 255.255.255.255 eq 443
+permit tcp 10.0.30.0 0.0.0.255 0.0.0.0 255.255.255.255 eq 20
+permit tcp 10.0.30.0 0.0.0.255 0.0.0.0 255.255.255.255 eq 21
