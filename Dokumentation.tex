@@ -19,8 +19,18 @@
 \maketitle
 \newpage
 
+\tableofcontents
+\newpage
+
 \section{Netzwerk}
 \subsection{Netzwerkdiagramm}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.0\textwidth]{Phase1/Netz.PNG}
+\caption{Netzwerk}
+\label{fig:netzwerkdiagramm}
+\end{figure}
+
 \subsection{IP Dual-Stack Konzept}
 \subsubsection{IPv4}
 Wir unterscheiden zwischen drei verschiedenen Netzwerke. Das interne Netzwerk, das DMZ Netzwerk und das öffentliche Netzwerk. Wir verwenden für die DMZ und das interne Netzwerk verschiedene Netzwerkklassen um die Netze schnell unterscheiden zu können. Folgende IP-Adressierung und Maskierung werden wir verwenden.
@@ -370,4 +380,15 @@ deny icmp any any router-advertisement
 \end{lstlisting}
 
 Analog IPv4 muss ebenfalls der Traffic von UDP Quellport 547 an den Zielport 546 aus den Client-Netzen unterbunden werden.
+
+\newpage
+\appendix
+\phantomsection
+\addcontentsline{toc}{section}{Anhang}
+\section{Konfiguration Core}
+\lstinputlisting{gns3/wosm/configs/Core.cfg}
+
+\section{Konfiguration ASA}
+\lstinputlisting{asa_config.txt}
+
 \end{document}
