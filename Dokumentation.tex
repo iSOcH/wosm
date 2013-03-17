@@ -31,7 +31,8 @@ VLAN 10 Server: 10.0.10.0 255.255.255.0 Gateway 10.0.10.1\\
 VLAN 20 Administratoren: 10.0.20.0 255.255.255.0 Gateway 10.0.20.1\\
 VLAN 30 Entwicklung: 10.0.30.0 255.255.255.0 Gatetway 10.0.30.1\\
 VLAN 40 Verkauf: 10.0.40.0 255.255.255.0 Gatetway 10.0.40.1\\
-VPN Clients: 10.0.99.0 255.255.255.0\\
+VPN Clients Admins: 10.0.99.0 255.255.255.128\\
+VPN Clients Users: 10.0.99.128 255.255.255.128\\
 Infrastructure LAN: 10.100.0.0 255.255.255.252
 
 \textbf{DMZ}\\
@@ -76,14 +77,41 @@ IPv6: 2005:2013:FF:A10::/64 next Hop 2005:2013:FF:A0::1\\
 2005:2013:FF:A40::/64 next Hop 2005:2013:FF:A0::1
 
 \subsection{NAT}
-Network Address Translation wird für IPv4 verwendet um den internen Clients Zugriff ins Internet zu gewähren und um den Webserver in der DMZ vom Internet aus zugänglich zu machen. Für den Internetzugriff der Clients wird ein Port Address Translation (PAT) konfiguriert, damit nur eine Public IP-Adresse verwendet werden muss. Für den Webserver wird ein statisches NAT mit einer zusätzlichen Public IP-Adresse konfiguriert.\\
-
-Webserver: statisches NAT interne IP: 172.16.0.11 - öffentliche IP: 209.165.50.2\\
-Interne Hosts: dynamisches NAT overload: interner Range: 10.0.0.0 255.255.0.0 - öffentliche IP 209.165.50.1 (Outside IF IP der Firewall)
+Network Address Translation wird für IPv4 verwendet um den internen Clients Zugriff ins Internet zu gewähren und um den Webserver in der DMZ vom Internet aus zugänglich zu machen. Für den Internetzugriff der Clients wird ein Port Address Translation (PAT) konfiguriert, damit nur eine Public IP-Adresse verwendet werden muss. Für den Webserver wird ein statisches NAT mit einer zusätzlichen Public IP-Adresse konfiguriert.\\\\
+Webserver: statisches NAT interne IP: 172.16.0.21 - öffentliche IP: 209.165.50.2\\
+Interne Hosts: dynamisches NAT overload: interner Range: 10.0.0.0 255.255.0.0 - öffentliche IP 209.165.50.1 (Outside IF IP der Firewall)\\
+Ausgenommen vom NAT ist die Verbindung vom Server Netzwerk (10.0.10.0/24) ins VPN Client Netzwerk (10.0.99.0/24) da sonst keine Verbindung von Remote Client zu Server erstellt werden kann.
 
 \subsection{VTP}
+Das VLAN Trunking Protokoll kommt in unserer Simulation nicht zu Einsatz, da GNS3 keine konfigurierbare Switches anbietet. Im Labor werden wir jedoch mit konfigurierbaren Switches arbeiten und VTP einsetzen. Der Core Router wird dabei der VTP Server sein und alle VLAN Informationen an die Switches verteilen.
+
 \subsection{Spanning-Tree}
+Spanning-Tree musste in der Simulation nicht berücksichtigt werden. Das Netzwerk ist sehr einfach aufgebaut und die Verbindung zwischen Core Router und Firewall benötigt keinen Spanning-Tree.
+
 \subsection{VPN IPsec Remote Access}
+Der Zugriff auf das interne Netzwerk für externe Mitarbeiter erfolgt über den IPsec VPN Client. Beim Zugriff unterscheiden wir zwischen Administratoren und Mitarbeiter. Der Zugriff als Mitarbeiter kann somit stärker eingeschränkt werden als ein Administrator. In der Simulation haben wir keine unterschiedlichen Zugriffsmöglichkeiten, die Firewall wurde aber für diesen Fall konfiguriert. Der Remote Access Zugang erfolgt über die IP 209.165.50.1 (Outside IF Firewall) und unterstützt nur IPv4.\\
+\\
+\textbf{IKE Phase 1:}
+\begin{itemize}
+	\item{Authenzifizierung: Pre-shared}
+	\item{Verschlüsselung AES 256-bit}
+	\item{Hash SHA}
+	\item{Schlüsselgenerierung Diffie-Hellman Group 2}
+	\item{Gültigkeit Schlüsse 12h}
+\end{itemize}
+
+\textbf{IKE Phase 2 (Group-Policy):}
+\begin{itemize}
+	\item{Interne Gruppen (VPN\_ADMINISTRATOR \& VPN\_USERS\_GROUP)}
+	\item{DNS-Server 10.0.10.21}
+	\item{ACL 99: permit ip any 10.0.10.0 255.255.255.0 }
+	\item{Split-Tunneling: 10.0.10.0/24}
+	\item{Tunnel Protokol IKEv1 \& IKEv2}
+	\item{Default Domain: wosm.com}
+	\item{IP-Adressen Pools: VPN-ADMIN 10.0.99.0/25, VPN-USERS 10.0.99.128/25}
+\end{itemize}
+
+
 \subsection{Serverkonzept}
 !!!!Create Latex Table!!!!\\
 Name					OS					IP			Gateway		Services\\
@@ -100,14 +128,24 @@ WOSMGR1INETPC			Windows 7				209.165.50.22	209.165.50.1\\
 Um die Sicherheit unseres Netzes zu gewähtleisten, haben wir uns entschieden verschiedene Sicherheitsstufen zu definieren. Dabei verfolgen wir eine High Security Strategie. Die höchste Sicherheitsstufe 'Stufe 1' gilt für die normalen User. Die zweite Sicherheitsstufe 'Stufe 2' gilt für die Server. Die dritte Sicherheitsstufe 'Stufe 3' gilt für die Administratoren.\\
 Bei der Sicherheitsstufe Stufe 1 wird nur das nötigste zugelassen und alles andere blockiert. Die User dürfen über Ports 80 und 443 im Internet surfen, sowie FTP Verbindungen über Port 21 und 22 öffnen. Zudem werden eingehende DHCP Antworten über den Port UDP 68 zugelassen.\\
 Bei der Sicherheitsstufe Stufe 2 wird alles zugelassen, was die Server benötigen. Dabei wird aus den VLANs 20, 30 und 40 alles zugelassen. Aus der DMZ wird nur der Port 389 für LDAP zugelassen.\\
-Bei der Sicherheitsstufe Stufe 3 wird zusätzlich zu den in Stufe 1 zugelassenen Ports noch der Port 22 im internen Netz und in die DMZ zur Verwaltung der Netzwerkgeräte zugelassen. Zudem ist ist Internet für die Administratoren alles offen.\\
+Bei der Sicherheitsstufe Stufe 3 wird zusätzlich zu den in Stufe 1 zugelassenen Ports noch der Port 22 im internen Netz und in die DMZ zur Verwaltung der Netzwerkgeräte zugelassen. Zudem ist ins Internet für die Administratoren alles offen.\\
 Die definierten Sicherheitsstufen wurden mithilfe verschiedener ACL's umgesetzt. Die definierten Regeln (Auflistung oben nicht abschliessend) der ACL's sind im folgenden Kapitel ersichtlich.\\
 \\
 Die ACL's werden möglichst nahe an der Quelle angewendet. Somit sind alle ACL's welche den Zugriff der verschiedenen internen VLAN's in irgend ein anderes Netz regeln auf dem Core Switch auf den Interfaces in Richtung 'in' angewendet. Alle ACL's die den Zugriff in die DMZ, rsp. von der DMZ in ein anderes Netz regeln auf der ASA angewendet. Alle ACL's die den eingehenden Traffic aus dem Internet regeln sind ebenfalls auf der ASA angewendet.\\
 \\
 Mit einer Stateful Firewall ist ein höherer Konfigurationsaufwand verbunden, aber gleichzeitig auch eine höhere Sicherheit. Da wir eine High Security Strategie verfolgen, ist die Stateful Variante besser geeignet für unsere Zwecke.\\
 \subsection{Firewall}
-ACL's!!
+Auf der Firewall wurden 3 Access Lists definiert. DMZ\_in, Inside\_in und Outside\_in. Aus dem DMZ-Netzwerk  sind folgende Verbindungen erlaubt.
+\begin{itemize}
+	\item{host 172.16.0.21 zu host 10.0.10.21, Port tcp 389 (ldap)}
+	\item{host 172.16.0.21 ins Internet, Ports tcp 80, 433, 21, 22 \& udp 53}
+\end{itemize}
+Aus dem Internet sind folgende Verbindungen erlaubt.
+\begin{itemize}
+	\item{any zu host 172.16.0.21, Ports tcp 80, 433, 21, 22, 48999 - 49999}
+\end{itemize}
+Da die Access Lists nahe an der Quelle implementiert wurden, git es in der inside\_in ACL keine Einschränkungen (permit ip any any). Alle anderen Verbindungen werden nicht zugelassen.
+
 
 \section{Bedrohungsmodel}
 \subsection{TCP DoS (SYN-Flooding)}
