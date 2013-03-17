@@ -25,7 +25,7 @@
 \subsubsection{IPv4}
 Wir unterscheiden zwischen drei verschiedenen Netzwerke. Das interne Netzwerk, das DMZ Netzwerk und das öffentliche Netzwerk. Wir verwenden für die DMZ und das interne Netzwerk verschiedene Netzwerkklassen um die Netze schnell unterscheiden zu können. Folgende IP-Adressierung und Maskierung werden wir verwenden.
 
-\begin{longtable}{p{1.5cm}|p{3cm}|p{4.5cm}|p{4cm}}
+\begin{longtable}{p{1.5cm}|p{4cm}|p{4cm}|p{3cm}}
 	\textbf{VLAN} & \textbf{Funktion} & \textbf{IPv4 Range} & \textbf{IPv4 Gateway}\\
 	\hline
 	\endfirsthead
@@ -36,20 +36,20 @@ Wir unterscheiden zwischen drei verschiedenen Netzwerke. Das interne Netzwerk, d
 	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
 	\endfoot
 	\endlastfoot
-	10 & Server & 10.0.10.0 255.255.255.0 & 10.0.10.1\\
-	20 & Administratoren & 10.0.20.0 255.255.255.0 & 10.0.20.1\\
-	30 & Entwicklung & 10.0.30.0 255.255.255.0 & 10.0.30.1\\
-	40 & Verkauf & 10.0.40.0 255.255.255.0 & 10.0.40.1\\
-	n/a & VPN Clients & 10.0.99.0 255.255.255.0 & n/a \\
-	n/a & Infrastructure & 10.100.0.0 255.255.255.252 & n/a\\
-	n/a & DMZ & 172.16.0.0 255.255.255.0 & 172.16.0.1\\
-	n/a & WAN & 209.165.50.0 255.255.255.0 & 209.165.50.1
+	10 & Server & 10.0.10.0/24 & 10.0.10.1\\
+	20 & Administratoren & 10.0.20.0/24 & 10.0.20.1\\
+	30 & Entwicklung & 10.0.30.0/24 & 10.0.30.1\\
+	40 & Verkauf & 10.0.40.0/24 & 10.0.40.1\\
+	n/a & VPN Clients & 10.0.99.0/24 & n/a \\
+	n/a & Infrastructure & 10.100.0.0/30 & n/a\\
+	n/a & DMZ & 172.16.0.0/24 & 172.16.0.1\\
+	n/a & WAN & 209.165.50.0/24 & 209.165.50.1
 \end{longtable}
 
 \subsubsection{IPv6}
 Da die Hosts über das Internet direkt erreichbar sein sollen, werden wir globale IPv6 Adressen mit dem Site Prefix /64 verwenden.
 
-\begin{longtable}{p{1.5cm}|p{3cm}|p{4.5cm}|p{4cm}}
+\begin{longtable}{p{1.5cm}|p{4cm}|p{4cm}|p{4cm}}
 	\textbf{VLAN} & \textbf{Funktion} & \textbf{IPv6 Range} & \textbf{IPv6 Gateway}\\
 	\hline
 	\endfirsthead
@@ -69,14 +69,64 @@ Da die Hosts über das Internet direkt erreichbar sein sollen, werden wir global
 	n/a & WAN & 2005:209:165:50::/64 & 2005:209:165:50::1/64
 \end{longtable}
 
+\subsection{Adressvergabe an Clients}
+\subsubsection{IPv4}
+Die Clients stellen regulare DHCP-Anfragen. Um die Leases und Bereichsoptionen zentral und (einigermassen) angenehm über eine grafische Schnittstelle verwalten zu können, wird der Core-Router so konfiguriert, dass er die Anfragen an den internen Domänencontroller und DHCP-Server (INTSRV in VLAN10) weiterleitet. Der Router setzt dabei ein Flag in der Anfrage, welches es dem DHCP-Server erlaubt, festzustellen aus welchem Bereich die Anfrage kam. Nur so kann der Server beispielsweise einem Client aus dem Adminnetz eine IP aus dem Admin-Bereich zuweisen.
+
+Der folgende Konfigurationsausschnitt zeigt die notwendigen Optionen (IPv6-betreffende Einstellungen entfernt):
+\begin{lstlisting}
+interface Vlan20
+ description *** VLAN Admin ***
+ ip address 10.0.20.1 255.255.255.0
+ ip access-group ADMIN in
+ ip helper-address 10.0.10.21
+\end{lstlisting} 
+
+Der Befehl \glqq{}ip helper address\grqq{} gibt an, wohin die DHCP-Anfrage weitergeleitet werden soll.
+
+\subsubsection{IPv6}
+Für die automatische Konfiguration der Client-Adressen für IPv6 kommen mehrere Möglichkeiten in Betracht:
+\begin{description}
+	\item[Autokonfiguration ohne DHCP] IPv6 sieht vor, dass Router Clients direkt das zu verwendende Netzwerkprefix angeben können und Clients sich dann mittels EUI-64 eine Adresse generieren. Da EUI-64 die (weltweit eindeutige) MAC-Adresse miteinbezieht, sind Adresskonflikte ausgeschlossen. Die Clients erfahren über Router-Advertisements, welche Netze sie über welche Router erreichen können.
+		Leider ist keine Möglichkeit vorgesehen, den Clients mitzueteilen, welchen DNS-Server sie verwenden sollen. Somit kann dieser Ansatz alleine aktuell das Problem der Adressvergabe nicht abschliessend lösen.
+	\item[DHCPv6 stateful] Diese Variante funktioniert sehr ähnlich wie die klassische DHCP Adressvergabe in IPv4-Netzen. Der Client fragt per Multicast (Broadcast-Adressen wurden in IPv6 abgeschafft) nach DHCP-Servern und \glqq{}bestellt\grqq{} sich eine Adresse. Die Angabe von weiteren Optionen, wie eine Liste der DNS-Server ist genau auf die selbe Art und weise möglich, wie dies bereits in IPv4-Netzen der Fall war. Eine Einschränkung ist bei unserer Konfiguration allerdings ins Gewicht gefallen: Der DHCP-Server kann den Clients keinen Default-Gateway angeben, eine entsprechende Option ist derzeit im Protokoll nicht vorgesehen.
+	\item[DHCPv6 stateless] Diese Variante vereint die Stärken der beiden zuvor genannten Varianten der Adressvergabe. Die Konfiguration der IPv6-Adresse sowie des Gateways erfolgt per Router-Advertisements zwischen Router und Client. In der Antwort zur Router-Solicitation-Anfrage des Clients gibt der Router dem Client des Weiteren an, dass er weitere Informationen per DHCPv6 erfragen soll. Als Antwort auf die DHCP-Anfrage erhält der Client dann Optionen wie eine DNS-Serverliste oder den Domänennamen. Die Bezeichnung \glqq{}stateless\grqq{} rührt daher, dass der Server keine Informationen (Lease) zu den Clients speichern muss.
+\end{description}
+
+Auch dieser Ansatz soll mit einem Auszug der Schnittstellenkonfiguration verdeutlicht werden (IPv4 betreffende Konfigurationen entfernt):
+\begin{lstlisting}
+interface Vlan20
+ description *** VLAN Admin ***
+ ipv6 address 2005:2013:FF:A20::1/64
+ ipv6 traffic-filter ADMINv6 in
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2005:2013:FF:A10::21
+\end{lstlisting}
+
+Die Option \glqq{}ipv6 nd other-config-flag\grqq{} gibt an, dass der Router Clients darauf hinweisen soll, dass weitere Informationen über DHCPv6 erhalten werden können. Eine andere Einstellung hier wäre \glqq{}ipv6 nd managed-config-flag\grqq{} - dies würde den Client auffordern, auch seine IP-Adresse per DHCPv6 zu erfragen.
+
+\glqq{}ipv6 dhcp relay destination\grqq{} gibt, analog zu der \glqq{}helper-adress\grqq{} bei IPv4, an, wohin DHCP-Anfragen weitergeleitet werden sollen.
+
+Des Weiteren ist zu beachten, dass eintreffende \glqq{}Router-Solicitation\grqq{}-Anfragen der Clients nicht durch die ACL geblockt werden. Falls dies dennoch der Fall ist, erhält der Client die IPv6-Route erst nach einiger Zeit, da der Router von sich aus periodisch Router-Advertisement verschickt.
+
 \subsection{Routing}
 \subsubsection{Core Router}
-Der Core Router hat nur default-routen konfiguriert. Sämtlicher Datenverkehr wird an die Firewall gesendet.
+Der Core Router hat nur default-routen konfiguriert. Sämtlicher Datenverkehr, der nicht in ein lokal angeschlossenes Netz soll, wird an die Firewall gesendet.
 
-\begin{description}
-	\item[IPv4] 0.0.0.0 0.0.0.0 next Hop 10.100.0.2
-	\item[IPv6] ::/0 next Hop 2005:2013:FF:A0::2
-\end{description}
+\begin{longtable}{p{4.5cm}|p{4cm}}
+	\textbf{Zielnetz} & \textbf{Next Hop}\\
+	\hline
+	\endfirsthead
+	\textbf{Zielnetz} & \textbf{Next Hop}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	0.0.0.0/0 & 10.100.0.2\\
+	::/0 & 2005:2013:FF:A0::2
+\end{longtable}
 
 \subsubsection{Firewall}
 Die default Route auf der Firewall würde normalerweise auf den Router des Service Providers zeigen. Da wir in der Simulation aber keinen solchen haben, werden keine default Routen konfiguriert. Die Firewall sendet somit nur den Verkehr für das interne Netzwerk an den Core Router.
@@ -92,7 +142,7 @@ Die default Route auf der Firewall würde normalerweise auf den Router des Servi
 	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
 	\endfoot
 	\endlastfoot
-	10.0.0.0 255.255.0.0 & 10.100.0.1\\
+	10.0.0.0/16 (Supernet) & 10.100.0.1\\
 	2005:2013:FF:A10::/64 & 2005:2013:FF:A0::1\\
 	2005:2013:FF:A20::/64 & 2005:2013:FF:A0::1\\
 	2005:2013:FF:A30::/64 & 2005:2013:FF:A0::1\\
@@ -100,18 +150,44 @@ Die default Route auf der Firewall würde normalerweise auf den Router des Servi
 \end{longtable}
 
 \subsection{NAT}
-Network Address Translation wird für IPv4 verwendet um den internen Clients Zugriff ins Internet zu gewähren und um den Webserver in der DMZ vom Internet aus zugänglich zu machen. Für den Internetzugriff der Clients wird ein Port Address Translation (PAT) konfiguriert, damit nur eine Public IP-Adresse verwendet werden muss. Für den Webserver wird ein statisches NAT mit einer zusätzlichen Public IP-Adresse konfiguriert.\\
+Network Address Translation wird für IPv4 verwendet um den internen Clients Zugriff ins Internet zu gewähren und um den Webserver in der DMZ vom Internet aus zugänglich zu machen. Für den Internetzugriff der Clients wird eine Port Address Translation (PAT) konfiguriert, damit nur eine Public IP-Adresse verwendet werden muss. Für den Webserver wird ein statisches NAT mit einer zusätzlichen Public IP-Adresse konfiguriert.
 
 \begin{description}
 	\item[Webserver] statisches NAT interne IP: 172.16.0.11 - öffentliche IP: 209.165.50.2
-	\item[Interne Hosts] dynamisches NAT overload: interner Range: 10.0.0.0 255.255.0.0 - öffentliche IP 209.165.50.1 (Outside IF IP der Firewall)
+	\item[Interne Hosts] dynamisches NAT overload: interner Range: 10.0.0.0/16 - öffentliche IP 209.165.50.1 (Outside IF IP der Firewall)
 \end{description}
+Ausgenommen vom NAT ist die Verbindung vom Server Netzwerk (10.0.10.0/24) ins VPN Client Netzwerk (10.0.99.0/24) da sonst keine Verbindung von Remote Client zu Server erstellt werden kann.
 
 \subsection{VTP}
-\subsection{Spanning-Tree}
-\subsection{VPN IPsec Remote Access}
-\subsection{Serverkonzept}
+Das VLAN Trunking Protokoll kommt in unserer Simulation nicht zu Einsatz, da GNS3 keine konfigurierbare Switches anbietet. Im Labor werden wir jedoch mit konfigurierbaren Switches arbeiten und VTP einsetzen. Der Core Router wird dabei der VTP Server sein und alle VLAN Informationen an die Switches verteilen.
 
+\subsection{Spanning-Tree}
+Spanning-Tree musste in der Simulation nicht berücksichtigt werden. Das Netzwerk ist sehr einfach aufgebaut und die Verbindung zwischen Core Router und Firewall benötigt keinen Spanning-Tree.
+
+\subsection{VPN IPsec Remote Access}
+Der Zugriff auf das interne Netzwerk für externe Mitarbeiter erfolgt über den IPsec VPN Client. Beim Zugriff unterscheiden wir zwischen Administratoren und Mitarbeiter. Der Zugriff als Mitarbeiter kann somit stärker eingeschränkt werden als ein Administrator. In der Simulation haben wir keine unterschiedlichen Zugriffsmöglichkeiten, die Firewall wurde aber für diesen Fall konfiguriert. Der Remote Access Zugang erfolgt über die IP 209.165.50.1 (Outside IF Firewall) und unterstützt nur IPv4.\\
+\\
+\textbf{IKE Phase 1:}
+\begin{itemize}
+	\item{Authenzifizierung: Pre-shared}
+	\item{Verschlüsselung AES 256-bit}
+	\item{Hash SHA}
+	\item{Schlüsselgenerierung Diffie-Hellman Group 2}
+	\item{Gültigkeit Schlüsse 12h}
+\end{itemize}
+
+\textbf{IKE Phase 2 (Group-Policy):}
+\begin{itemize}
+	\item{Interne Gruppen (VPN\_ADMINISTRATOR \& VPN\_USERS\_GROUP)}
+	\item{DNS-Server 10.0.10.21}
+	\item{ACL 99: permit ip any 10.0.10.0 255.255.255.0 }
+	\item{Split-Tunneling: 10.0.10.0/24}
+	\item{Tunnel Protokol IKEv1 \& IKEv2}
+	\item{Default Domain: wosm.com}
+	\item{IP-Adressen Pools: VPN-ADMIN 10.0.99.0/25, VPN-USERS 10.0.99.128/25}
+\end{itemize}
+
+\subsection{Serverkonzept}
 \begin{longtable}{p{3cm}|p{2.5cm}|p{2.3cm}|p{3.5cm}|p{3cm}}
 	\textbf{Name} & \textbf{OS} & \textbf{IPv4} & \textbf{IPv6} & \textbf{Services}\\
 	\hline
@@ -132,21 +208,70 @@ Network Address Translation wird für IPv4 verwendet um den internen Clients Zug
 	INETPC & Windows 7 & 209.165.50.22 & 2005:209:165:50::22 & Client Extern\\
 \end{longtable}
 
+
 \section{Sicherheit}
 \subsection{Konzept}
-Um die Sicherheit unseres Netzes zu gewähtleisten, haben wir uns entschieden verschiedene Sicherheitsstufen zu definieren. Dabei verfolgen wir eine High Security Strategie. Die höchste Sicherheitsstufe 'Stufe 1' gilt für die normalen User. Die zweite Sicherheitsstufe 'Stufe 2' gilt für die Server. Die dritte Sicherheitsstufe 'Stufe 3' gilt für die Administratoren.\\
-Bei der Sicherheitsstufe Stufe 1 wird nur das nötigste zugelassen und alles andere blockiert. Die User dürfen über Ports 80 und 443 im Internet surfen, sowie FTP Verbindungen über Port 21 und 22 öffnen. Zudem werden eingehende DHCP Antworten über den Port UDP 68 zugelassen.\\
-Bei der Sicherheitsstufe Stufe 2 wird alles zugelassen, was die Server benötigen. Dabei wird aus den VLANs 20, 30 und 40 alles zugelassen. Aus der DMZ wird nur der Port 389 für LDAP zugelassen.\\
-Bei der Sicherheitsstufe Stufe 3 wird zusätzlich zu den in Stufe 1 zugelassenen Ports noch der Port 22 im internen Netz und in die DMZ zur Verwaltung der Netzwerkgeräte zugelassen. Zudem ist ist Internet für die Administratoren alles offen.\\
-Die definierten Sicherheitsstufen wurden mithilfe verschiedener ACL's umgesetzt. Die definierten Regeln (Auflistung oben nicht abschliessend) der ACL's sind im folgenden Kapitel ersichtlich.\\
-\\
-Die ACL's werden möglichst nahe an der Quelle angewendet. Somit sind alle ACL's welche den Zugriff der verschiedenen internen VLAN's in irgend ein anderes Netz regeln auf dem Core Switch auf den Interfaces in Richtung 'in' angewendet. Alle ACL's die den Zugriff in die DMZ, rsp. von der DMZ in ein anderes Netz regeln auf der ASA angewendet. Alle ACL's die den eingehenden Traffic aus dem Internet regeln sind ebenfalls auf der ASA angewendet.\\
-\\
-Mit einer Stateful Firewall ist ein höherer Konfigurationsaufwand verbunden, aber gleichzeitig auch eine höhere Sicherheit. Da wir eine High Security Strategie verfolgen, ist die Stateful Variante besser geeignet für unsere Zwecke.\\
-\subsection{Firewall}
-ACL's!!
+Um die Sicherheit unseres Netzes zu gewähtleisten, haben wir uns entschieden, verschiedene Sicherheitsstufen zu definieren. Dabei verfolgen wir eine High Security Strategie. Die höchste Sicherheitsstufe 'Stufe 1' gilt für die normalen User. Die zweite Sicherheitsstufe 'Stufe 2' gilt für die Server. Die dritte Sicherheitsstufe 'Stufe 3' gilt für die Administratoren.
 
-\section{Bedrohungsmodel}
+Bei der Sicherheitsstufe Stufe 1 wird nur das nötigste zugelassen und alles andere blockiert. Die User dürfen über Ports 80 und 443 im Internet surfen, sowie FTP Verbindungen über Port 21 und 20 öffnen. Zudem werden eingehende DHCP Anfragen über den Port UDP 68 zugelassen.
+
+Bei der Sicherheitsstufe Stufe 2 wird alles zugelassen, was die Server benötigen. Dabei wird aus den VLANs 20, 30 und 40 alles zugelassen. Aus der DMZ wird nur der Port 389 für LDAP zugelassen.
+
+Bei der Sicherheitsstufe Stufe 3 wird zusätzlich zu den in Stufe 1 zugelassenen Ports noch der Port 22 im internen Netz und in die DMZ zur Verwaltung der Netzwerkgeräte zugelassen. Zudem ist beim Internetzugang für die Administratoren alles offen.
+
+Die definierten Sicherheitsstufen wurden mithilfe verschiedener ACLs umgesetzt. Die definierten Regeln (Auflistung oben nicht abschliessend) der ACL's sind im folgenden Kapitel ersichtlich.
+
+Die ACLs werden möglichst nahe an der Quelle angewendet. Somit sind alle ACLs welche den Zugriff der verschiedenen internen VLANs in irgend ein anderes Netz regeln auf dem Core Switch auf den VLAN-Interfaces in Richtung \emph{in} angewendet. Alle ACLs die den Zugriff in die DMZ, resp. von der DMZ in ein anderes Netz regeln werden auf der ASA angewendet. Alle ACLs die den eingehenden Traffic aus dem Internet regeln sind ebenfalls auf der ASA angewendet.
+
+Mit einer Stateful Firewall sinkt einerseits der Konfigurationsaufwand und gleichzeitig kann eine höhere Sicherheit erreicht werden. Da wir eine High Security Strategie verfolgen, ist die Stateful Variante besser geeignet für unsere Zwecke.
+
+\subsection{Firewall}
+\subsubsection{ACL auf Core-Router}
+Auf diesem Router sind ACL für alle angeschlossenen VLANs definiert. Die folgende Tabelle liefert einen Überblick, die kompletten ACL sind im Anhang dieser Dokumentation zu finden.
+\begin{longtable}{p{2.5cm}|p{3.5cm}|p{7cm}}
+	\textbf{Name} & \textbf{Interface/Richtung} & \textbf{Anmerkung}\\
+	\hline
+	\endfirsthead
+	\textbf{Name} & \textbf{Interface/Richtung} & \textbf{Anmerkung}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	INTSRV & VLAN 10 / in & Reglementiert IPv4 Traffic, der aus dem Servernetz verschickt werden darf.\\
+	INTSRVv6 & VLAN 10 / in & Reglementiert IPv6 Traffic, der aus dem Servernetz verschickt werden darf.\\
+	ADMIN & VLAN 20 / in & Reglementiert IPv4 Traffic, der aus dem Adminnetz verschickt werden darf.\\
+	ADMINv6 & VLAN 20 / in & Reglementiert IPv6 Traffic, der aus dem Adminnetz verschickt werden darf.\\
+	DEV & VLAN 30 / in & Reglementiert IPv4 Traffic, der aus dem Entwicklungsnetz verschickt werden darf.\\
+	DEVv6 & VLAN 30 / in & Reglementiert IPv6 Traffic, der aus dem Entwicklungsnetz verschickt werden darf.\\
+	VERKAUF & VLAN 40 / in & Reglementiert IPv4 Traffic, der aus dem Verkaufsnetz verschickt werden darf.\\
+	VERKAUFv6 & VLAN 40 / in & Reglementiert IPv6 Traffic, der aus dem Verkaufsnetz verschickt werden darf.\\
+\end{longtable}
+
+\subsubsection{ACL auf ASA}
+Auf der Firewall wurden jeweils 3 Access Lists definiert.Diese werden auf den jeweiligen Interfaces angewendet. Die kompletten Access-lists sind im Anhang zu finden.
+
+\begin{longtable}{p{2.5cm}|p{3.5cm}|p{7cm}}
+	\textbf{Name} & \textbf{Interface/Richtung} & \textbf{Anmerkung}\\
+	\hline
+	\endfirsthead
+	\textbf{Name} & \textbf{Interface/Richtung} & \textbf{Anmerkung}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	dmz\_in & dmz / in & IPv4 Traffic, der aus dem DMZ-Netzwerk verschickt werden darf.\\
+	dmz\_in\_v6 & dmz / in & IPv6 Traffic, der aus dem DMZ-Netzwerk verschickt werden darf.\\
+	inside\_in  & inside / in & IPv4 Traffic, der aus dem internen Netzwerk verschickt werden darf.\\
+	inside\_in\_v6 & inside / in & IPv6 Traffic, der aus dem internen Netzwerk verschickt werden darf.\\
+	outside\_in & outside / in & IPv4 Traffic, der aus dem Internet verschickt werden darf.\\
+	outside\_in\_v6 & outside / in & IPv6 Traffic, der aus dem Internet verschickt werden darf.\\
+\end{longtable}
+
+\section{Bedrohungsmodell}
 \subsection{TCP DoS (SYN-Flooding)}
 \subsubsection{Bedrohung}
 Beim TCP 3-Way Handshake wird zuerst eine Anfrage an einen Server gesendet, indem ein TCP Paket mit dem Flag SYN verschickt wird. Der Server als Empfänger dieses TCP SYN Pakets verarbeitet dieses und sendet ein TCP Paket mit den Falgs SYN und ACK zurück. Er merkt sich dabei in einer SYN-Liste, mit wem er ein 3-Way Handshake begonnen hat. Wenn derInitiator der Verbindung das TCP Paket mit den Flags SYN und ACK empfängt, verarbeitet er dieses und sendet zur Bestätigung ein Paket mit dem Flag ACK. Sobald der Server das Packet mit dem Flag ACK erhalten hat, wird der Eintrag in der SYN-Liste gelöscht.\\
@@ -198,17 +323,26 @@ Eine Person mit Zugriff auf ein Netzwerkkabel im internen Netz verbindet einen z
 Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (ausser vom offiziellen DHCP Server). Dadurch ist sichergestellt, dass kein zusätzlicher DHCP Server IP Adressen im interne Netz verteilen kann.
 
 \subsection{Überblick}
-Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierung und Markierung, gegen welche wir uns schützen:\\
-!!!!Create Latex Table!!!!\\
-Ranking	Eintrittswahrscheinlichkeit		Schweregrad		Bedrohung					Schutz umgesetzt\\
-1		hoch					hoch			ICMP ‘smurf attack’: Denial of Service	ja\\
-2		hoch					mittel			Viren / Würmer / Trojaner			nein\\
-3		mittel					hoch			TCP DoS (SYN-Flooding)			ja\\
-4		mittel					hoch			DNS Cache poisoning			nein\\
-5		hoch					niedrig		Phishing					nein\\
-6		niedrig				hoch			DHCP						ja\\
-7		niedrig				mittel			MAC flooding					nein\\
-8		niedrig				mittel			ARP spoofing				nein\\
+\begin{longtable}{p{1.4cm}|p{3.9cm}|p{2.6cm}|p{4cm}|p{2cm}}
+	\textbf{Rank} & \textbf{Wahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
+	\hline
+	\endfirsthead
+	\textbf{Ranking} & \textbf{Eintrittswahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	1 & hoch & hoch & ICMP ‘smurf attack’: Denial of Service & ja\\
+	2 & hoch & mittel & Viren / Würmer / Trojaner & nein\\
+	3 & mittel & hoch & TCP DoS (SYN-Flooding) & ja\\
+	4 & mittel & hoch & DNS Cache poisoning & nein\\
+	5 & hoch & niedrig & Phishing & nein\\
+	6 & niedrig & hoch & Rogue DHCP & ja\\
+	7 & niedrig & mittel & MAC flooding & nein\\
+	8 & niedrig & mittel & ARP spoofing & nein\\
+\end{longtable}
 
 \subsection{ACL gegen Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
@@ -218,7 +352,7 @@ Ranking	Eintrittswahrscheinlichkeit		Schweregrad		Bedrohung					Schutz umgesetzt
 
 
 \subsubsection{DHCP IPv4}
-Die ACL für die internen Client-VLANs verhindert das Versenden einer Antwort auf eine DHCP-Client-Anfrage. Um die Beantwortung aus dem Servernetz zu erlauben wurden die folgenden Regeln angewendet:
+Die ACL für die internen Client-VLANs verhindert das Versenden einer Antwort auf eine DHCP-Anfrage. Um die Beantwortung aus dem Servernetz zu erlauben wurden die folgenden Regeln angewendet:
 
 \begin{lstlisting}
 permit udp 10.0.10.0 0.0.0.255 eq 67 10.0.20.1 0.0.0.0 eq 67
@@ -236,5 +370,4 @@ deny icmp any any router-advertisement
 \end{lstlisting}
 
 Analog IPv4 muss ebenfalls der Traffic von UDP Quellport 547 an den Zielport 546 aus den Client-Netzen unterbunden werden.
-
 \end{document}
