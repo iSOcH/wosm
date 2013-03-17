@@ -146,6 +146,7 @@ timeout tcp-proxy-reassembly 0:01:00
 timeout floating-conn 0:00:00
 dynamic-access-policy-record DfltAccessPolicy
 user-identity default-domain LOCAL
+aaa authentication ssh console LOCAL
 no snmp-server location
 no snmp-server contact
 snmp-server enable traps snmp authentication linkup linkdown coldstart warmstart
@@ -163,7 +164,8 @@ crypto ikev1 policy 65535
  group 2
  lifetime 43200
 telnet timeout 5
-ssh timeout 5
+ssh 10.0.20.0 255.255.255.0 inside
+ssh timeout 30
 console timeout 0
 threat-detection basic-threat
 threat-detection statistics access-list
@@ -186,6 +188,7 @@ group-policy VPN_USERS_GROUP attributes
  split-tunnel-network-list value SPLIT_TUNNEL_LIST
  default-domain value wosm.com
  address-pools value VPN-USERS
+username ssh_admin password SxYXLtULZ5hPDb07 encrypted privilege 15
 username verkauf password FHPW9HqlN8QD22Y/ encrypted
 username verkauf attributes
  vpn-group-policy VPN_USERS_GROUP
@@ -222,5 +225,5 @@ call-home
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
 crashinfo save disable
-Cryptochecksum:7e3b946fd369e64bbb0c835ab86e6757
+Cryptochecksum:1a739f944de561e0353561d15a5f256e
 : end
