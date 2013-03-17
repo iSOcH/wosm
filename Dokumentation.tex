@@ -19,6 +19,9 @@
 \maketitle
 \newpage
 
+\tableofcontents
+\newpage
+
 \section{Netzwerk}
 \subsection{Netzwerkdiagramm}
 \begin{figure}[H]
@@ -377,4 +380,15 @@ deny icmp any any router-advertisement
 \end{lstlisting}
 
 Analog IPv4 muss ebenfalls der Traffic von UDP Quellport 547 an den Zielport 546 aus den Client-Netzen unterbunden werden.
+
+\newpage
+\appendix
+\phantomsection
+\addcontentsline{toc}{section}{Anhang}
+\section{Konfiguration Core}
+\lstinputlisting{gns3/wosm/configs/Core.cfg}
+
+\section{Konfiguration ASA}
+\lstinputlisting{asa_config.txt}
+
 \end{document}
