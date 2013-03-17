@@ -326,7 +326,7 @@ Ein Agreifer sendet ARP Antworten mit den IP Adressen der Opfer und seiner eigen
 \subsubsection{Gegenmassnahme}
 Um sich gegen diese Attacke zu schützen, kann die Port Security auf dem Switch aktiviert werden, dadurch hat ein potentieller Anfreifer gar keine Möglichkeit sich ins interne Netz einzubinden.
 
-\subsection{DHCP}
+\subsection{Rogue DHCP}
 \subsubsection{Bedrohung}
 Eine Person mit Zugriff auf ein Netzwerkkabel im internen Netz verbindet einen zusätzlichen, nicht autorisierten DHCP Server. Wenn der zusätzliche DHCP Sever schnellere Antwortzeiten hat als der offizielle DHCP Server, erhalten die Clients nun eine IP des nicht autorisierten DHCP Server, wodurch diese nicht mehr auf die interne Infrastruktur zugreiffen können.
 \subsubsection{Gegenmassnahme}
@@ -334,7 +334,7 @@ Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (au
 
 \subsection{Überblick}
 \begin{longtable}{p{1.4cm}|p{3.9cm}|p{2.6cm}|p{4cm}|p{2cm}}
-	\textbf{Rank} & \textbf{Wahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
+	\textbf{Rang} & \textbf{Wahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
 	\hline
 	\endfirsthead
 	\textbf{Ranking} & \textbf{Eintrittswahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
