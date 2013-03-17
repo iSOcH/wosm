@@ -266,7 +266,8 @@ Leider gibt es gegen diese Attacke keine effektive Schutzmassnahme. Um sich mög
 \subsubsection{Bedrohung}
 Ein Angreifer sendet viele ARP Antworten. Dabei setzt er immer eine andere MAC Adresse. Wenn die Index Tabelle des Switches voll ist, schaltet dieser in den Hub Modus um und sendet alle Packete jedem angeschlossenen Gerät. Nun kann der Anfreifer jegliche Kommunikation über diesen Switch mithören. 
 \subsubsection{Gegenmassnahme}
-Um sich gegen diese Attacke zu schützen, kann auf dem Switch definiert werden, dass er ausschalten soll, wenn die Index Tabelle voll ist. Dadurch ist zwar ein Unterbruch im Netz vorhanden, aber der Angreifer kann keine nicht mithören.\\
+Um sich gegen diese Attacke zu schützen, kann auf dem Switch definiert werden, dass er ausschalten soll, wenn die Index Tabelle voll ist. Dadurch ist zwar ein Unterbruch im Netz vorhanden, aber der Angreifer kann keine nicht mithören.
+
 Eine noch besserer Schutz ist, wenn die Port Security auf dem Switch aktiviert und konfiguriert wird. Dadurch hat kein Angreifer die Möglichkeit die Index Tabelle des Switches zu füllen.
 
 \subsection{ARP spoofing}
@@ -282,17 +283,29 @@ Eine Person mit Zugriff auf ein Netzwerkkabel im internen Netz verbindet einen z
 Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (ausser vom offiziellen DHCP Server). Dadurch ist sichergestellt, dass kein zusätzlicher DHCP Server IP Adressen im interne Netz verteilen kann.
 
 \subsection{Überblick}
-Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierung und Markierung, gegen welche wir uns schützen:\\
-!!!!Create Latex Table!!!!\\
-Ranking	Eintrittswahrscheinlichkeit		Schweregrad		Bedrohung					Schutz umgesetzt\\
-1		hoch					hoch			ICMP ‘smurf attack’: Denial of Service	ja\\
-2		hoch					mittel			Viren / Würmer / Trojaner			nein\\
-3		mittel					hoch			TCP DoS (SYN-Flooding)			ja\\
-4		mittel					hoch			DNS Cache poisoning			nein\\
-5		hoch					niedrig		Phishing					nein\\
-6		niedrig				hoch			DHCP						ja\\
-7		niedrig				mittel			MAC flooding					nein\\
-8		niedrig				mittel			ARP spoofing				nein\\
+Hier noch einmal ein Überblick der beschriebenen Bedrohungen inkl. Priorisierung und Markierung, gegen welche wir uns schützen:
+
+
+\begin{longtable}{p{1.4cm}|p{3.9cm}|p{2.6cm}|p{4cm}|p{2cm}}
+	\textbf{Rank} & \textbf{Wahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
+	\hline
+	\endfirsthead
+	\textbf{Ranking} & \textbf{Eintrittswahrscheinlichkeit} & \textbf{Schweregrad} & \textbf{Bedrohung} & \textbf{Schutz umgesetzt}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	1 & hoch & hoch & ICMP ‘smurf attack’: Denial of Service & ja\\
+	2 & hoch & mittel & Viren / Würmer / Trojaner & nein\\
+	3 & mittel & hoch & TCP DoS (SYN-Flooding) & ja\\
+	4 & mittel & hoch & DNS Cache poisoning & nein\\
+	5 & hoch & niedrig & Phishing & nein\\
+	6 & niedrig & hoch & Rogue DHCP & ja\\
+	7 & niedrig & mittel & MAC flooding & nein\\
+	8 & niedrig & mittel & ARP spoofing & nein\\
+\end{longtable}
 
 \subsection{ACL gegen Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
