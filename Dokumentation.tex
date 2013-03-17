@@ -156,15 +156,37 @@ Network Address Translation wird für IPv4 verwendet um den internen Clients Zug
 	\item[Webserver] statisches NAT interne IP: 172.16.0.11 - öffentliche IP: 209.165.50.2
 	\item[Interne Hosts] dynamisches NAT overload: interner Range: 10.0.0.0/16 - öffentliche IP 209.165.50.1 (Outside IF IP der Firewall)
 \end{description}
-
+Ausgenommen vom NAT ist die Verbindung vom Server Netzwerk (10.0.10.0/24) ins VPN Client Netzwerk (10.0.99.0/24) da sonst keine Verbindung von Remote Client zu Server erstellt werden kann.
 
 \subsection{VTP}
-
+Das VLAN Trunking Protokoll kommt in unserer Simulation nicht zu Einsatz, da GNS3 keine konfigurierbare Switches anbietet. Im Labor werden wir jedoch mit konfigurierbaren Switches arbeiten und VTP einsetzen. Der Core Router wird dabei der VTP Server sein und alle VLAN Informationen an die Switches verteilen.
 
 \subsection{Spanning-Tree}
-
+Spanning-Tree musste in der Simulation nicht berücksichtigt werden. Das Netzwerk ist sehr einfach aufgebaut und die Verbindung zwischen Core Router und Firewall benötigt keinen Spanning-Tree.
 
 \subsection{VPN IPsec Remote Access}
+Der Zugriff auf das interne Netzwerk für externe Mitarbeiter erfolgt über den IPsec VPN Client. Beim Zugriff unterscheiden wir zwischen Administratoren und Mitarbeiter. Der Zugriff als Mitarbeiter kann somit stärker eingeschränkt werden als ein Administrator. In der Simulation haben wir keine unterschiedlichen Zugriffsmöglichkeiten, die Firewall wurde aber für diesen Fall konfiguriert. Der Remote Access Zugang erfolgt über die IP 209.165.50.1 (Outside IF Firewall) und unterstützt nur IPv4.\\
+\\
+\textbf{IKE Phase 1:}
+\begin{itemize}
+	\item{Authenzifizierung: Pre-shared}
+	\item{Verschlüsselung AES 256-bit}
+	\item{Hash SHA}
+	\item{Schlüsselgenerierung Diffie-Hellman Group 2}
+	\item{Gültigkeit Schlüsse 12h}
+\end{itemize}
+
+\textbf{IKE Phase 2 (Group-Policy):}
+\begin{itemize}
+	\item{Interne Gruppen (VPN\_ADMINISTRATOR \& VPN\_USERS\_GROUP)}
+	\item{DNS-Server 10.0.10.21}
+	\item{ACL 99: permit ip any 10.0.10.0 255.255.255.0 }
+	\item{Split-Tunneling: 10.0.10.0/24}
+	\item{Tunnel Protokol IKEv1 \& IKEv2}
+	\item{Default Domain: wosm.com}
+	\item{IP-Adressen Pools: VPN-ADMIN 10.0.99.0/25, VPN-USERS 10.0.99.128/25}
+\end{itemize}
+
 \subsection{Serverkonzept}
 \begin{longtable}{p{3cm}|p{2.5cm}|p{2.3cm}|p{3.5cm}|p{3cm}}
 	\textbf{Name} & \textbf{OS} & \textbf{IPv4} & \textbf{IPv6} & \textbf{Services}\\
@@ -228,7 +250,26 @@ Auf diesem Router sind ACL für alle angeschlossenen VLANs definiert. Die folgen
 \end{longtable}
 
 \subsubsection{ACL auf ASA}
-TODO
+Auf der Firewall wurden jeweils 3 Access Lists definiert.Diese werden auf den jeweiligen Interfaces angewendet. Die kompletten Access-lists sind im Anhang zu finden.
+
+\begin{longtable}{p{2.5cm}|p{3.5cm}|p{7cm}}
+	\textbf{Name} & \textbf{Interface/Richtung} & \textbf{Anmerkung}\\
+	\hline
+	\endfirsthead
+	\textbf{Name} & \textbf{Interface/Richtung} & \textbf{Anmerkung}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	dmz\_in & dmz / in & IPv4 Traffic, der aus dem DMZ-Netzwerk verschickt werden darf.\\
+	dmz\_in\_v6 & dmz / in & IPv6 Traffic, der aus dem DMZ-Netzwerk verschickt werden darf.\\
+	inside\_in  & inside / in & IPv4 Traffic, der aus dem internen Netzwerk verschickt werden darf.\\
+	inside\_in\_v6 & inside / in & IPv6 Traffic, der aus dem internen Netzwerk verschickt werden darf.\\
+	outside\_in & outside / in & IPv4 Traffic, der aus dem Internet verschickt werden darf.\\
+	outside\_in\_v6 & outside / in & IPv6 Traffic, der aus dem Internet verschickt werden darf.\\
+\end{longtable}
 
 \section{Bedrohungsmodell}
 \subsection{TCP DoS (SYN-Flooding)}
