@@ -6,8 +6,8 @@ version = 0.8.3.1
     [[5520]]
         netcard = e1000
         options = -vnc none -vga none -m 1024 -icount auto -hdachs 980,16,32
-        initrd = /home/iso/docs/schule/fh/wosm/ASA842/asa842-initrd.gz
-        kernel = /home/iso/docs/schule/fh/wosm/ASA842/asa842-vmlinuz
+        initrd = C:\Users\root\FHNW\wosm\ASA842\asa842-initrd.gz
+        kernel = C:\Users\root\FHNW\wosm\ASA842\asa842-vmlinuz
         kernel_cmdline = -append ide_generic.probe_mask=0x01 ide_core.chs=0.0:980,16,32 auto nousb console=ttyS0,9600 bigphysarea=65536
     [[ASA ASA1]]
         e0 = INETSW 6
@@ -20,16 +20,16 @@ version = 0.8.3.1
     workingdir = working
     udp = 10000
     [[3725]]
-        image = /home/iso/docs/schule/fh/wosm/c3725-advipservicesk9-mz124-25.image
+        image = C:\Users\root\FHNW\wosm\c3725-advipservicesk9-mz124-25.image
         ram = 128
-        idlepc = 0x60a8a2e8
+        idlepc = 0x6023b564
         sparsemem = True
         ghostios = True
     [[ROUTER Core]]
         model = 3725
         console = 2001
         aux = 2501
-        cnfg = configs/Core.cfg
+        cnfg = configs\Core.cfg
         f0/0 = ASA1 e2
         slot1 = NM-16ESW
         f1/0 = NIO_udp:30000:127.0.0.1:20000
@@ -48,7 +48,7 @@ version = 0.8.3.1
         model = 3725
         console = 2003
         aux = 2503
-        cnfg = configs/R1.cfg
+        cnfg = configs\R1.cfg
         f0/0 = INETSW 1
         f0/1 = DMZSW 1
         slot1 = NM-1FE-TX
@@ -106,8 +106,8 @@ version = 0.8.3.1
     [[VBOX WOSMGR1DMZSRV]]
         image = WOSMGR1DMZSRV
         e2 = DMZSW 3
-        x = -457.085786438
-        y = -218.428932189
+        x = -461.328427125
+        y = -219.843145751
         z = 1.0
     [[VBOX WOSMGR1INETPC]]
         image = WOSMGR1INETPC
@@ -127,8 +127,8 @@ version = 0.8.3.1
     m22 = 0.707106781187
     [[NOTE 1]]
         text = "LAN"
-        x = -319.798989873
-        y = -41.8994949366
+        x = -300.0
+        y = -32.0
     [[NOTE 2]]
         text = "Internet"
         x = 148.0
@@ -193,7 +193,7 @@ version = 0.8.3.1
         height = 265.0
     [[SHAPE 3]]
         type = rectangle
-        x = -500.63160108
+        x = -494.0
         y = -303.0
-        width = 370.63160108
+        width = 364.0
         height = 154.0
