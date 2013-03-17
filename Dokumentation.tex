@@ -73,7 +73,7 @@ Da die Hosts über das Internet direkt erreichbar sein sollen, werden wir global
 \subsubsection{IPv4}
 Die Clients stellen regulare DHCP-Anfragen. Um die Leases und Bereichsoptionen zentral und (einigermassen) angenehm über eine grafische Schnittstelle verwalten zu können, wird der Core-Router so konfiguriert, dass er die Anfragen an den internen Domänencontroller und DHCP-Server (INTSRV in VLAN10) weiterleitet. Der Router setzt dabei ein Flag in der Anfrage, welches es dem DHCP-Server erlaubt, festzustellen aus welchem Bereich die Anfrage kam. Nur so kann der Server beispielsweise einem Client aus dem Adminnetz eine IP aus dem Admin-Bereich zuweisen.
 
-Der folgende Konfigurationsausschnitt zeigt die notwendigen Optionen:
+Der folgende Konfigurationsausschnitt zeigt die notwendigen Optionen (IPv6-betreffende Einstellungen entfernt):
 \begin{lstlisting}
 interface Vlan20
  description *** VLAN Admin ***
@@ -87,10 +87,25 @@ Der Befehl \glqq{}ip helper address\grqq{} gibt an, wohin die DHCP-Anfrage weite
 \subsubsection{IPv6}
 Für die automatische Konfiguration der Client-Adressen für IPv6 kommen mehrere Möglichkeiten in Betracht:
 \begin{description}
-	\item[Konfiguration ohne DHCP] bla
-	\item[DHCPv6 stateless] blubb
-	\item[DHCPv6 stateful] noch was
+	\item[Autokonfiguration ohne DHCP] IPv6 sieht vor, dass Router Clients direkt das zu verwendende Netzwerkprefix angeben können und Clients sich dann mittels EUI-64 eine Adresse generieren. Da EUI-64 die (weltweit eindeutige) MAC-Adresse miteinbezieht, sind Adresskonflikte ausgeschlossen. Die Clients erfahren über Router-Advertisements, welche Netze sie über welche Router erreichen können.
+		Leider ist keine Möglichkeit vorgesehen, den Clients mitzueteilen, welchen DNS-Server sie verwenden sollen. Somit kann dieser Ansatz alleine aktuell das Problem der Adressvergabe nicht abschliessend lösen.
+	\item[DHCPv6 stateful] Diese Variante funktioniert sehr ähnlich wie die klassische DHCP Adressvergabe in IPv4-Netzen. Der Client fragt per Multicast (Broadcast-Adressen wurden in IPv6 abgeschafft) nach DHCP-Servern und \glqq{}bestellt\grqq{} sich eine Adresse. Die Angabe von weiteren Optionen, wie eine Liste der DNS-Server ist genau auf die selbe Art und weise möglich, wie dies bereits in IPv4-Netzen der Fall war. Eine Einschränkung ist bei unserer Konfiguration allerdings ins Gewicht gefallen: Der DHCP-Server kann den Clients keinen Default-Gateway angeben, eine entsprechende Option ist derzeit im Protokoll nicht vorgesehen.
+	\item[DHCPv6 stateless] Diese Variante vereint die Stärken der beiden zuvor genannten Varianten der Adressvergabe. Die Konfiguration der IPv6-Adresse sowie des Gateways erfolgt per Router-Advertisements zwischen Router und Client. In der Antwort zur Router-Solicitation-Anfrage des Clients gibt der Router dem Client des Weiteren an, dass er weitere Informationen per DHCPv6 erfragen soll. Als Antwort auf die DHCP-Anfrage erhält der Client dann Optionen wie eine DNS-Serverliste oder den Domänennamen. Die Bezeichnung \glqq{}stateless\grqq{} rührt daher, dass der Server keine Informationen (Lease) zu den Clients speichern muss.
 \end{description}
+
+Auch dieser Ansatz soll mit einem Auszug der Schnittstellenkonfiguration verdeutlicht werden (IPv4 betreffende Konfigurationen entfernt):
+\begin{lstlisting}
+interface Vlan20
+ description *** VLAN Admin ***
+ ipv6 address 2005:2013:FF:A20::1/64
+ ipv6 traffic-filter ADMINv6 in
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2005:2013:FF:A10::21
+\end{lstlisting}
+
+Die Option \glqq{}ipv6 nd other-config-flag\grqq{} gibt an, dass der Router Clients darauf hinweisen soll, dass weitere Informationen über DHCPv6 erhalten werden können. Eine andere Einstellung hier wäre \glqq{}ipv6 nd managed-config-flag\grqq{} - dies würde den Client auffordern, auch seine IP-Adresse per DHCPv6 zu erfragen.
+
+\glqq{}ipv6 dhcp relay destination\grqq{} gibt, analog zu der \glqq{}helper-adress\grqq{} bei IPv4, an, wohin DHCP-Anfragen weitergeleitet werden sollen.
 
 \subsection{Routing}
 \subsubsection{Core Router}
