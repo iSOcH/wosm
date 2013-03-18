@@ -23,7 +23,7 @@ permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 eq 21
 
 remark verkauf-dmzsrv-ftppasv
 permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 gt 48999
-permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 lt 50000
+permit tcp 2005:2013:ff:a40::/64 2005:2013:ff:b0::21/128 gt 49999
 
 remark verkauf-dmzsrv-end
 deny ip 2005:2013:ff:a40::/64 2005:2013:ff:b0::/64
