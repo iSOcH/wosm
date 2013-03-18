@@ -40,6 +40,12 @@ interface GigabitEthernet4
  no security-level
  no ip address
 !
+interface GigabitEthernet5
+ shutdown
+ no nameif
+ no security-level
+ no ip address
+!
 ftp mode passive
 object network NAT_inside_overload
  subnet 10.0.0.0 255.255.0.0
@@ -93,7 +99,7 @@ mtu inside 1500
 ip local pool VPN-ADMIN 10.0.99.1-10.0.99.126 mask 255.255.255.128
 ip local pool VPN-USERS 10.0.99.129-10.0.99.254 mask 255.255.255.128
 ip verify reverse-path interface outside
-ipv6 icmp deny any outside
+ipv6 icmp permit any outside
 ipv6 icmp permit any dmz
 ipv6 icmp permit any inside
 ipv6 route inside 2005:2013:ff:a10::/64 2005:2013:ff:a0::1
@@ -252,5 +258,5 @@ call-home
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
 crashinfo save disable
-Cryptochecksum:8d3f7cb9dd07d6cdc6b11d33ad22d473
+Cryptochecksum:15602c08839a9f6456ce0d4a95c48fa2
 : end
