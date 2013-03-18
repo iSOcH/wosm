@@ -289,6 +289,12 @@ Ein Angreifer sendet 100 SYN-Anfragen pro Sekunde an einen bestimmten Server. Da
 \subsubsection{Gegenmassnahme}
 Um einen Webserver vor diesem Angriff zu schützen, kann auf der ASA eine Policy erstellt werden, welche die maximale Anzahl Verbindungen und halb offener Verbindungen limitiert. Zudem können Timeouts gesetzt werden, wie lange eine Verbindung in welchem Status sein darf (halb offen, offen, halb geschlossen).\\ Auf einem normalen Router kann mit SYN-Cookies oder SYN-Cache gearbeitet werden. Dadurch sind die Server hinter der ASA vor SYN-Flooging Attacken geschützt.\\
 
+\subsection{IP spoofing}
+\subsubsection{Bedrohung}
+Ein Anfreifer sendet viele Anfragen an einen Server mit einer falschen Absender IP (z.B: 10.0.1.19). Dadurch wird der Server die Antworten zu den Anfragen an einen Client (10.0.1.19) senden. Der Server, sowie der Client wird dadurch ausgelastet.
+\subsubsection{Gegenmassnahme}
+Um sich gegen IP spoofing zu schützen, kann eine Überprüfung des 'Reverse-Path' aktiviert werden. So wird überprüft, ob die eingetragene Absenderadresse mit der effektiven Absenderadresse übereinstimmt.
+
 \subsection{ICMP ‘smurf attack’: Denial of Service}
 \subsubsection{Bedrohung}
 Ein Angreifer sendet ein ICMP Packet mit einer Echo-Anfrage an eine oder mehrere Broadcasts und verwendet als Absenderadresse die IP Adresse des Servers (Opfer). Die Broadcastanfrage wird an alle Hosts in betroffenen Netz weitergeleitet. Die Hosts senden daraufhin ein die Echo-Antwort an den Server (Opfer). Der Server empfängt nun so viele Echo Antworten dass der Server nicht mehr reagiert und abstürtzt.
@@ -350,16 +356,45 @@ Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (au
 	4 & mittel & hoch & DNS Cache poisoning & nein\\
 	5 & hoch & niedrig & Phishing & nein\\
 	6 & niedrig & hoch & Rogue DHCP & ja\\
-	7 & niedrig & mittel & MAC flooding & nein\\
-	8 & niedrig & mittel & ARP spoofing & nein\\
+	7 & niedrig & mittel & IP spoofing & ja\\
+	8 & niedrig & mittel & MAC flooding & nein\\
+	9 & niedrig & mittel & ARP spoofing & nein\\
 \end{longtable}
 
-\subsection{ACL gegen Attacken}
+\subsection{Verteidigung gegen Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
-
+\begin{lstlisting}
+object-group service inet2dmzsrv_TCPPorts tcp
+ port-object eq www
+ port-object eq https
+ port-object eq ftp-data
+ port-object eq ftp
+ port-object range 48999 49999
+!
+access-list outside_in remark wan-dmzsrv
+access-list outside_in extended permit tcp any host 172.16.0.21 object-group inet2dmzsrv_TCPPorts
+access-list outside_in extended deny ip any any log
+!
+icmp deny any outside
+\end{lstlisting}
 
 \subsubsection{TCP DoS (SYN-Flooding)}
+Folgende Policy Map schützt gegen SYN-Flooding:
+\begin{lstlisting}
+policy-map tcpmap
+ class tcp_syn
+  set connection conn-max 100 embryonic-conn-max 100 per-client-max 10 per-client-embryonic-max 10
+  set connection timeout embryonic 0:00:45 half-closed 0:05:00 idle 1:00:00
+!
+class-map tcp_syn
+ match any
+\end{lstlisting}
 
+\subsubsection{IP spoofing}
+Folgender Befehl schützt gegen IP spoofing:
+\begin{lstlisting}
+ip verify reverse-path interface outside
+\end{lstlisting}
 
 \subsubsection{DHCP IPv4}
 Die ACL für die internen Client-VLANs verhindert das Versenden einer Antwort auf eine DHCP-Anfrage. Um die Beantwortung aus dem Servernetz zu erlauben wurden die folgenden Regeln angewendet:
