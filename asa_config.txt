@@ -100,6 +100,7 @@ mtu inside 1500
 ip local pool VPN-ADMIN 10.0.99.1-10.0.99.126 mask 255.255.255.128
 ip local pool VPN-USERS 10.0.99.129-10.0.99.254 mask 255.255.255.128
 ip verify reverse-path interface outside
+ipv6 icmp deny any outside
 ipv6 icmp permit any dmz
 ipv6 icmp permit any inside
 ipv6 route inside 2005:2013:ff:a10::/64 2005:2013:ff:a0::1
@@ -240,7 +241,7 @@ policy-map global_policy
 policy-map tcpmap
  class tcp_syn
   set connection conn-max 100 embryonic-conn-max 100 per-client-max 10 per-client-embryonic-max 10
-  set connection timeout half-closed 0:05:00
+  set connection timeout embryonic 0:00:45 half-closed 0:05:00 idle 1:00:00
 !
 service-policy tcpmap global
 service-policy global_policy interface outside
@@ -258,5 +259,5 @@ call-home
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
 crashinfo save disable
-Cryptochecksum:0decbb04b0c125f419b128c48d1138c6
+Cryptochecksum:95fef6474f36e5fb331ab197685106b8
 : end
