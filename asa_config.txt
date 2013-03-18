@@ -40,12 +40,6 @@ interface GigabitEthernet4
  no security-level
  no ip address
 !
-interface GigabitEthernet5
- shutdown
- no nameif
- no security-level
- no ip address
-!
 ftp mode passive
 object network NAT_inside_overload
  subnet 10.0.0.0 255.255.0.0
@@ -88,7 +82,6 @@ access-list dmz_in extended deny ip any any log
 access-list outside_in remark wan-dmzsrv
 access-list outside_in extended permit tcp any host 172.16.0.21 object-group inet2dmzsrv_TCPPorts
 access-list outside_in extended deny ip any any log
-access-list dmz extended permit ip any any
 access-list 99 remark permit ip access from any to server subnet
 access-list 99 extended permit ip any 10.0.10.0 255.255.255.0
 access-list SPLIT_TUNNEL_LIST standard permit 10.0.10.0 255.255.255.0
@@ -171,7 +164,7 @@ ssh timeout 30
 console timeout 0
 threat-detection basic-threat
 threat-detection statistics access-list
-threat-detection statistics tcp-intercept rate-interval 30 burst-rate 400 average-rate 200
+no threat-detection statistics tcp-intercept
 group-policy VPN_ADMINISTRATOR internal
 group-policy VPN_ADMINISTRATOR attributes
  dns-server value 10.0.10.21
@@ -259,5 +252,5 @@ call-home
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
 crashinfo save disable
-Cryptochecksum:f21602bc8dba5cf234b7ae3c813911a8
+Cryptochecksum:8d3f7cb9dd07d6cdc6b11d33ad22d473
 : end
