@@ -287,7 +287,13 @@ Auf der Firewall wurden jeweils 3 Access Lists definiert. Diese werden auf den j
 Beim TCP 3-Way Handshake wird zuerst eine Anfrage an einen Server gesendet, indem ein TCP Paket mit dem Flag SYN verschickt wird. Der Server als Empfänger dieses TCP SYN Pakets verarbeitet dieses und sendet ein TCP Paket mit den Falgs SYN und ACK zurück. Er merkt sich dabei in einer SYN-Liste, mit wem er ein 3-Way Handshake begonnen hat. Wenn derInitiator der Verbindung das TCP Paket mit den Flags SYN und ACK empfängt, verarbeitet er dieses und sendet zur Bestätigung ein Paket mit dem Flag ACK. Sobald der Server das Packet mit dem Flag ACK erhalten hat, wird der Eintrag in der SYN-Liste gelöscht.\\
 Ein Angreifer sendet 100 SYN-Anfragen pro Sekunde an einen bestimmten Server. Dabei setzt er eine andere Source IP Adresse, sodass die Antwort nicht zum Angreifer kommt. Da sich der Server merkt, mit wem er einen 3-Way Handshake begonnen, diese aber nicht abschliessen kann, da nie eine Bestätigung mit dem Flag ACK eintrifft, wird der Arbeitsspeicher des Server gefüllt. Sobald der Speicher gefüllt ist, kann dieser keine weiteren Verbindungen mehr aufnehmen oder stürtzt ab.
 \subsubsection{Gegenmassnahme}
-Um einen Webserver vor diesem Angriff zu schützen, kann die Anzahl der Verbindungen in der Warteschlange vergrössert werden. Zudem kann das Timeout reduziert werden um Speicher freizugeben. Weiter kann auf der ASA SYN Cookies oder SYN Cache aktiviert und limitiert werden. Dadurch sind die Server hinter der ASA vor SYN-Flooging Attacken geschützt.\\
+Um einen Webserver vor diesem Angriff zu schützen, kann auf der ASA eine Policy erstellt werden, welche die maximale Anzahl Verbindungen und halb offener Verbindungen limitiert. Zudem können Timeouts gesetzt werden, wie lange eine Verbindung in welchem Status sein darf (halb offen, offen, halb geschlossen).\\ Auf einem normalen Router kann mit SYN-Cookies oder SYN-Cache gearbeitet werden. Dadurch sind die Server hinter der ASA vor SYN-Flooging Attacken geschützt.\\
+
+\subsection{IP spoofing}
+\subsubsection{Bedrohung}
+Ein Anfreifer sendet viele Anfragen an einen Server mit einer falschen Absender IP (z.B: 10.0.1.19). Dadurch wird der Server die Antworten zu den Anfragen an einen Client (10.0.1.19) senden. Der Server, sowie der Client wird dadurch ausgelastet.
+\subsubsection{Gegenmassnahme}
+Um sich gegen IP spoofing zu schützen, kann eine Überprüfung des 'Reverse-Path' aktiviert werden. So wird überprüft, ob die eingetragene Absenderadresse mit der effektiven Absenderadresse übereinstimmt.
 
 \subsection{ICMP ‘smurf attack’: Denial of Service}
 \subsubsection{Bedrohung}
@@ -350,16 +356,45 @@ Um dies zu verhindern, kann der Port 68 für DHCP Antworten blockiert werden (au
 	4 & mittel & hoch & DNS Cache poisoning & nein\\
 	5 & hoch & niedrig & Phishing & nein\\
 	6 & niedrig & hoch & Rogue DHCP & ja\\
-	7 & niedrig & mittel & MAC flooding & nein\\
-	8 & niedrig & mittel & ARP spoofing & nein\\
+	7 & niedrig & mittel & IP spoofing & ja\\
+	8 & niedrig & mittel & MAC flooding & nein\\
+	9 & niedrig & mittel & ARP spoofing & nein\\
 \end{longtable}
 
-\subsection{ACL gegen Attacken}
+\subsection{Verteidigung gegen Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
-
+\begin{lstlisting}
+object-group service inet2dmzsrv_TCPPorts tcp
+ port-object eq www
+ port-object eq https
+ port-object eq ftp-data
+ port-object eq ftp
+ port-object range 48999 49999
+!
+access-list outside_in remark wan-dmzsrv
+access-list outside_in extended permit tcp any host 172.16.0.21 object-group inet2dmzsrv_TCPPorts
+access-list outside_in extended deny ip any any log
+!
+icmp deny any outside
+\end{lstlisting}
 
 \subsubsection{TCP DoS (SYN-Flooding)}
+Folgende Policy Map schützt gegen SYN-Flooding:
+\begin{lstlisting}
+policy-map tcpmap
+ class tcp_syn
+  set connection conn-max 100 embryonic-conn-max 100 per-client-max 10 per-client-embryonic-max 10
+  set connection timeout embryonic 0:00:45 half-closed 0:05:00 idle 1:00:00
+!
+class-map tcp_syn
+ match any
+\end{lstlisting}
 
+\subsubsection{IP spoofing}
+Folgender Befehl schützt gegen IP spoofing:
+\begin{lstlisting}
+ip verify reverse-path interface outside
+\end{lstlisting}
 
 \subsubsection{DHCP IPv4}
 Die ACL für die internen Client-VLANs verhindert das Versenden einer Antwort auf eine DHCP-Anfrage. Um die Beantwortung aus dem Servernetz zu erlauben wurden die folgenden Regeln angewendet:
