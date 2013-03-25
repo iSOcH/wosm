@@ -1,0 +1,283 @@
+interface Ethernet0/0
+ description *** Inside Interface ***
+!
+interface Ethernet0/1
+ description *** Outside Interface ***
+ switchport access vlan 2
+!
+interface Ethernet0/2
+ description *** DMZ Interface ***
+ switchport access vlan 3
+!
+interface Ethernet0/3
+ shutdown
+!
+interface Ethernet0/4
+ shutdown
+!
+interface Ethernet0/5
+ shutdown
+!
+interface Ethernet0/6
+ shutdown
+!
+interface Ethernet0/7
+ shutdown
+!
+interface Vlan1
+ nameif inside
+ security-level 100
+ ip address 10.100.0.2 255.255.255.252
+ ipv6 address 2005:2013:ff:a0::2/64
+ ipv6 enable
+!
+interface Vlan2
+ nameif outside
+ security-level 0
+ ip address 209.165.50.1 255.255.255.0
+ ipv6 address 2005:209:165:50::1/64
+ ipv6 enable
+!
+interface Vlan3
+ no forward interface Vlan1
+ nameif dmz
+ security-level 50
+ ip address 172.16.0.1 255.255.255.0
+ ipv6 address 2005:2013:ff:b0::1/64
+ ipv6 enable
+!
+
+
+########## Simulator Config ######################
+
+: Saved
+:
+ASA Version 8.4(2)
+!
+hostname ciscoasa
+enable password 2KFQnbNIdI.2KYOU encrypted
+passwd 2KFQnbNIdI.2KYOU encrypted
+names
+!
+interface Ethernet0/0
+ nameif outside
+ security-level 0
+ ip address 209.165.50.1 255.255.255.0
+ ipv6 address 2005:209:165:50::1/64
+ ipv6 enable
+!
+interface Ethernet0/1
+ nameif dmz
+ security-level 50
+ ip address 172.16.0.1 255.255.255.0
+ ipv6 address 2005:2013:ff:b0::1/64
+ ipv6 enable
+!
+interface Ethernet0/2
+ nameif inside
+ security-level 100
+ ip address 10.100.0.2 255.255.255.252
+ ipv6 address 2005:2013:ff:a0::2/64
+ ipv6 enable
+
+ftp mode passive
+object network NAT_inside_overload
+ subnet 10.0.0.0 255.255.0.0
+object network NAT_dmzsrv_outside
+ host 209.165.50.2
+object network NAT_dmz_static
+ host 172.16.0.21
+object network NO_NAT_INSIDE
+ subnet 10.0.10.0 255.255.255.0
+object network NO_NAT_VPN
+ subnet 10.0.99.0 255.255.255.0
+object-group service dmzsrv2inet_UDPPorts udp
+ port-object eq domain
+object-group service dmzsrv2inet_TCPPorts tcp
+ port-object eq www
+ port-object eq https
+ port-object eq ftp-data
+ port-object eq ftp
+object-group service inet2dmzsrv_TCPPorts tcp
+ port-object eq www
+ port-object eq https
+ port-object eq ftp-data
+ port-object eq ftp
+ port-object range 48999 49999
+object-group network inside_subnets_ipv6
+ network-object 2005:2013:ff:a10::/64
+ network-object 2005:2013:ff:a20::/64
+ network-object 2005:2013:ff:a30::/64
+ network-object 2005:2013:ff:a40::/64
+ network-object 2005:2013:ff:a0::/64
+access-list inside_in extended permit ip any any
+access-list dmz_in remark dmzsrv-intsrv_ldap
+access-list dmz_in extended permit tcp host 172.16.0.21 host 10.0.10.21 eq ldap
+access-list dmz_in remark dmz-nolan-access
+access-list dmz_in extended deny ip 172.16.0.0 255.255.255.0 10.0.0.0 255.0.0.0 log
+access-list dmz_in remark dmzsrv-inet
+access-list dmz_in extended permit tcp host 172.16.0.21 any object-group dmzsrv2inet_TCPPorts
+access-list dmz_in extended permit udp host 172.16.0.21 any object-group dmzsrv2inet_UDPPorts
+access-list dmz_in extended deny ip any any log
+access-list outside_in remark wan-dmzsrv
+access-list outside_in extended permit tcp any host 172.16.0.21 object-group inet2dmzsrv_TCPPorts
+access-list outside_in extended deny ip any any log
+access-list 99 remark permit ip access from any to server subnet
+access-list 99 extended permit ip any 10.0.10.0 255.255.255.0
+access-list SPLIT_TUNNEL_LIST standard permit 10.0.10.0 255.255.255.0
+pager lines 24
+logging console informational
+mtu outside 1500
+mtu dmz 1500
+mtu inside 1500
+ip local pool VPN-ADMIN 10.0.99.1-10.0.99.126 mask 255.255.255.128
+ip local pool VPN-USERS 10.0.99.129-10.0.99.254 mask 255.255.255.128
+ip verify reverse-path interface outside
+ipv6 icmp permit any outside
+ipv6 icmp permit any dmz
+ipv6 icmp permit any inside
+ipv6 route inside 2005:2013:ff:a10::/64 2005:2013:ff:a0::1
+ipv6 route inside 2005:2013:ff:a20::/64 2005:2013:ff:a0::1
+ipv6 route inside 2005:2013:ff:a30::/64 2005:2013:ff:a0::1
+ipv6 route inside 2005:2013:ff:a40::/64 2005:2013:ff:a0::1
+ipv6 access-list dmz_in_v6 remark dmzsrv-intsrv_ldap
+ipv6 access-list dmz_in_v6 permit tcp host 2005:2013:ff:b0::21 host 2005:2013:ff:a10::21 eq ldap
+ipv6 access-list dmz_in_v6 remark dmz-nolan-access
+ipv6 access-list dmz_in_v6 deny ip 2005:2013:ff:b0::/64 object-group inside_subnets_ipv6
+ipv6 access-list dmz_in_v6 remark dmzsrv-inet
+ipv6 access-list dmz_in_v6 permit tcp host 2005:2013:ff:b0::21 any object-group dmzsrv2inet_TCPPorts
+ipv6 access-list dmz_in_v6 permit udp host 2005:2013:ff:b0::21 any object-group dmzsrv2inet_UDPPorts
+ipv6 access-list dmz_in_v6 deny ip any any log
+ipv6 access-list outside_in_v6 remark  wan-dmzsrv
+ipv6 access-list outside_in_v6 permit tcp any host 2005:2013:ff:b0::21 object-group inet2dmzsrv_TCPPorts
+ipv6 access-list outside_in_v6 deny ip any any log
+ipv6 access-list inside_in_v6 permit ip any any
+no failover
+icmp unreachable rate-limit 1 burst-size 1
+icmp deny any outside
+icmp permit any dmz
+icmp permit any inside
+no asdm history enable
+arp timeout 14400
+nat (inside,outside) source static NO_NAT_INSIDE NO_NAT_INSIDE destination static NO_NAT_VPN NO_NAT_VPN
+!
+object network NAT_inside_overload
+ nat (inside,outside) dynamic interface
+object network NAT_dmz_static
+ nat (dmz,outside) static NAT_dmzsrv_outside
+access-group outside_in in interface outside
+access-group outside_in_v6 in interface outside
+access-group dmz_in in interface dmz
+access-group dmz_in_v6 in interface dmz
+access-group inside_in in interface inside
+access-group inside_in_v6 in interface inside
+route inside 10.0.0.0 255.255.0.0 10.100.0.1 1
+timeout xlate 3:00:00
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+dynamic-access-policy-record DfltAccessPolicy
+user-identity default-domain LOCAL
+aaa authentication ssh console LOCAL
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps snmp authentication linkup linkdown coldstart warmstart
+crypto ipsec ikev1 transform-set ESP-3DES-SHA esp-3des esp-sha-hmac
+crypto dynamic-map outside_dyn_map 10 set ikev1 transform-set ESP-3DES-SHA
+crypto dynamic-map outside_dyn_map 10 set security-association lifetime seconds 288000
+crypto dynamic-map outside_dyn_map 10 set reverse-route
+crypto map outside_map 10 ipsec-isakmp dynamic outside_dyn_map
+crypto map outside_map interface outside
+crypto ikev1 enable outside
+crypto ikev1 policy 65535
+ authentication pre-share
+ encryption aes-256
+ hash sha
+ group 2
+ lifetime 43200
+telnet timeout 5
+ssh 10.0.20.0 255.255.255.0 inside
+ssh timeout 30
+console timeout 0
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+group-policy VPN_ADMINISTRATOR internal
+group-policy VPN_ADMINISTRATOR attributes
+ dns-server value 10.0.10.21
+ vpn-filter value 99
+ vpn-tunnel-protocol ikev1 ikev2
+ split-tunnel-policy tunnelspecified
+ split-tunnel-network-list value SPLIT_TUNNEL_LIST
+ default-domain value wosm.com
+ address-pools value VPN-ADMIN
+group-policy VPN_USERS_GROUP internal
+group-policy VPN_USERS_GROUP attributes
+ dns-server value 10.0.10.21
+ vpn-filter value 99
+ vpn-tunnel-protocol ikev1 ikev2
+ split-tunnel-policy tunnelspecified
+ split-tunnel-network-list value SPLIT_TUNNEL_LIST
+ default-domain value wosm.com
+ address-pools value VPN-USERS
+username ssh_admin password SxYXLtULZ5hPDb07 encrypted privilege 15
+username verkauf password FHPW9HqlN8QD22Y/ encrypted
+username verkauf attributes
+ vpn-group-policy VPN_USERS_GROUP
+ vpn-filter value 99
+username admin password f3UhLvUj1QsXsuK7 encrypted
+username admin attributes
+ vpn-group-policy VPN_ADMINISTRATOR
+ vpn-filter value 99
+tunnel-group VPN_ADMINISTRATOR type remote-access
+tunnel-group VPN_ADMINISTRATOR general-attributes
+ address-pool VPN-ADMIN
+ default-group-policy VPN_ADMINISTRATOR
+tunnel-group VPN_ADMINISTRATOR ipsec-attributes
+ ikev1 pre-shared-key *****
+tunnel-group VPN_USERS_GROUP type remote-access
+tunnel-group VPN_USERS_GROUP general-attributes
+ address-pool VPN-USERS
+ default-group-policy VPN_USERS_GROUP
+tunnel-group VPN_USERS_GROUP ipsec-attributes
+ ikev1 pre-shared-key *****
+!
+class-map tcp_syn
+ match any
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum 512
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp
+  inspect h323 h225
+  inspect h323 ras
+  inspect rsh
+  inspect rtsp
+  inspect esmtp
+  inspect sqlnet
+  inspect skinny
+  inspect sunrpc
+  inspect xdmcp
+  inspect sip
+  inspect netbios
+  inspect tftp
+  inspect http
+policy-map tcpmap
+ class tcp_syn
+  set connection conn-max 100 embryonic-conn-max 100 per-client-max 10 per-client-embryonic-max 10
+  set connection timeout embryonic 0:00:45 half-closed 0:05:00 idle 1:00:00
+!
+service-policy tcpmap global
+service-policy global_policy interface outside
+prompt hostname context
+Cryptochecksum:15602c08839a9f6456ce0d4a95c48fa2
+: end
