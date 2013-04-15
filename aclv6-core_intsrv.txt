@@ -1,3 +1,6 @@
+remark intsrv-dhcp
+permit udp 2005:2013:ff:a10::/64 eq 547 2005:2013:ff:a10::1/128 eq 547
+
 remark intsrv-adm
 permit tcp 2005:2013:ff:a10::/64 2005:2013:ff:a20::/64 established
 permit udp 2005:2013:ff:a10::/64 eq 53 2005:2013:ff:a20::/64
