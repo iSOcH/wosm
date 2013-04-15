@@ -1,0 +1,195 @@
+: Saved
+:
+ASA Version 9.1(1)
+!
+hostname ciscoasa
+enable password 8Ry2YjIyt7RRXU24 encrypted
+xlate per-session deny tcp any4 any4
+xlate per-session deny tcp any4 any6
+xlate per-session deny tcp any6 any4
+xlate per-session deny tcp any6 any6
+xlate per-session deny udp any4 any4 eq domain
+xlate per-session deny udp any4 any6 eq domain
+xlate per-session deny udp any6 any4 eq domain
+xlate per-session deny udp any6 any6 eq domain
+passwd 2KFQnbNIdI.2KYOU encrypted
+names
+ip local pool SSLClientPool 10.0.98.1-10.0.98.100 mask 255.255.255.0
+!
+interface Ethernet0/0
+ description *** Inside Interface ***
+ no shut
+!
+interface Ethernet0/1
+ description *** Outside Interface ***
+ switchport access vlan 2
+ no shut
+!
+interface Ethernet0/2
+ description *** DMZ Interface ***
+ switchport access vlan 3
+ no shut
+!
+interface Ethernet0/3
+ shutdown
+!
+interface Ethernet0/4
+ shutdown
+!
+interface Ethernet0/5
+ shutdown
+!
+interface Ethernet0/6
+ shutdown
+!
+interface Ethernet0/7
+ shutdown
+!
+interface Vlan1
+ nameif inside
+ security-level 100
+ ip address 10.100.0.2 255.255.255.252
+ ipv6 address 2005:2013:ff:a0::2/64
+ ipv6 enable
+!
+interface Vlan2
+ nameif outside
+ security-level 0
+ ip address 209.165.50.1 255.255.255.0
+ ipv6 address 2005:209:165:50::1/64
+ ipv6 enable
+!
+interface Vlan3
+ no forward interface Vlan1
+ nameif dmz
+ security-level 50
+ ip address 172.16.0.1 255.255.255.0
+ ipv6 address 2005:2013:ff:b0::1/64
+ ipv6 enable
+!
+boot system disk0:/asa911-k8.bin
+ftp mode passive
+object network NO_NAT_INSIDE
+ subnet 10.0.10.0 255.255.255.0
+object network NO_NAT_SSLVPN
+ subnet 10.0.98.0 255.255.255.0
+access-list no_nat_sslvpn extended permit ip 10.0.10.0 255.255.255.0 10.0.98.0 255.255.255.0
+pager lines 24
+mtu inside 1500
+mtu outside 1500
+mtu dmz 1500
+icmp unreachable rate-limit 1 burst-size 1
+asdm image disk0:/asdm-523.bin
+no asdm history enable
+arp timeout 14400
+no arp permit-nonconnected
+nat (inside,outside) source static NO_NAT_INSIDE NO_NAT_INSIDE destination static NO_NAT_SSLVPN NO_NAT_SSLVPN
+timeout xlate 3:00:00
+timeout pat-xlate 0:00:30
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00 mgcp-pat 0:05:00
+timeout sip 0:30:00 sip_media 0:02:00 sip-invite 0:03:00 sip-disconnect 0:02:00
+timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
+timeout tcp-proxy-reassembly 0:01:00
+timeout floating-conn 0:00:00
+dynamic-access-policy-record DfltAccessPolicy
+user-identity default-domain LOCAL
+no snmp-server location
+no snmp-server contact
+snmp-server enable traps snmp authentication linkup linkdown coldstart
+crypto ipsec security-association pmtu-aging infinite
+crypto ca trustpoint localtrust
+ enrollment self
+ fqdn sslvpn.cisco.com
+ subject-name CN=sslvpn.cisco.com
+ keypair sslvpnkeypair
+ crl configure
+crypto ca trustpool policy
+crypto ca certificate chain localtrust
+ certificate 2f576251
+    308201ef 30820158 a0030201 0202042f 57625130 0d06092a 864886f7 0d010105
+    0500303c 31193017 06035504 03131073 736c7670 6e2e6369 73636f2e 636f6d31
+    1f301d06 092a8648 86f70d01 09021610 73736c76 706e2e63 6973636f 2e636f6d
+    301e170d 31333034 30383035 35373137 5a170d32 33303430 36303535 3731375a
+    303c3119 30170603 55040313 1073736c 76706e2e 63697363 6f2e636f 6d311f30
+    1d06092a 864886f7 0d010902 16107373 6c76706e 2e636973 636f2e63 6f6d3081
+    9f300d06 092a8648 86f70d01 01010500 03818d00 30818902 818100cd f99b4e5a
+    13c7345b 8baacac2 46a45bd8 09872292 6ff37109 9d35e098 68de163f 28a96e62
+    bb880f4b 7f8982ee c6074653 96c21221 cf637e7d 3cf94cde f299a3a9 97513ee4
+    c618b62f cdc32014 2e1ff53d 943cf0db ba1853d6 bfd36286 d5c08df3 c56f5c46
+    5d9219c3 36bfe596 897dd24d 177a2cb5 ce9d8701 f48177c8 9a884f02 03010001
+    300d0609 2a864886 f70d0101 05050003 818100cc a565d3f1 490abd55 9d5066d0
+    c9091a3f 36cb2db5 56f923ab 17aaed30 382c1dd7 4e23dac5 3206823f dad8ee91
+    ef6089a3 8d8766de 0e7e4500 c2fd9246 18e90379 9967dff6 eb9fa57b cbaddd39
+    8fb4549b 965ba080 8dd9883a ce3925f6 c966e5cb 033dba57 9e084fb9 f211d8cd
+    4f30bf36 4d2269c9 b446ec20 f1b56eed 175658
+  quit
+telnet timeout 5
+ssh timeout 5
+console timeout 0
+
+threat-detection basic-threat
+threat-detection statistics access-list
+no threat-detection statistics tcp-intercept
+ssl trust-point localtrust outside
+webvpn
+ enable outside
+ anyconnect image disk0:/anyconnect-win-3.1.01065-k9.pkg 1
+ anyconnect enable
+ tunnel-group-list enable
+group-policy SSLCLientPolicy internal
+group-policy SSLCLientPolicy attributes
+ dns-server value 10.0.10.21
+ vpn-tunnel-protocol ssl-client
+ default-domain value wosm.com
+ address-pools value SSLClientPool
+username sslvpn password bzN3HgmMqoLp3Liy encrypted
+username sslvpn attributes
+ service-type remote-access
+tunnel-group SSLClientProfile type remote-access
+tunnel-group SSLClientProfile general-attributes
+ default-group-policy SSLCLientPolicy
+tunnel-group SSLClientProfile webvpn-attributes
+ group-alias SSLVPNClient enable
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum 512
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp
+  inspect h323 h225
+  inspect h323 ras
+  inspect netbios
+  inspect rsh
+  inspect rtsp
+  inspect skinny
+  inspect esmtp
+  inspect sqlnet
+  inspect sunrpc
+  inspect tftp
+  inspect sip
+  inspect xdmcp
+  inspect ip-options
+!
+service-policy global_policy global
+prompt hostname context
+no call-home reporting anonymous
+call-home
+ profile CiscoTAC-1
+  no active
+  destination address http https://tools.cisco.com/its/service/oddce/services/DDCEService
+  destination address email callhome@cisco.com
+  destination transport-method http
+  subscribe-to-alert-group diagnostic
+  subscribe-to-alert-group environment
+  subscribe-to-alert-group inventory periodic monthly
+  subscribe-to-alert-group configuration periodic monthly
+  subscribe-to-alert-group telemetry periodic daily
+Cryptochecksum:c02af71cfeb924ddb65dde8f3e948144
+: end
