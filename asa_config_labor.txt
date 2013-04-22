@@ -19,17 +19,14 @@ ip local pool VPN-USERS 10.0.99.129-10.0.99.254 mask 255.255.255.128
 !
 interface Ethernet0/0
  description *** Inside Interface ***
- no shut
 !
 interface Ethernet0/1
  description *** Outside Interface ***
  switchport access vlan 2
- no shut
 !
 interface Ethernet0/2
  description *** DMZ Interface ***
  switchport access vlan 3
- no shut
 !
 interface Ethernet0/3
  shutdown
@@ -134,7 +131,6 @@ ip verify reverse-path interface outside
 icmp unreachable rate-limit 1 burst-size 1
 icmp permit any inside
 icmp permit any outside
-icmp permit any dmz
 no asdm history enable
 arp timeout 14400
 no arp permit-nonconnected
@@ -142,14 +138,10 @@ nat (inside,outside) source static NO_NAT_INSIDE NO_NAT_INSIDE destination stati
 !
 object network NAT_inside_overload
  nat (inside,outside) dynamic interface
-object network NAT_dmz_static
- nat (dmz,outside) static NAT_dmzsrv_outside
 access-group inside_in_v6 in interface inside
 access-group outside_in_v6 in interface outside
-access-group dmz_in_v6 in interface dmz
 ipv6 icmp permit any inside
 ipv6 icmp permit any outside
-ipv6 icmp permit any dmz
 ipv6 route inside 2005:2013:ff:a10::/64 2005:2013:ff:a0::1
 ipv6 route inside 2005:2013:ff:a20::/64 2005:2013:ff:a0::1
 ipv6 route inside 2005:2013:ff:a30::/64 2005:2013:ff:a0::1
@@ -164,6 +156,9 @@ timeout sip-provisional-media 0:02:00 uauth 0:05:00 absolute
 timeout tcp-proxy-reassembly 0:01:00
 timeout floating-conn 0:00:00
 dynamic-access-policy-record DfltAccessPolicy
+aaa-server RAD_SRV_GRP protocol radius
+aaa-server RAD_SRV_GRP (inside) host 10.0.10.21
+ key *****
 user-identity default-domain LOCAL
 aaa authentication ssh console LOCAL
 no snmp-server location
@@ -176,7 +171,32 @@ crypto dynamic-map outside_dyn_map 10 set security-association lifetime seconds 
 crypto dynamic-map outside_dyn_map 10 set reverse-route
 crypto map outside_map 10 ipsec-isakmp dynamic outside_dyn_map
 crypto map outside_map interface outside
+crypto ca trustpoint localtrust
+ enrollment self
+ fqdn sslvpn.wosm.com
+ subject-name CN=sslvpn.wosm.com
+ keypair sslvpnkeypair
+ crl configure
 crypto ca trustpool policy
+crypto ca certificate chain localtrust
+ certificate 00cb7451
+    308201eb 30820154 a0030201 02020400 cb745130 0d06092a 864886f7 0d010105
+    0500303a 31183016 06035504 03130f73 736c7670 6e2e776f 736d2e63 6f6d311e
+    301c0609 2a864886 f70d0109 02160f73 736c7670 6e2e776f 736d2e63 6f6d301e
+    170d3133 30343232 30353336 34345a17 0d323330 34323030 35333634 345a303a
+    31183016 06035504 03130f73 736c7670 6e2e776f 736d2e63 6f6d311e 301c0609
+    2a864886 f70d0109 02160f73 736c7670 6e2e776f 736d2e63 6f6d3081 9f300d06
+    092a8648 86f70d01 01010500 03818d00 30818902 818100c2 ee2c7ac1 55bc7caa
+    211c2ca6 d6455349 3820648f d6f37890 30b32326 35119bb9 358db6ec f25f39d4
+    53ce389a 5dd83ace d9630fbd f1f53a1e 88ef29c3 9f991a35 51150a62 1b715bd3
+    678836b9 225b1f5a 07c79f50 869fdb45 d73844b5 bf9e6e80 cb961674 daf80bd4
+    837c3e5e 83438669 21cd7f55 4a979562 c749c73a 68738302 03010001 300d0609
+    2a864886 f70d0101 05050003 81810093 4a0ad2c1 cb9ef906 03bcdb44 603f4935
+    729c24b4 5e820dac cde0ea29 44a13111 05dd13fb 2205b4c0 180e7682 cd2631ad
+    ae4c723d 2b79169e 3763693d 79342e62 841cd12a 906d9152 b96b4f79 31f1a098
+    fafab98b 0124376f c9cdb1da c49797c8 a2ec50ee 4cce9c24 ad804699 89391955
+    8e579c89 8589a49e f95248ef 4e8064
+  quit
 crypto ikev1 enable outside
 crypto ikev1 policy 65535
  authentication pre-share
@@ -193,6 +213,18 @@ console timeout 0
 threat-detection basic-threat
 threat-detection statistics access-list
 no threat-detection statistics tcp-intercept
+ssl trust-point localtrust outside
+webvpn
+ enable outside
+ anyconnect image disk0:/anyconnect-win-3.1.01065-k9.pkg 1
+ anyconnect enable
+ tunnel-group-list enable
+group-policy SSLCLientPolicy internal
+group-policy SSLCLientPolicy attributes
+ dns-server value 10.0.10.21
+ vpn-tunnel-protocol ssl-client
+ default-domain value wosm.com
+ address-pools value VPN-USERS
 group-policy VPN_ADMINISTRATOR internal
 group-policy VPN_ADMINISTRATOR attributes
  dns-server value 10.0.10.21
@@ -216,22 +248,36 @@ username verkauf password FHPW9HqlN8QD22Y/ encrypted
 username verkauf attributes
  vpn-group-policy VPN_USERS_GROUP
  vpn-filter value 99
+ service-type remote-access
 username admin password f3UhLvUj1QsXsuK7 encrypted
 username admin attributes
  vpn-group-policy VPN_ADMINISTRATOR
  vpn-filter value 99
+ service-type remote-access
+username vpnssl password eskjFbUY2tUPkl83 encrypted
+username vpnssl attributes
+ vpn-group-policy SSLCLientPolicy
+ service-type remote-access
 tunnel-group VPN_ADMINISTRATOR type remote-access
 tunnel-group VPN_ADMINISTRATOR general-attributes
  address-pool VPN-ADMIN
+ authentication-server-group RAD_SRV_GRP
  default-group-policy VPN_ADMINISTRATOR
 tunnel-group VPN_ADMINISTRATOR ipsec-attributes
  ikev1 pre-shared-key *****
 tunnel-group VPN_USERS_GROUP type remote-access
 tunnel-group VPN_USERS_GROUP general-attributes
  address-pool VPN-USERS
+ authentication-server-group RAD_SRV_GRP
  default-group-policy VPN_USERS_GROUP
 tunnel-group VPN_USERS_GROUP ipsec-attributes
  ikev1 pre-shared-key *****
+tunnel-group SSLClientProfile type remote-access
+tunnel-group SSLClientProfile general-attributes
+ authentication-server-group RAD_SRV_GRP
+ default-group-policy SSLCLientPolicy
+tunnel-group SSLClientProfile webvpn-attributes
+ group-alias SSLVPNClient enable
 !
 class-map tcp_syn
  match any
@@ -280,5 +326,5 @@ call-home
   subscribe-to-alert-group inventory periodic monthly
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
-Cryptochecksum:60b65aa3079fddce582b18c6204e481b
+Cryptochecksum:d41d8cd98f00b204e9800998ecf8427e
 : end
