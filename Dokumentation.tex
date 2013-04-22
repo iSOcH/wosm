@@ -416,6 +416,157 @@ deny icmp any any router-advertisement
 
 Analog IPv4 muss ebenfalls der Traffic von UDP Quellport 547 an den Zielport 546 aus den Client-Netzen unterbunden werden.
 
+\section{Probleme mit Simulator}
+Bei unserer Arbeit mit dem Simulator sind einige Probleme aufgetreten, für welche wir keine Lösung gefunden haben.
+
+\subsection{Ressourcen lokaler Rechner}
+Wenn im Simulator VMs über VirtualBox eingebunden werden und der lokale Rechner nichts genügend oder nur knapp genügend RAM hat, kann es vorkommen, dass  die komplette Simulation abstürtzt. Die komplette Simulation konnte daher nur auf den Rechnern ausgeführt werden mit mindestens 8GB RAM.
+\subsection{SSL VPN Image}
+In der Simulation kann grundsätzlich das zu verwendende Image für ein Netzwerkgerät gewählt und eingespielt werden. Bei der ASA konnte jedoch das SSL VPN Image nicht eingespielt werden. Das Upload des Images auf die ASA war nicht möglich. Bei jedem Versuch das Image einzuspielen erschien der Fehler 'unspecified error' bei ca. 60\% des Uploads.
+\subsection{ASA und Linux}
+Die simulierte ASA konnte auf Windows korrekt gestartet werden. Unter Linux wurde der Bootvorgang gestartet, aber nie richtig abgeschlossen (Crash). Eine komplette Simulation unseres Netzes war mit Linux daher nicht möglich.
+\subsection{Anbindung VirtualBox}
+Die virtuellen Maschinen müssen aus dem Simulator gestartet werden, damit diese auch im Simulator verwedent werden können. Falls nun eine VM über das Betriebssystem abgestellt wird, erkennt der Simulator nicht, dass die VM nicht mehr läuft. Diese muss im Simulator anschliessend noch manuell beendet werden.\\
+Die VM kann aber auch über den Simulator abgestellt werden. Bei einem Shutdown über den Simulator wird die VM jedoch sofort beendet, ohne korrekten Shutdown des Betriebssystems.
+
+\section{Lab}
+\subsection{Berechtigungskonzept}
+Das Berechtigungskonzept ist in der Aufgabenstellung vorgegeben. Da dies jedoch unterschiedlich interpretiert werden kann, beschreiben wir dies noch einmal kurz.\\
+\begin{itemize}
+\item{Jeder User hat ein eigenes persönliches Laufwerk}
+\item{Jeder User hat Zugriff auf die Allgemeinen Dateien seiner Abteilung}
+\item{Jeder Abteilungsleiter hat Zugriff auf alle Dateien seiner Abteilung inkl. persönlicher Laufwerke seiner Mitarbeiter}
+\item{Die Administratoren haben Zugriff auf alle Daten der Firma}
+\end{itemize}
+\subsection{Active Directory und Fileserver}
+Um das Berechtigungskonzept umzusetzen und dem Administrator die Verwaltung zu vereinfachen haben wir uns für eine Struktur entschieden die wie folgt aussieht:
+\begin{itemize}
+\item[-]{wosm.com}
+\begin{itemize}
+\item[-]{MyBusiness}
+\begin{itemize}
+\item[-]{Admin}
+\item[-]{Entwicklung}
+\item[-]{Verkauf}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+Um die firmenspezifischen Einrträge zu verwalten wurde die OU 'MyBusiness' erstellt. Dies hilft uns den Überblick zu bewahren und schützt vor Fehlmanipulationen, da die Default Microsoft Berechtigungsgruppen und User klar von den firmenspezifischen Einträgen getrennt ist.\\
+Zudem wurde für jede Abteilung eine eigene OU erstellt, in welcher nun die Abteilungsspezifischen Berechtigungsgruppen und Benutzer erstellt werden.\\
+\\
+Für jede Abteilung haben wir eine Berechtigunsgruppe [Abteilung] und [Abteilung]\_Leitung erstellt, sowie die Benutzer für den Abteilungsleiter und die Mitarbeiter. Am Beispiel Verkauf sieht dies wie folgt aus:
+\begin{itemize}
+\item[-]{Verkauf}
+\begin{itemize}
+\item[+]{Verkauf}
+\item[+]{Verkauf\_Leitung}
+\item[°]{User40}
+\item[°]{User41}
+\item[°]{User42}
+\end{itemize}
+\end{itemize}
+In der Gruppe 'Verkauf\_Leitung' ist der Benutzer 'User40'. In der Gruppe 'Verkauf' ist die Gruppe 'Verkauf\_Leitung' sowie die Benutzer 'User41' und 'User42'. \\
+\\
+Auf dem Fileserver wurde für jede Abteilung ein eigener Ordner erstellt, auf welchen nur die jeweilige Abteilung sowie die Administratoren Zugriff haben. Zudem werden alle persönlichen Ordner auf dem Fileserver (Ordner wird direkt im AD verwaltet und automatisch erstellt, da es als Home-Laufwerk angegeben wird) erzeugt. Die Struktur sowie die Berechtigungen sehen wie folgt aus (Ordner : Berechtigungsgruppe 1, Berechtigungsgruppe 2, ...) :
+\begin{itemize}
+\item[-]{Verkauf : Verkauf\_Leitung, Administratoren}
+\begin{itemize}
+\item[-]{Allgemein : Verkauf\_Leitung, Verkauf, Administratoren}
+\item[-]{User40 : Verkauf\_Leitung, User40, Administratoren}
+\item[-]{User41 : Verkauf\_Leitung, User41, Administratoren}
+\item[-]{User42 : Verkauf\_Leitung, User42, Administratoren}
+\end{itemize}
+\end{itemize}
+Damit alle Mitarbeiter aus der Abteilung Verkauf auf ihre Ordner zugreifen können, wurde der Order 'Verkauf' für die Gruppe 'Verkauf' und 'Administratoren' freigegeben.\\
+\\
+Die Struktur, sowie die Berechtigungen sehen bei den anderen Abteilungen gleich aus, jedoch mit deren Berechtigungsgruppen.\\
+\\ 
+Die Verwaltung wurde durch die oben definierte Struktur soweit vereinfacht, dass bei der Erstellung eines weiteren Benutzers ein bestehender Benutzer kopiert werden kann und lediglich das Home-Laufwerk angegeben werden muss.
+\subsection{Logonscript}
+Das persönliche Laufwerk wird automatisch als Z: verbunden, da dies im Active Directory als Home-Laufwerk angegeben wurde.\\
+Damit alle Benutzer auf die für sie relevanten Dateien Zugriff haben, haben wir ein Logonscript erstellt, welches überprüft in welcher Berechtigungsgruppe ein Benutzer ist und dementsprechend ein Netzlaufwerk verknüpft.
+Das Logonscript sieht folgendermassen aus:
+\begin{lstlisting}
+@echo off
+net use P: /DEL /Y
+cls
+set user=%username%
+
+set i=0
+set group=Administratoren
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :end)
+
+set i=0
+set group=Verkauf_Leitung
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :Verkauf_Leitung)
+
+set i=0
+set group=Verkauf
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :Verkauf)
+
+set i=0
+set group=Admin_Leitung
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :Admin_Leitung)
+
+set i=0
+set group=Admin
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :Admin)
+
+set i=0
+set group=Entwicklung_Leitung
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :Entwicklung_Leitung)
+
+set i=0
+set group=Entwicklung
+echo Checking if %user% is member of %group%...
+for /f %%f in ('"net user %user% /domain | findstr /i %group%"') do set /a i=%i%+1
+if %i% gtr 0 (goto :Entwicklung)
+
+
+goto :end
+
+:verkauf
+net use P: \\10.0.10.21\Verkauf\Allgemein
+goto :end
+
+:verkauf_Leitung
+net use P: \\10.0.10.21\Verkauf
+goto :end
+
+:Admin
+net use P: \\10.0.10.21\Admin\Allgemein
+goto :end
+
+:Admin_Leitung
+net use P: \\10.0.10.21\Admin
+goto :end
+
+:Entwicklung
+net use P: \\10.0.10.21\Entwicklung\Allgemein
+goto :end
+
+:Entwicklung_Leitung
+net use P: \\10.0.10.21\Entwicklung
+goto :end
+
+:end
+REM pause
+\end{lstlisting}
+\subsection{TINK}
+\subsection{ASA}
+
 \newpage
 \appendix
 \phantomsection
