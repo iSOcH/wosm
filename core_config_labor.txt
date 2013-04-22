@@ -1,0 +1,326 @@
+Building configuration...
+
+Current configuration : 10015 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Core
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+system mtu routing 1500
+ip subnet-zero
+ip routing
+!
+!
+ipv6 unicast-routing
+!
+!
+crypto pki trustpoint TP-self-signed-2644390528
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2644390528
+ revocation-check none
+ rsakeypair TP-self-signed-2644390528
+!
+!
+crypto pki certificate chain TP-self-signed-2644390528
+ certificate self-signed 01
+  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 32363434 33393035 3238301E 170D3933 30333031 30303030
+  35305A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 36343433
+  39303532 3830819F 300D0609 2A864886 F70D0101 01050003 818D0030 81890281
+  8100CB96 EC7E5ADC 46394381 CC2EDAB7 1582F792 E7813BC9 60522F90 318012A8
+  F9A6E1E3 2069BCDC 5825F066 99EA15F7 0946EEA3 DAD3B0F9 451AC952 8B541D27
+  5DB50895 C8242CF2 6C7A05F2 2CD9DD9A 6FF26DC6 40F6AC47 FA40BCD0 CB4C9562
+  B5439AEB 4BDF2BC8 1CA49674 5BBD1E9D CE2275E2 167DFDFE 25182E5C BF261D12
+  5D1F0203 010001A3 65306330 0F060355 1D130101 FF040530 030101FF 30100603
+  551D1104 09300782 05436F72 652E301F 0603551D 23041830 168014C9 769F25DE
+  B6254520 2D2728D1 A3BD28CE 17E6DB30 1D060355 1D0E0416 0414C976 9F25DEB6
+  2545202D 2728D1A3 BD28CE17 E6DB300D 06092A86 4886F70D 01010405 00038181
+  00A2BC54 B6D2FD5B 6002A413 9DD75EE6 C3E23B75 8CECD603 6E962243 20DACB1D
+  BD42F0C2 49481257 425F9D6A 9BAE42EC 031C9E95 A1E6AE55 4D599C06 361AE27A
+  0C9ECA9C 901CC428 B29CF169 67DF40FF 04415A48 E6D9E2CF 7058E207 74D3DD9E
+  57347CE9 0490A4E8 768EA1F9 E1B30B8B C266BC9A 778D541A C4B6AB3B 5EFC340C 8F
+  quit
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+interface FastEthernet0/1
+ no switchport
+ ip address 10.100.0.1 255.255.255.252
+!
+interface FastEthernet0/2
+!
+interface FastEthernet0/3
+!
+interface FastEthernet0/4
+!
+interface FastEthernet0/5
+!
+interface FastEthernet0/6
+!
+interface FastEthernet0/7
+!
+interface FastEthernet0/8
+!
+interface FastEthernet0/9
+!
+interface FastEthernet0/10
+!
+interface FastEthernet0/11
+!
+interface FastEthernet0/12
+!
+interface FastEthernet0/13
+ switchport access vlan 10
+!
+interface FastEthernet0/14
+ switchport access vlan 20
+!
+interface FastEthernet0/15
+ switchport access vlan 30
+!
+interface FastEthernet0/16
+ switchport access vlan 40
+!
+interface FastEthernet0/17
+!
+interface FastEthernet0/18
+!
+interface FastEthernet0/19
+!
+interface FastEthernet0/20
+!
+interface FastEthernet0/21
+ switchport access vlan 10
+!
+interface FastEthernet0/22
+ switchport access vlan 20
+ ip access-group ADMIN in
+!
+interface FastEthernet0/23
+!
+interface FastEthernet0/24
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan10
+ description *** VLAN Server ***
+ ip address 10.0.10.1 255.255.255.0
+ ip access-group INTSRV in
+ ip helper-address 10.0.10.21
+ ipv6 address 2005:2013:FF:A10::1/64
+ ipv6 traffic-filter INTSRVv6 in
+!
+interface Vlan20
+ description *** VLAN Admin ***
+ ip address 10.0.20.1 255.255.255.0
+ ip access-group ADMIN in
+ ip helper-address 10.0.10.21
+ ipv6 address 2005:2013:FF:A20::1/64
+ ipv6 traffic-filter ADMINv6 in
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2005:2013:FF:A10::21
+!
+interface Vlan30
+ description *** VLAN Entwicklung ***
+ ip address 10.0.30.1 255.255.255.0
+ ip access-group DEV in
+ ip helper-address 10.0.10.21
+ ipv6 address 2005:2013:FF:A30::1/64
+ ipv6 traffic-filter DEVv6 in
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2005:2013:FF:A10::21
+!
+interface Vlan40
+ description *** VLAN Verkauf ***
+ ip address 10.0.40.1 255.255.255.0
+ ip access-group VERKAUF in
+ ip helper-address 10.0.10.21
+ ipv6 address 2005:2013:FF:A40::1/64
+ ipv6 traffic-filter VERKAUFv6 in
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 2005:2013:FF:A10::21
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.100.0.2
+ip http server
+ip http secure-server
+!
+!
+ip access-list extended ADMIN
+ remark admin-dhcp
+ permit udp host 0.0.0.0 eq bootpc host 255.255.255.255 eq bootps
+ remark admin-dns
+ permit udp 10.0.20.0 0.0.0.255 host 10.0.10.21 eq domain
+ remark admin-intsrv
+ permit ip 10.0.20.0 0.0.0.255 10.0.10.0 0.0.0.255
+ remark admin-int
+ permit ip 10.0.20.0 0.0.0.255 10.0.30.0 0.0.0.255
+ permit ip 10.0.20.0 0.0.0.255 10.0.40.0 0.0.0.255
+ permit ip 10.0.20.0 0.0.0.255 10.0.99.0 0.0.0.255
+ remark admin-dmzsrv
+ permit tcp 10.0.20.0 0.0.0.255 host 172.16.0.21 eq www
+ permit tcp 10.0.20.0 0.0.0.255 host 172.16.0.21 eq 443
+ permit tcp 10.0.20.0 0.0.0.255 host 172.16.0.21 eq ftp-data
+ permit tcp 10.0.20.0 0.0.0.255 host 172.16.0.21 eq ftp
+ remark admin-dmzsrv-ftppasv
+ permit tcp 10.0.20.0 0.0.0.255 host 172.16.0.21 gt 48999
+ deny   tcp 10.0.20.0 0.0.0.255 host 172.16.0.21 gt 49999
+ remark admin-dmzsw
+ permit tcp 10.0.20.0 0.0.0.255 host 172.16.0.2 eq 22
+ remark admin-dmz-end
+ deny   ip 10.0.20.0 0.0.0.255 172.16.0.0 0.0.0.255
+ remark admin-network
+ permit ip 10.0.20.0 0.0.0.255 10.0.100.0 0.0.0.255
+ remark admin-inet
+ permit tcp 10.0.20.0 0.0.0.255 any
+ip access-list extended DEV
+ remark dev-dhcp
+ permit udp host 0.0.0.0 eq bootpc host 255.255.255.255 eq bootps
+ remark dev-dns
+ permit udp 10.0.30.0 0.0.0.255 host 10.0.10.21 eq domain
+ remark dev-intsrv
+ permit ip 10.0.30.0 0.0.0.255 host 10.0.10.21
+ remark dev-intsrv-end
+ deny   ip 10.0.30.0 0.0.0.255 10.0.10.0 0.0.0.255
+ remark dev-respondadmin
+ permit tcp 10.0.30.0 0.0.0.255 10.0.20.0 0.0.0.255 established
+ remark dev-dmzsrv
+ permit tcp 10.0.30.0 0.0.0.255 host 172.16.0.21 eq www
+ permit tcp 10.0.30.0 0.0.0.255 host 172.16.0.21 eq 443
+ permit tcp 10.0.30.0 0.0.0.255 host 172.16.0.21 eq ftp-data
+ permit tcp 10.0.30.0 0.0.0.255 host 172.16.0.21 eq ftp
+ remark dev-dmzsrv-ftppasv
+ permit tcp 10.0.30.0 0.0.0.255 host 172.16.0.21 gt 48999
+ deny   tcp 10.0.30.0 0.0.0.255 host 172.16.0.21 gt 49999
+ remark dev-dmzsrv-end
+ deny   ip 10.0.30.0 0.0.0.255 172.16.0.0 0.0.0.255
+ remark dev-inet
+ permit tcp 10.0.30.0 0.0.0.255 any eq www
+ permit tcp 10.0.30.0 0.0.0.255 any eq 443
+ permit tcp 10.0.30.0 0.0.0.255 any eq ftp-data
+ permit tcp 10.0.30.0 0.0.0.255 any eq ftp
+ip access-list extended INTSRV
+ remark intsrv-adm
+ permit tcp 10.0.10.0 0.0.0.255 10.0.20.0 0.0.0.255 established
+ permit udp 10.0.10.0 0.0.0.255 eq domain 10.0.20.0 0.0.0.255
+ permit udp 10.0.10.0 0.0.0.255 eq bootps host 10.0.20.1 eq bootps
+ remark intsrv-dev
+ permit tcp 10.0.10.0 0.0.0.255 10.0.30.0 0.0.0.255 established
+ permit udp 10.0.10.0 0.0.0.255 eq domain 10.0.30.0 0.0.0.255
+ permit udp 10.0.10.0 0.0.0.255 eq bootps host 10.0.30.1 eq bootps
+ remark intsrv-verkauf
+ permit tcp 10.0.10.0 0.0.0.255 10.0.40.0 0.0.0.255 established
+ permit udp 10.0.10.0 0.0.0.255 eq domain 10.0.40.0 0.0.0.255
+ permit udp 10.0.10.0 0.0.0.255 eq bootps host 10.0.40.1 eq bootps
+ remark intsrv-vpn
+ permit tcp 10.0.10.0 0.0.0.255 10.0.99.0 0.0.0.255 established
+ permit udp 10.0.10.0 0.0.0.255 eq domain 10.0.99.0 0.0.0.255
+ remark intsrv-lan-end
+ deny   ip 10.0.10.0 0.0.0.255 10.0.0.0 0.0.255.255
+ remark intsrv-dmzsrv
+ permit tcp 10.0.10.0 0.0.0.255 host 172.16.0.21 eq www
+ permit tcp 10.0.10.0 0.0.0.255 host 172.16.0.21 eq 443
+ permit tcp 10.0.10.0 0.0.0.255 host 172.16.0.21 eq ftp-data
+ permit tcp 10.0.10.0 0.0.0.255 host 172.16.0.21 eq ftp
+ remark admin-dmzsrv-ftppasv
+ permit tcp 10.0.10.0 0.0.0.255 host 172.16.0.21 gt 48999
+ deny   tcp 10.0.10.0 0.0.0.255 host 172.16.0.21 gt 49999
+ remark intsrv-dmzsrv-respond-radius
+ permit tcp host 10.0.10.21 eq 389 host 172.16.0.21 established
+ remark intsrv-dmzsrv-end
+ deny   ip 10.0.10.0 0.0.0.255 172.16.0.0 0.0.0.255
+ remark intsrv-inet
+ permit tcp 10.0.10.0 0.0.0.255 any eq www
+ permit tcp 10.0.10.0 0.0.0.255 any eq 443
+ permit tcp 10.0.10.0 0.0.0.255 any eq ftp-data
+ permit tcp 10.0.10.0 0.0.0.255 any eq ftp
+ permit udp 10.0.10.0 0.0.0.255 any eq domain
+ip access-list extended VERKAUF
+ remark verkauf-dhcp
+ permit udp host 0.0.0.0 eq bootpc host 255.255.255.255 eq bootps
+ remark verkauf-dns
+ permit udp 10.0.40.0 0.0.0.255 host 10.0.10.21 eq domain
+ remark verkauf-intsrv
+ permit ip 10.0.40.0 0.0.0.255 host 10.0.10.21
+ remark verkauf-intsrv-end
+ deny   ip 10.0.40.0 0.0.0.255 10.0.10.0 0.0.0.255
+ remark verkauf-respondadmin
+ permit tcp 10.0.40.0 0.0.0.255 10.0.20.0 0.0.0.255 established
+ remark verkauf-dmzsrv
+ permit tcp 10.0.40.0 0.0.0.255 host 172.16.0.21 eq www
+ permit tcp 10.0.40.0 0.0.0.255 host 172.16.0.21 eq 443
+ permit tcp 10.0.40.0 0.0.0.255 host 172.16.0.21 eq ftp-data
+ permit tcp 10.0.40.0 0.0.0.255 host 172.16.0.21 eq ftp
+ remark verkauf-dmzsrv-ftppasv
+ permit tcp 10.0.40.0 0.0.0.255 host 172.16.0.21 gt 48999
+ deny   tcp 10.0.40.0 0.0.0.255 host 172.16.0.21 gt 49999
+ remark verkauf-dmzsrv-end
+ deny   ip 10.0.40.0 0.0.0.255 172.16.0.0 0.0.0.255
+ remark verkauf-inet
+ permit tcp 10.0.40.0 0.0.0.255 any eq www
+ permit tcp 10.0.40.0 0.0.0.255 any eq 443
+ permit tcp 10.0.40.0 0.0.0.255 any eq ftp-data
+ permit tcp 10.0.40.0 0.0.0.255 any eq ftp
+!
+ipv6 route ::/0 2005:2013:FF:A0::2
+!
+!
+ipv6 access-list INTSRVv6
+ remark intsrv-dhcp
+!
+ipv6 access-list ADMINv6
+ permit icmp any FF02::/16 router-solicitation
+ remark admin-dhcp
+ remark admin-dns
+ remark admin-intsrv
+ permit ipv6 2005:2013:FF:A20::/64 2005:2013:FF:A10::/64
+ remark admin-int
+ permit ipv6 2005:2013:FF:A20::/64 2005:2013:FF:A30::/64
+ permit ipv6 2005:2013:FF:A20::/64 2005:2013:FF:A40::/64
+ remark admin-dmzsrv
+ remark admin-dmzsrv-ftppasv
+ remark admin-dmzsw
+ remark admin-dmz-end
+ deny ipv6 2005:2013:FF:A20::/64 2005:2013:FF:B0::/64
+ remark admin-network
+ permit ipv6 2005:2013:FF:A20::/64 2005:2013:FF:A0::/64
+ remark admin-inet
+ permit tcp 2005:2013:FF:A20::/64 any
+!
+control-plane
+!
+!
+line con 0
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+end
+
