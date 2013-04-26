@@ -36,6 +36,9 @@ permit tcp 10.0.10.21 0.0.0.0 eq 389 172.16.0.21 0.0.0.0 established
 remark intsrv-dmzsrv-end
 deny ip 10.0.10.0 0.0.0.255 172.16.0.0 0.0.0.255
 
+remark intsrv-radiusasa
+permit udp 10.0.10.21 0.0.0.0 eq 1645 10.100.0.2 0.0.0.0
+
 remark intsrv-inet
 permit tcp 10.0.10.0 0.0.0.255 0.0.0.0 255.255.255.255 eq 80
 permit tcp 10.0.10.0 0.0.0.255 0.0.0.0 255.255.255.255 eq 443
