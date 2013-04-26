@@ -130,3 +130,25 @@ Datenverkehr, der über das \emph{eth0.10} Interface verschickt wird erhält dad
 
 \subsubsection{Script für Start der Tunnels}
 Um die ansonsten manuell auszuführenden Befehle nicht immer von Hand eintippen zu müssen, wurde für die beiden Tunnel-VMs ein Startscript erstellt. Diese sind in den Anhängen \ref{app:tinc-start-esx} und \ref{app:tinc-start-lab} zu finden.
+
+\subsubsection{VLANs und virtuelle Bridges}
+Die folgende Tabelle bietet einen Überblick über die verschiedenen Tunnel, die für den Aufbau im Lab eingerichtet wurden.
+
+\begin{longtable}{p{2.5cm}|p{2cm}|p{1.5cm}|p{2cm}|p{2.5cm}|p{2cm}}
+	\textbf{Netz} & \textbf{VLAN ID} & \textbf{Bridge} & \textbf{Tunnel} & \textbf{IF VMware} & \textbf{IF Lab}\\
+	\hline
+	\endfirsthead
+	\textbf{Netz} & \textbf{VLAN ID} & \textbf{Virt. Bridge} & \textbf{Tunnelname} & \textbf{IF VMware} & \textbf{IF Lab}\\
+	\hline
+	\endhead
+	\hline
+	\multicolumn{2}{l}{\textit{Fortführung auf nächster Seite\ldots}} \\
+	\endfoot
+	\endlastfoot
+	Int. Server & 10 & brv\_10 & bridge\_10 & eth1 & eth0.10 \\
+	Admins & 20 & brv\_20 & bridge\_20 & eth2 & eth0.20 \\
+	Entwicklung & 30 & brv\_30 & bridge\_30 & eth3 & eth0.30 \\
+	Verkauf & 40 & brv\_40 & bridge\_40 & eth4 & eth0.40 \\
+	DMZ & 110 & brv\_110 & bridge\_110 & eth5 & eth0.110 \\
+	Internet & 120 & brv\_120 & bridge\_120 & eth6 & eth0.120
+\end{longtable}
