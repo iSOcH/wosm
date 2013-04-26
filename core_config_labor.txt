@@ -1,6 +1,6 @@
 Building configuration...
 
-Current configuration : 10015 bytes
+Current configuration : 10279 bytes
 !
 version 12.2
 no service pad
@@ -67,6 +67,7 @@ vlan internal allocation policy ascending
 interface FastEthernet0/1
  no switchport
  ip address 10.100.0.1 255.255.255.252
+ ipv6 address 2005:2013:FF:A0::1/64
 !
 interface FastEthernet0/2
 !
@@ -107,19 +108,28 @@ interface FastEthernet0/17
 interface FastEthernet0/18
 !
 interface FastEthernet0/19
+ switchport mode access
 !
 interface FastEthernet0/20
 !
 interface FastEthernet0/21
  switchport access vlan 10
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/22
  switchport access vlan 20
  ip access-group ADMIN in
+ spanning-tree portfast
 !
 interface FastEthernet0/23
+ switchport access vlan 30
+ spanning-tree portfast
 !
 interface FastEthernet0/24
+ switchport access vlan 40
+ switchport mode access
+ spanning-tree portfast
 !
 interface GigabitEthernet0/1
 !
@@ -170,7 +180,6 @@ ip classless
 ip route 0.0.0.0 0.0.0.0 10.100.0.2
 ip http server
 ip http secure-server
-!
 !
 ip access-list extended ADMIN
  remark admin-dhcp
@@ -234,7 +243,6 @@ ip access-list extended INTSRV
  permit tcp 10.0.10.0 0.0.0.255 10.0.30.0 0.0.0.255 established
  permit udp 10.0.10.0 0.0.0.255 eq domain 10.0.30.0 0.0.0.255
  permit udp 10.0.10.0 0.0.0.255 eq bootps host 10.0.30.1 eq bootps
- remark intsrv-verkauf
  permit tcp 10.0.10.0 0.0.0.255 10.0.40.0 0.0.0.255 established
  permit udp 10.0.10.0 0.0.0.255 eq domain 10.0.40.0 0.0.0.255
  permit udp 10.0.10.0 0.0.0.255 eq bootps host 10.0.40.1 eq bootps
@@ -255,6 +263,8 @@ ip access-list extended INTSRV
  permit tcp host 10.0.10.21 eq 389 host 172.16.0.21 established
  remark intsrv-dmzsrv-end
  deny   ip 10.0.10.0 0.0.0.255 172.16.0.0 0.0.0.255
+ remark intsrv-radiusasa
+ permit udp host 10.0.10.21 eq 1645 host 10.100.0.2
  remark intsrv-inet
  permit tcp 10.0.10.0 0.0.0.255 any eq www
  permit tcp 10.0.10.0 0.0.0.255 any eq 443
@@ -291,9 +301,6 @@ ip access-list extended VERKAUF
 ipv6 route ::/0 2005:2013:FF:A0::2
 !
 !
-ipv6 access-list INTSRVv6
- remark intsrv-dhcp
-!
 ipv6 access-list ADMINv6
  permit icmp any FF02::/16 router-solicitation
  remark admin-dhcp
@@ -323,4 +330,3 @@ line vty 5 15
  login
 !
 end
-
