@@ -47,7 +47,7 @@ sub main
  
 sub makeheaders
 {
-    $IPPROTO_TCP = 4;
+    $IPPROTO_TCP = 6;
     local($src_host , $src_port , $dst_host , $dst_port) = @_;
      
     my $zero_cksum = 0;
