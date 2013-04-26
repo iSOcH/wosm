@@ -519,8 +519,11 @@ Für das SYN-Flooding haben wir folgendes Skript eingesetzt:
 
 \subsubsection{IP spoofing}
 Das IP spoofing wird mit dem Perl Skript aus dem Abschnitt SYN-Flooding getestet. Da wir eine falsche IP Adresse als Source angeben, wird der Traffic blockiert, da die ASA den Reverse-Path prüft.
+
 \subsubsection{Autoconfiguration IPv6}
-schwarz... :-)
+Mit dem Programm \emph{fake\_router6} aus der Toolsammlung von \url{http://www.thc.org/thc-ipv6/} haben wir versucht, die Client-Konfiguration zu manipulieren. Das Script versendet Router-Advertisements mit beliebigen, vom Angreifer festlegbaren Optionen. Zudem gibt es sich selbst als Router mit der höchsten Priorität aus.
+
+Der Aufruf für den Angriff...
 
 \subsubsection{Stress-Test ASA}
 Mithilfe eines Skripts senden wir massenhaft Daten an eine bestimmte IP Adresse, wobei der Port zufällig gewählt wird.
