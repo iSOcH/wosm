@@ -82,6 +82,43 @@ ifconfig $INTERFACE up
 
 Sind alle diese Vorbereitungen getroffen kann der Tunnel mit dem Befehl \emph{tincd -n bridge\_10} gestartet werden. \emph{bridge\_10} bezieht sich dabei auf das Konfigurationsverzeichnis unterhalb von \emph{/etc/tinc/}.
 
+\subsubsection{Statusausgaben}
+Anzeige der virtuellen Bridges und zugehörigen Interfaces (auf VMware-VM):
+\begin{lstlisting}
+root@WOSMGR1TUN:~# brctl show
+bridge name	bridge id		STP enabled	interfaces
+brv_10		8000.005056bc0101	no		bridge_10
+							eth1
+brv_110		8000.005056bc0105	no		bridge_110
+							eth5
+brv_120		8000.005056bc0106	no		bridge_120
+							eth6
+brv_20		8000.005056bc0102	no		bridge_20
+							eth2
+brv_30		8000.005056bc0103	no		bridge_30
+							eth3
+brv_40		8000.005056bc0104	no		bridge_40
+							eth4
+\end{lstlisting}
+
+Anzeige der virtuellen Bridges und zugehörigen Interfaces (auf Lab-PC):
+\begin{lstlisting}
+root@wosmtunlab:~# brctl show
+bridge name	bridge id		STP enabled	interfaces
+brv_10		8000.000bcdb58e8c	no		bridge_10
+							eth0.10
+brv_110		8000.000bcdb58e8c	no		bridge_110
+							eth0.110
+brv_120		8000.000bcdb58e8c	no		bridge_120
+							eth0.120
+brv_20		8000.000bcdb58e8c	no		bridge_20
+							eth0.20
+brv_30		8000.000bcdb58e8c	no		bridge_30
+							eth0.30
+brv_40		8000.000bcdb58e8c	no		bridge_40
+							eth0.40
+\end{lstlisting}
+
 \subsubsection{VLAN-Subinterfaces unter Linux}
 Die zuvor beschriebenen Punkte reichen für die VM unter VMware aus. Für die Installation im Lab ist es hingegen (aufgrund der begrenzten Anzahl Netzwerkschnittstellen) nötig, die verschiedenen VLANs auf einem Kabel als Trunk auf den Switch zu führen. Dazu kennt Linux, sehr ähnlich wie dies bei Cisco-Geräten der Fall ist, Subinterfaces. Das folgende Listing zeigt beispielhaft die Erstellung eines solchen Interfaces (für VLAN 10):
 
