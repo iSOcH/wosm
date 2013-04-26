@@ -92,4 +92,4 @@ ip link add link eth0 name eth0.10 type vlan id 10
 Datenverkehr, der über das \emph{eth0.10} Interface verschickt wird erhält dadurch das VLAN-Tag 10 und Datenverkehr der auf \emph{eth0} mit einem derartigen Tag erhalten wird taucht auf \emph{eth0.10} ohne Tag auf. Die restlichen für Tinc notwendigen Konfigurationsschritte können normal mit diesem VLAN-Subinterface durchgeführt werden.
 
 \subsubsection{Script für Start der Tunnels}
-Um die ansonsten manuell auszuführenden Befehle nicht immer von Hand eintippen zu müssen, wurde für die beiden VMs ein Startscript erstellt. Diese sind im Anhang der Dokumentation zu finden.
+Um die ansonsten manuell auszuführenden Befehle nicht immer von Hand eintippen zu müssen, wurde für die beiden Tunnel-VMs ein Startscript erstellt. Diese sind in den Anhängen \ref{app:tinc-start-esx} und \ref{app:tinc-start-lab} zu finden.
