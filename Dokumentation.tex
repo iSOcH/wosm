@@ -499,10 +499,94 @@ Damit alle Benutzer auf die für sie relevanten Dateien Zugriff haben, haben wir
 Das Logonscript sieht folgendermassen aus:
 \lstinputlisting{Phase2/logonscript.bat}
 
+\subsection{Radius}
+Damit für den VPN Zugang die Active Directory Benutzer verwendet werden können, haben wir auf dem LAN Server ein Radius Dienst installiert. Microsoft nennt diesen Dienst Internet Authentication Service (IAS), welcher mit der Rolle Netzwerkrichtlinien- und Zugriffsdienste installiert wird. Um die Benutzerabfrage zu ermöglichen muss die ASA Firewall als Client erfasst werden. Dazu ist lediglich die IP-Adresse des Clients (ASA) und ein gemeinsamer Schlüssel für die Kommunikation notwendig. Die Verbindungsbedingungen können anhand einer Netzwerkrichtlinie eingestellt werden. Diese bietet viele Konfigurationsmöglichkeiten wie Verschlüsselungsmethode, Zugriffszeit usw. Unsere Einschränkung bezieht sich lediglich auf
+die Benutzergruppen. Dies bedeutet nur AD Benutzer, welche in den Gruppen Admin, Admin\_Leitung, Verkauf und Verkauf\_Leitung sind, können sich authentifizieren und somit eine gesicherte Verbindung herstellen.
+
 \subsection{Tunnelling mit Tinc}
 \input{Dokumentation_Tinc.tex}
 
 \subsection{ASA}
+\subsubsection{Radius Authentifizierung}
+Damit die VPN Benutzer über das AD authentifiziert werden können, muss auf der Firewall der Radius-Server konfiguriert werden. Dazu wird ein neuer AAA-Server konfiguriert, welcher die Abfragen mit dem RADIUS Protkoll durchführt. Dazu sind lediglich die IP-Addresse, das Interface und der gemeinsame Schlüssel notwendig.
+\begin{lstlisting}
+aaa-server RAD_SRV_GRP protocol radius
+aaa-server RAD_SRV_GRP (inside) host 10.0.10.21
+ key *****
+\end{lstlisting}
+Der erstellte Server kann nun in den VPN Gruppen für die Authentifizierung verwendet werden. Hier am Beispiel für die IPsec Verbindung.
+\begin{lstlisting}
+tunnel-group VPN_ADMINISTRATOR general-attributes
+ address-pool VPN-ADMIN
+ authentication-server-group RAD_SRV_GRP
+ default-group-policy VPN_ADMINISTRATOR
+\end{lstlisting}
+
+\subsubsection{VPN IPsec \& SSL}
+Die IPsec VPN Verbindung die wir in der Simulation verwendet haben, konnte im Labor ohne Änderungen übernommen werden. Im Labor haben wir zusätzlich den SSL VPN Zugang eingerichtet. Diese Verbindung wird über das SSL Protokoll verschlüsselt und die Kommunikation erfolgt lediglich über Port 443. Die Konfiguration unterscheidet sich nur gering von der IPsec Konfiguration. Der wichtigste Punkt ist das Zertifikat. SSL benötigt ein Zertifikat zur Überprüfung des Servers. Da wir kein öffentliches Zertifikat haben, dient die ASA Firewall als Zertifikatsserver. Dazu wird ein localtrust Point konfiguriert und ein Zertifikat generiert.
+\begin{lstlisting}
+crypto ca trustpoint localtrust
+ enrollment self
+ fqdn sslvpn.wosm.com
+ subject-name CN=sslvpn.wosm.com
+ keypair sslvpnkeypair
+ crl configure
+crypto ca trustpool policy
+crypto ca certificate chain localtrust
+ certificate 00cb7451
+    308201eb 30820154 a0030201 02020400 cb745130 0d06092a 864886f7 0d010105
+    0500303a 31183016 06035504 03130f73 736c7670 6e2e776f 736d2e63 6f6d311e
+    301c0609 2a864886 f70d0109 02160f73 736c7670 6e2e776f 736d2e63 6f6d301e
+    170d3133 30343232 30353336 34345a17 0d323330 34323030 35333634 345a303a
+    31183016 06035504 03130f73 736c7670 6e2e776f 736d2e63 6f6d311e 301c0609
+    2a864886 f70d0109 02160f73 736c7670 6e2e776f 736d2e63 6f6d3081 9f300d06
+    092a8648 86f70d01 01010500 03818d00 30818902 818100c2 ee2c7ac1 55bc7caa
+    211c2ca6 d6455349 3820648f d6f37890 30b32326 35119bb9 358db6ec f25f39d4
+    53ce389a 5dd83ace d9630fbd f1f53a1e 88ef29c3 9f991a35 51150a62 1b715bd3
+    678836b9 225b1f5a 07c79f50 869fdb45 d73844b5 bf9e6e80 cb961674 daf80bd4
+    837c3e5e 83438669 21cd7f55 4a979562 c749c73a 68738302 03010001 300d0609
+    2a864886 f70d0101 05050003 81810093 4a0ad2c1 cb9ef906 03bcdb44 603f4935
+    729c24b4 5e820dac cde0ea29 44a13111 05dd13fb 2205b4c0 180e7682 cd2631ad
+    ae4c723d 2b79169e 3763693d 79342e62 841cd12a 906d9152 b96b4f79 31f1a098
+    fafab98b 0124376f c9cdb1da c49797c8 a2ec50ee 4cce9c24 ad804699 89391955
+    8e579c89 8589a49e f95248ef 4e8064
+  quit
+\end{lstlisting}
+
+Die ASA Firewall erlaubt für die Verbindung mit dem SSL Client Anyconnect keine unterschiedliche Client-Versionen. Deshalb wird die Client Software auf die Firewall gespeichert. Wird eine neue Version auf die Firewall hochgeladen, werden die Clients beim nächsten Verbindungsaufbau automatisch ein Update durchführen.\\
+Wurde dieses Image des Clients auf die Firewall geladen kann SSL VPN konfiguriert werden.
+\begin{lstlisting}
+webvpn
+ enable outside
+ anyconnect image disk0:/anyconnect-win-3.1.01065-k9.pkg 1
+ anyconnect enable
+ tunnel-group-list enable
+\end{lstlisting}
+Anschliessend müssen äquivalent zur IPsec Konfiguration die group-policy und tunnel-group konfiguriert werden. 
+
+\begin{lstlisting}
+group-policy SSLCLientPolicy internal
+group-policy SSLCLientPolicy attributes
+ dns-server value 10.0.10.21
+ vpn-tunnel-protocol ssl-client
+ default-domain value wosm.com
+ address-pools value VPN-USERS
+\end{lstlisting}
+
+\begin{lstlisting}
+tunnel-group SSLClientProfile type remote-access
+tunnel-group SSLClientProfile general-attributes
+ authentication-server-group RAD_SRV_GRP
+ default-group-policy SSLCLientPolicy
+tunnel-group SSLClientProfile webvpn-attributes
+ group-alias SSLVPNClient enable
+\end{lstlisting}
+
+Um die Client Software zu installieren kann nun auf die ASA über https://209.165.50.1 (Outside Interface) zugegriffen werden und der Client heruntergeladen werden.
+
+
+\subsubsection{ASDM}
+-------- TODO Lerch ---------------------
 
 \subsection{Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
@@ -545,11 +629,11 @@ Das Skript sieht wie folgt aus:
 \phantomsection
 \addcontentsline{toc}{section}{Anhang}
 \section{Konfiguration Core}
-\lstinputlisting{gns3/wosm/configs/Core.cfg}
+\lstinputlisting{core_config_labor.txt}
 \newpage
 
 \section{Konfiguration ASA}
-\lstinputlisting{asa_config.txt}
+\lstinputlisting{asa_config_labor.txt}
 \newpage
 
 \section{Tinc Startscript VMware}
