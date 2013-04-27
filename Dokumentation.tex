@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[colorlinks=false,pdfborder={0 0 0}]{hyperref}
 \usepackage{graphicx}
+\usepackage{fancyhdr} %http://texblog.org/2007/11/07/headerfooter-in-latex-with-fancyhdr/
 \usepackage{caption}
 \usepackage{longtable}
 \usepackage{float}
@@ -13,6 +14,7 @@
 \geometry{a4paper, left=30mm, right=25mm, top=30mm, bottom=35mm} 
 \usepackage{listings}
 \lstset{breaklines=true, breakatwhitespace=true, basicstyle=\scriptsize, numbers=left}
+\pagestyle{fancy}
 \title{Workshop System Management}
 \author{Tobias Lerch, Yanick Eberle, Pascal Schwarz}
 \begin{document}
@@ -523,7 +525,14 @@ Das IP spoofing wird mit dem Perl Skript aus dem Abschnitt SYN-Flooding getestet
 \subsubsection{Autoconfiguration IPv6}
 Mit dem Programm \emph{fake\_router6} aus der Toolsammlung von \url{http://www.thc.org/thc-ipv6/} haben wir versucht, die Client-Konfiguration zu manipulieren. Das Script versendet Router-Advertisements mit beliebigen, vom Angreifer festlegbaren Optionen. Zudem gibt es sich selbst als Router mit der höchsten Priorität aus.
 
-Der Aufruf für den Angriff...
+Der Aufruf für den Angriff (muss als root unter Linux ausgeführt werden) lautet:
+\begin{lstlisting}
+./fake_router6 eth0 1::/64
+\end{lstlisting}
+
+Clients im selben VLAN erhalten daraufhin eine zusätzliche IP-Adresse aus dem 1::/64-Prefix und können, aufgrund der hohen Priorität der ungültigen Route, nicht mehr auf den Server zugreifen.
+
+Die von uns erstellte ACL für IPv6 verhindert den Angriff allerdings, da Router-Advertisements geblockt werden.
 
 \subsubsection{Stress-Test ASA}
 Mithilfe eines Skripts senden wir massenhaft Daten an eine bestimmte IP Adresse, wobei der Port zufällig gewählt wird.
