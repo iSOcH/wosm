@@ -3,19 +3,23 @@ In Phase 2 stehen die Netzwerkkomponenten (Layer 3 Switch, ASA) im Lab und die V
 
 \begin{description}
 	\item[Nur logische Trennung der Netze] bei dieser Variante wären alle VLANs ungetaggt über die Verbindung zwischen Lab und VMware-Umgebung geführt worden. Da sich die Rechner in unterschiedlichen IP-Netzen befinden wären nur geringe Einschränkungen entstanden. DHCP mit unterschiedlichen IP-Ranges für die verschiedenen VLANs hätte mit dieser Variante aber nicht ermöglicht werden können, da der Server die DHCP-Anfragen der Clients (Broadcast) direkt beantwortet hätte.
-	Des Weiteren wäre es notwendig gewesen, die Konfiguration des Layer 3 Switches 
+	
+	Des Weiteren wäre es notwendig gewesen, die Konfiguration des Layer 3 Switches anzupassen.
 	\item[Nachfrage bei Herrn Schindler] Ergab leider lediglich, dass es nicht möglich sei, die vorhandene Verbindung als Trunk zu realisieren.
+	\item[Betrieb der VMs auf unseren Notebooks im Labor] Diese Variante wäre einfach zu realisieren gewesen, aber das Problem, dass der Abgleich der VMs zwischen den Gruppenmitgliedern weiterhin notwendig ist wäre in gleichem Ausmasse bestanden, wie dies während Phase 1 der Fall war.
+	
+	Im Gegensatz zu Phase 1 war aber ein eigenständiges Arbeiten zu Hause sowieso nicht mehr möglich (aufgrund der Hardware-Komponenten), womit diese Variante primär Nachteile mit sich gebracht hätte.
 	\item[Tunnelling der unterschiedlichen Netze] Bei dieser Variante ist es unter Verwendung eines zusätzlichen Switches möglich, die bestehende Konfiguration des Layer 3 Switches weiterhin zu verwenden. Ebenfalls kann DHCP ohne Einschränkungen betrieben werden.
 \end{description}
 
-Aufgrund der Vorteile der Tunnelling Lösung gegenüber der nur logischen Trennung haben wir uns dazu entschieden, die Netze zu tunneln.
+Aufgrund der Vorteile der Tunnelling Lösung gegenüber den anderen Varianten haben wir uns dazu entschieden, die Netze zu tunneln. Des Weiteren haben wir eine relativ simple Lösung kennengelernt, die es erlaubt, geografisch getrennte Netze ohne spezielle Hardware miteinander zu verbinden.
 
 \subsubsection{Überblick}
 Tinc ermöglicht es, Netze über UDP/IP-Verbindungen zu tunneln als wären sie über einen Switch verbunden. Dadurch können Geräte im selben VLAN (z.B. das vlan10-Interface des L3 Switches und die VM für den internen Server) miteinander kommunizieren als wären sie direkt auf Layer 2 miteinander verbunden. Abbildung \ref{fig:tinc} zeigt exemplarisch die Konfiguration für den Tunnel von VLAN 10.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.0\textwidth]{Phase2/tinc_netz.png}
+\includegraphics[width=0.8\textwidth]{Phase2/tinc_netz.png}
 \caption{Tinc Funktionsweise / Aufbau}
 \label{fig:tinc}
 \end{figure}

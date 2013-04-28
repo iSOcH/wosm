@@ -15,6 +15,7 @@
 \geometry{a4paper, left=30mm, right=25mm, top=30mm, bottom=35mm} 
 \usepackage{listings}
 \lstset{breaklines=true, breakatwhitespace=true, basicstyle=\scriptsize, numbers=left, frame=single}
+\setcounter{tocdepth}{2}
 \pagestyle{fancy}
 \title{Workshop System Management}
 \author{Tobias Lerch, Yanick Eberle, Pascal Schwarz}
@@ -178,8 +179,8 @@ Das VLAN Trunking Protokoll kommt in unserer Simulation nicht zu Einsatz, da GNS
 Spanning-Tree musste in der Simulation nicht berücksichtigt werden. Das Netzwerk ist sehr einfach aufgebaut und die Verbindung zwischen Core Router und Firewall benötigt keinen Spanning-Tree.
 
 \subsection{VPN IPsec Remote Access}
-Der Zugriff auf das interne Netzwerk für externe Mitarbeiter erfolgt über den IPsec VPN Client. Beim Zugriff unterscheiden wir zwischen Administratoren und Mitarbeiter. Der Zugriff als Mitarbeiter kann somit stärker eingeschränkt werden als ein Administrator. In der Simulation haben wir keine unterschiedlichen Zugriffsmöglichkeiten, die Firewall wurde aber für diesen Fall konfiguriert. Der Remote Access Zugang erfolgt über die IP 209.165.50.1 (Outside IF Firewall) und unterstützt nur IPv4.\\
-\\
+Der Zugriff auf das interne Netzwerk für externe Mitarbeiter erfolgt über den IPsec VPN Client. Beim Zugriff unterscheiden wir zwischen Administratoren und Mitarbeiter. Der Zugriff als Mitarbeiter kann somit stärker eingeschränkt werden als ein Administrator. In der Simulation haben wir keine unterschiedlichen Zugriffsmöglichkeiten, die Firewall wurde aber für diesen Fall konfiguriert. Der Remote Access Zugang erfolgt über die IP 209.165.50.1 (Outside IF Firewall) und unterstützt nur IPv4.
+
 \textbf{IKE Phase 1:}
 \begin{itemize}
 	\item{Authenzifizierung: Pre-shared}
@@ -222,6 +223,7 @@ Der Zugriff auf das interne Netzwerk für externe Mitarbeiter erfolgt über den 
 \end{longtable}
 
 
+\newpage
 \section{Sicherheit}
 \subsection{Konzept}
 Um die Sicherheit unseres Netzes zu gewähtleisten, haben wir uns entschieden, verschiedene Sicherheitsstufen zu definieren. Dabei verfolgen wir eine High Security Strategie. Die höchste Sicherheitsstufe 'Stufe 1' gilt für die normalen User. Die zweite Sicherheitsstufe 'Stufe 2' gilt für die Server. Die dritte Sicherheitsstufe 'Stufe 3' gilt für die Administratoren.
@@ -284,6 +286,7 @@ Auf der Firewall wurden jeweils 3 Access Lists definiert. Diese werden auf den j
 	outside\_in\_v6 & outside / in & IPv6 Traffic, der aus dem Internet verschickt werden darf.\\
 \end{longtable}
 
+\newpage
 \section{Bedrohungsmodell}
 \subsection{TCP DoS (SYN-Flooding)}
 \subsubsection{Bedrohung}
@@ -424,6 +427,7 @@ deny icmp any any router-advertisement
 
 Analog IPv4 muss ebenfalls der Traffic von UDP Quellport 547 an den Zielport 546 aus den Client-Netzen unterbunden werden.
 
+\newpage
 \section{Probleme mit Simulator}
 Bei unserer Arbeit mit dem Simulator sind einige Probleme aufgetreten, für welche wir keine Lösung gefunden haben.
 
@@ -437,6 +441,7 @@ Die simulierte ASA konnte auf Windows korrekt gestartet werden. Unter Linux wurd
 Die virtuellen Maschinen müssen aus dem Simulator gestartet werden, damit diese auch im Simulator verwedent werden können. Falls nun eine VM über das Betriebssystem abgestellt wird, erkennt der Simulator nicht, dass die VM nicht mehr läuft. Diese muss im Simulator anschliessend noch manuell beendet werden.\\
 Die VM kann aber auch über den Simulator abgestellt werden. Bei einem Shutdown über den Simulator wird die VM jedoch sofort beendet, ohne korrekten Shutdown des Betriebssystems.
 
+\newpage
 \section{Lab}
 \subsection{Berechtigungskonzept}
 Das Berechtigungskonzept ist in der Aufgabenstellung vorgegeben. Da dies jedoch unterschiedlich interpretiert werden kann, beschreiben wir dies noch einmal kurz.
