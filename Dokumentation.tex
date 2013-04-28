@@ -14,7 +14,7 @@
 \usepackage{hyperref}
 \geometry{a4paper, left=30mm, right=25mm, top=30mm, bottom=35mm} 
 \usepackage{listings}
-\lstset{breaklines=true, breakatwhitespace=true, basicstyle=\scriptsize, numbers=left}
+\lstset{breaklines=true, breakatwhitespace=true, basicstyle=\scriptsize, numbers=left, frame=single}
 \pagestyle{fancy}
 \title{Workshop System Management}
 \author{Tobias Lerch, Yanick Eberle, Pascal Schwarz}
@@ -601,12 +601,12 @@ Da der Port 443 für das SSL VPN bereits verwendet wird, geben wir für den ASDM
 Da wir im Labor eine ASA 5505 mit dem neusten OS 9.1(1) einsetzten gab es ein paar Änderungen in der Konfiguration.
 \begin{description}
 	\item[Access-Lists] Die Access-Lists in der neusten Version unterscheiden nicht mehr zwischen IPv4 und IPv6. Die beiden IP-Adressen können nun in die selbe Access-List geschrieben werden. 
-	\item[VLAN] Interface konfigurationen werden nicht mehr direkt auf dem Interface gemacht sondern auf VLAN Interfaces. Damit ist es zb möglich verschiedene DMZ Netze zu erstellen.
+	\item[VLAN] Interface Konfigurationen werden nicht mehr direkt auf dem Interface gemacht sondern auf VLAN Interfaces. Damit ist es z.B. möglich, verschiedene DMZ Netze zu erstellen.
 	\item[Lizenz] Damit eine DMZ vollständig genutzt werden kann, braucht es eine Security Plus Lizenz. Mit der Basis Lizenz hat man nur einen eingeschränkten DMZ Zugriff. Details unter: \url{http://www.cisco.com/en/US/docs/security/asa/asa80/configuration/guide/int5505.html#wp1056883}
 \end{description}
 
 \subsection{Core Router}
-Die Konfiguration für den Core Router konnte leider nicht ganz von der Simulations übernommen werden. Wir haben festgestellt, dass Cisco Router mit der OS Version 12.2 wie sie im Labor eingesetzt wird, Probleme mit den IPv6 Adressen haben. Access-Lists mit IPv6 host Adressen (/128), welche nicht das EUI-64 Format haben, können nicht konfiguriert werden. Somit war es nicht möglich unsere Access-Lists aus der Simulation zu verwenden. Da der Aufwand zu gross war das IPv6 Konzept auf EUI-64 Adressen anzupassen, haben wir die IPv6 Access-Lists auf dem Core Router im Labor nicht eingesetzt. Details der Einschränkung sind in folgendem Dokument ersichtlich: \url{http://www.cisco.com/en/US/docs/switches/lan/catalyst3560/software/release/12.2_40_se/configuration/guide/swv6acl.html#wp4334642}
+Die Konfiguration für den Core Router konnte leider nicht ganz von der Simulations übernommen werden. Wir haben festgestellt, dass Cisco Router mit der OS Version 12.2 wie sie im Labor eingesetzt wird, Probleme mit den IPv6 Adressen haben. Access-Lists mit IPv6 Host Adressen (/128), welche nicht das EUI-64 Format haben, können nicht konfiguriert werden. Somit war es nicht möglich unsere Access-Lists aus der Simulation zu verwenden. Da der Aufwand zu gross war das IPv6 Konzept auf EUI-64 Adressen anzupassen, haben wir die IPv6 Access-Lists auf dem Core Router im Labor nicht eingesetzt. Details der Einschränkung sind in folgendem Dokument ersichtlich: \url{http://www.cisco.com/en/US/docs/switches/lan/catalyst3560/software/release/12.2_40_se/configuration/guide/swv6acl.html#wp4334642}
 
 \subsection{Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
