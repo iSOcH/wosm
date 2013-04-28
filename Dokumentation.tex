@@ -11,6 +11,7 @@
 \usepackage{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{hyperref}
 \geometry{a4paper, left=30mm, right=25mm, top=30mm, bottom=35mm} 
 \usepackage{listings}
 \lstset{breaklines=true, breakatwhitespace=true, basicstyle=\scriptsize, numbers=left}
@@ -551,10 +552,11 @@ crypto ca certificate chain localtrust
     fafab98b 0124376f c9cdb1da c49797c8 a2ec50ee 4cce9c24 ad804699 89391955
     8e579c89 8589a49e f95248ef 4e8064
   quit
+ssl trust-point localtrust outside
 \end{lstlisting}
 
-Die ASA Firewall erlaubt für die Verbindung mit dem SSL Client Anyconnect keine unterschiedliche Client-Versionen. Deshalb wird die Client Software auf die Firewall gespeichert. Wird eine neue Version auf die Firewall hochgeladen, werden die Clients beim nächsten Verbindungsaufbau automatisch ein Update durchführen.\\
-Wurde dieses Image des Clients auf die Firewall geladen kann SSL VPN konfiguriert werden.
+Die ASA Firewall erlaubt für die Verbindung mit dem SSL Client Anyconnect keine unterschiedliche Client-Versionen. Deshalb wird die eingesetzte Client Software auf die Firewall gespeichert. Wird eine neue Version auf die Firewall hochgeladen, werden die Clients beim nächsten Verbindungsaufbau automatisch ein Update durchführen.\\
+Das Image des Clients kann mit TFTP oder mit dem ASDM auf die Disk hochgeladen werden. Anschliessend kann das SSL VPN konfiguriert werden.
 \begin{lstlisting}
 webvpn
  enable outside
@@ -562,7 +564,7 @@ webvpn
  anyconnect enable
  tunnel-group-list enable
 \end{lstlisting}
-Anschliessend müssen äquivalent zur IPsec Konfiguration die group-policy und tunnel-group konfiguriert werden. 
+Zusätzlich müssen äquivalent zur IPsec Konfiguration die group-policy und tunnel-group konfiguriert werden. 
 
 \begin{lstlisting}
 group-policy SSLCLientPolicy internal
@@ -584,13 +586,31 @@ tunnel-group SSLClientProfile webvpn-attributes
 
 Um die Client Software zu installieren kann nun auf die ASA über https://209.165.50.1 (Outside Interface) zugegriffen werden und der Client heruntergeladen werden.
 
-
 \subsubsection{ASDM}
--------- TODO Lerch ---------------------
+Um die Konfiguration der ASA zu vereinfachen und zu visualisieren hat Cisco den Adaptive Security Device Manager entwickelt. Mit diesem kann sowohl die Firewall konfiguriert 
+werden wie auch verschiedene Diagramme und Logs betrachtete werden. Zudem enthält er nützliche Tools zur Fehlersuche. Hervorheben möchten wir hier den Packet Tracer, mit dem Verbindungen simuliert und Fehler in der Konfiguration aufgezeigt werden können. Um das ASDM einsetzten zu können muss das Image mit TFTP auf die Disk hochgeladen werden. Anschliessend kann das ASDM konfiguriert werden.
+\begin{lstlisting}
+asdm image disk0:/asdm-647.bin
+http server enable 12443
+http 209.165.50.0 255.255.255.0 outside
+username ssh_admin password SxYXLtULZ5hPDb07 encrypted privilege 15
+\end{lstlisting}
+Da der Port 443 für das SSL VPN bereits verwendet wird, geben wir für den ASDM den Port 12443 an. Der Zugriff über den Browser bzw. den ASDM Client erfolgt somit über die Adresse https://209.165.50.1:12443. Der Zugang kann auf einzelne IP Adressen eingeschränkt werden, um die Sicherheit zu erhöhen. Für die Authentifizierung benötigt es einen Benutzer mit Privilege Level 15. Wir verwenden daher den SSH Admin Benutzer.
+ 
+\subsubsection{Änderungen Simulation / Labor}
+Da wir im Labor eine ASA 5505 mit dem neusten OS 9.1(1) einsetzten gab es ein paar Änderungen in der Konfiguration.
+\begin{description}
+	\item[Access-Lists] Die Access-Lists in der neusten Version unterscheiden nicht mehr zwischen IPv4 und IPv6. Die beiden IP-Adressen können nun in die selbe Access-List geschrieben werden. 
+	\item[VLAN] Interface konfigurationen werden nicht mehr direkt auf dem Interface gemacht sondern auf VLAN Interfaces. Damit ist es zb möglich verschiedene DMZ Netze zu erstellen.
+	\item[Lizenz] Damit eine DMZ vollständig genutzt werden kann, braucht es eine Security Plus Lizenz. Mit der Basis Lizenz hat man nur einen eingeschränkten DMZ Zugriff. Details unter: \url{http://www.cisco.com/en/US/docs/security/asa/asa80/configuration/guide/int5505.html#wp1056883}
+\end{description}
+
+\subsection{Core Router}
+Die Konfiguration für den Core Router konnte leider nicht ganz von der Simulations übernommen werden. Wir haben festgestellt, dass Cisco Router mit der OS Version 12.2 wie sie im Labor eingesetzt wird, Probleme mit den IPv6 Adressen haben. Access-Lists mit IPv6 host Adressen (/128), welche nicht das EUI-64 Format haben, können nicht konfiguriert werden. Somit war es nicht möglich unsere Access-Lists aus der Simulation zu verwenden. Da der Aufwand zu gross war das IPv6 Konzept auf EUI-64 Adressen anzupassen, haben wir die IPv6 Access-Lists auf dem Core Router im Labor nicht eingesetzt. Details der Einschränkung sind in folgendem Dokument ersichtlich: \url{http://www.cisco.com/en/US/docs/switches/lan/catalyst3560/software/release/12.2_40_se/configuration/guide/swv6acl.html#wp4334642}
 
 \subsection{Attacken}
 \subsubsection{ICMP ‘smurf attack’: Denial of Service}
-Da wir jeglichen ICMP Traffic blockieren, reichen einige simplet 'PING' Anfragen aus um zu testen, ob die Verteidigung gegen ICMP ‘smurf attack’ funktioniert.
+Da wir jeglichen ICMP Traffic blockieren, reichen einige simple 'PING' Anfragen aus um zu testen, ob die Verteidigung gegen ICMP ‘smurf attack’ funktioniert.
 \begin{lstlisting}
 ping 209.165.50.1
 ping 209.165.50.2
@@ -624,6 +644,9 @@ Mithilfe eines Skripts senden wir massenhaft Daten an eine bestimmte IP Adresse,
 Das Skript sieht wie folgt aus:
 \lstinputlisting{Phase2/randomdata.pl}
 
+\subsubsection{Auswirkungen}
+Die von uns eingesetzten Attacken wie sie in den vorherigen Kapiteln beschrieben sind, konnten mit unserer Konfiguration alle abgewehrt werden. Das bedeutet, sowohl das interne wieauch das DMZ Netzwerk sind gegen die gängigsten Angriffe geschützt. Jedoch haben wir festgestellt, das die Ressourcen der ASA 5505 ans Limit kamen. Der Speicherverbrauch war zwar nicht überdurchschnittlich gross, doch die CPU Auslastung stieg vorallem beim Stresstest und den SYN-Attacken auf 100\%. Das Arbeiten mit dem ASDM war nicht mehr möglich, der Konsolen Zugriff jedoch immernoch möglich und schnell. Leider konnten wir nicht herausfinden was diese Auslastung für Auswirkungen auf den Internet und DMZ Zugriff sowie die VPN Verbindungen bedeutet. Wir finden aber, dass die Cisco ASA 5505 für KMUs und Niederlassungen eine gute und wenn richtig konfiguriert, eine sichere Lösung ist.
+
 \newpage
 \appendix
 \phantomsection
@@ -634,6 +657,10 @@ Das Skript sieht wie folgt aus:
 
 \section{Konfiguration ASA}
 \lstinputlisting{asa_config_labor.txt}
+\newpage
+
+\section{Konfiguration Switch}
+\lstinputlisting{switch_config_labor.txt}
 \newpage
 
 \section{Tinc Startscript VMware}
