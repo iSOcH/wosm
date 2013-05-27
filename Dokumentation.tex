@@ -655,13 +655,21 @@ Die von uns eingesetzten Attacken wie sie in den vorherigen Kapiteln beschrieben
 \newpage
 \section{IP Address Management}
 \subsection{Übersicht IPAM}
-\textit{Einen kurzen Überblick (1-2 Seiten A4) über die Funktionsweise, typische Features, Stärken, Schwächen, Abhängigkeiten etc. von IPAM.}
-
 Bei IPAM (IP Address Management) geht es darum, die in einer Organisation zugeteilten, verfügbaren und vergebenen IP-Adressen und -Adressbereiche in einem zentralen Verwaltungstool überblicken und bearbeiten zu können. Durch die immer komplexerer werdenden IT-Infrastrukturen (mit Technologien wie VPNs, Virtualisierung, Cloud, VoIP) steigen die Anforderungen an die Administratoren bzgl. der Verwaltung \glqq{}ihrer\grqq{} Adressbereiche.
 
-Nicht zuletzt führt auch die (immer weiter voranschreitende) Einführung von IPv6 auf Grund der üblicherweise noch notwendigen Dual-Stack-Konfigurationen im Zusammenspiel mit den zuvor genannten neuen Technologien dazu, dass es um ein Vielfaches komplexer und aufwendiger wird, die IP-Adressen und -Adressbereiche auf eine kluge Art und Weise zuzuordnen und den Überblick zu behalten.
+Nicht zuletzt führt auch die (immer weiter voranschreitende) Einführung von IPv6 (unter Anderem aufgrund der üblicherweise noch notwendigen Dual-Stack-Konfigurationen) im Zusammenspiel mit den zuvor genannten neuen Technologien dazu, dass es um ein Vielfaches komplexer und aufwendiger wird, die IP-Adressen und -Adressbereiche auf eine kluge Art und Weise zuzuordnen und den Überblick zu behalten.
 
-Viele der gefundenen IPAM-Werkzeuge werden über eine Weboberfläche bedient und zeigen dort Informationen zu den vorhandenen IP(v6)-Adressbereichen sowie deren Auslastung an. IP-Adressbereiche lassen sich erzeugen, bearbeiten und wieder löschen. Wichtig ist es auch, die Bereiche mit zusätzlichen Informationen (wo wird der Bereich verwendet, wofür wird er verwendet etc.) versehen zu können. Eine Strukturierungsmöglichkeit über die Bereiche (beispielsweise alle Bereiche, die an einem bestimmtem Standort verwendet werden) bieten ebenfalls einige Tools.
+Viele der gefundenen IPAM-Werkzeuge werden über eine Weboberfläche bedient und zeigen dort Informationen zu den vorhandenen IP(v6)-Adressbereichen sowie deren Belegung an. IP-Adressbereiche lassen sich erzeugen, bearbeiten und wieder löschen. Wichtig ist es auch, die Bereiche mit zusätzlichen Informationen (wo wird der Bereich verwendet, wofür wird er verwendet etc.) versehen zu können. So ist es eher möglich, später die Zuweisung einer Adresse oder eines Bereiches nachvollziehen zu können. Eine Strukturierungsmöglichkeit über die Bereiche (beispielsweise alle Bereiche, die an einem bestimmtem Standort verwendet werden) bieten ebenfalls einige Tools.
+
+Die Werkzeuge bieten dafür neben der offensichtlich notwendigen Anbindung von DHCP-Servern (um zu vergebende Adressbereiche konfigurieren zu können und Informationen über die vergebenen Adressen aus diesen Bereichen zu erhalten) häufig auch eine Schnittstelle zu DNS-Servern. Dadurch ist es möglich, für vergebene IP-Adressen auch direkt DNS-Einträge zu erstellen resp. nachzuführen. Der Funktionsumfang der Tools bzgl. DHCP Konfiguration unterscheidet sich und reicht teilweise bis zu der Möglichkeit, für einzelne Geräte Adressen zu reservieren und diesen dann auch spezielle Optionen (wie abweichende DNS-Server) mitgeben zu lassen.
+
+Einzelne Tools bieten neben der Anbindung von DHCP- und DNS-Servern auch die Möglichkeit, Virtualisierungsserver wie VMware ESX(i) oder Windows Server mit der Hyper-V Rolle zu integrieren.
+
+IPAM hilft den Administratoren eines Netzwerks, Fehler bei der Zuweisung von IP-Adressen oder -Bereichen zu verhindern. Dies wird dadurch ermöglicht, dass allenfalls nur mangelhaft nachgeführte Spreadsheets durch eine zentrale Verwaltung ersetzt werden, die selber Probleme wie die mehrfache Vergabe des selben Adressbereichs feststellen und hervorheben können. Durch die automatische periodische Abfrage von bei der Adresskonfiguration beteiligten Komponenten können Belegungsfaktoren und je nach Tool sogar die Entwicklung ebenjener in einer zentralen Oberfläche grafisch aufbereitet dargestellt werden.
+
+Neben den genannten Möglichkeiten und Vorteilen weist IPAM aber auch Schwächen auf. In erster Linie sind vorallem die umfangreicheren Tools für kleinere Netzwerke völlig überdimensioniert. Für Umgebungen, die nur eine geringe Anzahl an IP-Subnetzen besitzen und in denen Zuweisungen resp. Anpassungen der Adresskonfiguration in eher geringer Frequenz auftreten werden automatisierte IP-Adressmanagementlösungen nicht unbedingt benötigt.
+
+Die kommerziellen, kostenpflichtigen Tools sind teilweise auch ziemlich teuer und es fällt schwer, sich vorzustellen, wie die Kosten dieser Tools durch deren Nutzen (abhängig von der Umgebung) wiedergewonnen werden sollen. Ebenfalls bedingt die Nutzung eines zusätzlichen Werkzeugs auch eine Ausbildung der Nutzer/Administratoren, die damit arbeiten sollen.
 
 \subsection{IPAM Tools}
 \subsubsection{Tool 1}
