@@ -1,0 +1,399 @@
+root@wosmgr1-ipam:~# apt-get install apache2 mysql-server perl snmp libapache2-mod-perl2
+root@wosmgr1-ipam:~# service apache2 restart
+
+
+
+
+
+
+
+
+
+
+
+root@wosmgr1-ipam:~/gestioip_3.0# ./setup_gestioip.sh 
+
+This script will install GestioIP 3.0 on this computer
+
+Do you wish to continue [y]/n? 
+Starting installation
+
+Starting GestioIP setup from folder /root/gestioip_3.0
+Storing log in file /root/gestioip_3.0/20130527220414.setup.log
+
++----------------------------------------------------------+
+| Checking for Apache web server daemon...                 |
++----------------------------------------------------------+
+
+Where is Apache daemon binary [/usr/sbin/apache2]? 
+OK, using Apache daemon /usr/sbin/apache2
+
+
++----------------------------------------------------------+
+| Checking for Apache main configuration file...           |
++----------------------------------------------------------+
+
+Where is Apache main configuration file [/etc/apache2/apache2.conf]? 
+OK, using Apache main configuration file /etc/apache2/apache2.conf
+
+
++----------------------------------------------------------+
+| Checking for Apache user account...                      |
++----------------------------------------------------------+
+
+Which user account is running Apache web server [www-data]? 
+OK, Apache is running under user account www-data
+
+
++----------------------------------------------------------+
+| Checking for Apache group...                             |
++----------------------------------------------------------+
+
+Which user group is running Apache web server [www-data]? 
+OK, Apache is running under users group www-data
+
+
++----------------------------------------------------------+
+| Checking for Apache Include configuration directory...   |
++----------------------------------------------------------+
+
+Where is Apache Include configuration directory [/etc/apache2/conf.d/]? 
+OK, using Apache Include configuration directory /etc/apache2/conf.d
+
+
++----------------------------------------------------------+
+| Checking for PERL Interpreter...                         |
++----------------------------------------------------------+
+
+Where is PERL Intrepreter binary [/usr/bin/perl]? 
+OK, using PERL Intrepreter /usr/bin/perl
+
++----------------------------------------------------------+
+| Checking for Apache mod_perl version...                  |
++----------------------------------------------------------+
+
+Checking for Apache mod_perl
+Apache mod_perl available - Good!
+
++----------------------------------------------------------+
+| Checking for required Perl Modules...                    |
++----------------------------------------------------------+
+
+Do you plan to import networks or hosts from spreadsheets [y]/n? n
+
+OK, installing GestioIP without spreadsheet support
+
+Checking for DBI PERL module...
+Found that PERL module DBI is available.
+
+Checking for DBD-mysql PERL module...
+Found that PERL module DBD-mysql is available.
+
+Checking for Net::IP PERL module...
+*** ERROR ***: PERL module Net::IP is not installed!
+
+Checking for Net::Ping::External PERL module...
+*** ERROR ***: PERL module Net::Ping::External is not installed!
+
+Checking for Parallel::ForkManager PERL module...
+*** ERROR ***: PERL module Parallel::ForkManager is not installed!
+
+Checking for SNMP PERL module...
+*** ERROR ***: PERL module SNMP is not installed!
+
+Checking for SNMP::Info PERL module...
+*** ERROR ***: PERL module SNMP::Info is not installed!
+
+Checking for Mail::Mailer PERL module...
+Found that PERL module Mail::Mailer is available.
+
+Checking for Time::HiRes PERL module...
+Found that PERL module Time::HiRes is available.
+
+Checking for Date::Calc PERL module...
+*** ERROR ***: PERL module Date::Calc is not installed!
+
+Checking for Date::Manip PERL module...
+*** ERROR ***: PERL module Date::Manip is not installed!
+
+Checking for Net::DNS PERL module...
+*** ERROR ***: PERL module Net::DNS is not installed!
+
+
+Checking for GD::Graph::pie PERL module...
+*** ERROR ***: PERL module GD::Graph::pie is not installed!
+
+
+##### There are required Perl Modules missing #####
+
+Setup can install the missing modules
+
+Do you wish that Setup installs the missing Perl Modules now [y]/n? 
+
+
+Executing  apt-get install libdbi-perl libdbd-mysql-perl libparallel-forkmanager-perl libnet-ping-external-perl libwww-perl libnet-ip-perl libsnmp-perl libdate-manip-perl libdate-calc-perl libtime-modules-perl libmailtools-perl libnet-dns-perl libsnmp-info-perl libgd-graph-perl
+
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+libdbd-mysql-perl is already the newest version.
+libdbd-mysql-perl set to manually installed.
+libdbi-perl is already the newest version.
+libdbi-perl set to manually installed.
+libmailtools-perl is already the newest version.
+libmailtools-perl set to manually installed.
+libwww-perl is already the newest version.
+libwww-perl set to manually installed.
+The following extra packages will be installed:
+  fontconfig-config libbit-vector-perl libcarp-clan-perl libdate-calc-xs-perl
+  libdigest-hmac-perl libfontconfig1 libgd-gd2-perl libgd-text-perl libgd2-xpm
+  libjpeg-turbo8 libjpeg8 libxpm4 libyaml-syck-perl ttf-dejavu-core
+Suggested packages:
+  ttf-dustin libgd-tools netdisco-mibs-installer
+The following NEW packages will be installed:
+  fontconfig-config libbit-vector-perl libcarp-clan-perl libdate-calc-perl
+  libdate-calc-xs-perl libdate-manip-perl libdigest-hmac-perl libfontconfig1
+  libgd-gd2-perl libgd-graph-perl libgd-text-perl libgd2-xpm libjpeg-turbo8 libjpeg8
+  libnet-dns-perl libnet-ip-perl libnet-ping-external-perl libparallel-forkmanager-perl
+  libsnmp-info-perl libsnmp-perl libtime-modules-perl libxpm4 libyaml-syck-perl
+  ttf-dejavu-core
+0 upgraded, 24 newly installed, 0 to remove and 2 not upgraded.
+Need to get 6,807 kB of archives.
+After this operation, 21.4 MB of additional disk space will be used.
+Do you want to continue [Y/n]? Y
+Get:1 http://ch.archive.ubuntu.com/ubuntu/ precise/main ttf-dejavu-core all 2.33-2ubuntu1 [1,552 kB]
+Get:2 http://ch.archive.ubuntu.com/ubuntu/ precise-updates/main fontconfig-config all 2.8.0-3ubuntu9.1 [44.4 kB]
+Get:3 http://ch.archive.ubuntu.com/ubuntu/ precise-updates/main libfontconfig1 i386 2.8.0-3ubuntu9.1 [125 kB]
+Get:4 http://ch.archive.ubuntu.com/ubuntu/ precise-updates/main libjpeg-turbo8 i386 1.1.90+svn733-0ubuntu4.1 [118 kB]
+Get:5 http://ch.archive.ubuntu.com/ubuntu/ precise/main libjpeg8 i386 8c-2ubuntu7 [2,112 B]
+Get:6 http://ch.archive.ubuntu.com/ubuntu/ precise/main libxpm4 i386 1:3.5.9-4 [37.4 kB]
+Get:7 http://ch.archive.ubuntu.com/ubuntu/ precise/main libgd2-xpm i386 2.0.36~rc1~dfsg-6ubuntu2 [201 kB]
+Get:8 http://ch.archive.ubuntu.com/ubuntu/ precise/main libyaml-syck-perl i386 1.19-1 [64.8 kB]
+Get:9 http://ch.archive.ubuntu.com/ubuntu/ precise/main libcarp-clan-perl all 6.04-1 [14.1 kB]
+Get:10 http://ch.archive.ubuntu.com/ubuntu/ precise/main libbit-vector-perl i386 7.1-1build2 [161 kB]
+Get:11 http://ch.archive.ubuntu.com/ubuntu/ precise/universe libdate-calc-perl all 6.3-1 [209 kB]
+Get:12 http://ch.archive.ubuntu.com/ubuntu/ precise/universe libdate-calc-xs-perl i386 6.2-1build1 [57.3 kB]
+Get:13 http://ch.archive.ubuntu.com/ubuntu/ precise/main libdate-manip-perl all 6.25-1 [2,608 kB]
+Get:14 http://ch.archive.ubuntu.com/ubuntu/ precise/main libdigest-hmac-perl all 1.03+dfsg-1 [12.1 kB]
+Get:15 http://ch.archive.ubuntu.com/ubuntu/ precise/main libnet-ip-perl all 1.25-3 [28.1 kB]
+Get:16 http://ch.archive.ubuntu.com/ubuntu/ precise/main libnet-dns-perl i386 0.66-2ubuntu3 [275 kB]
+Get:17 http://ch.archive.ubuntu.com/ubuntu/ precise/universe libnet-ping-external-perl all 0.13-1 [13.8 kB]
+Get:18 http://ch.archive.ubuntu.com/ubuntu/ precise/universe libparallel-forkmanager-perl all 0.7.5-2 [13.1 kB]
+Get:19 http://ch.archive.ubuntu.com/ubuntu/ precise-updates/main libsnmp-perl i386 5.4.3~dfsg-2.4ubuntu1.1 [127 kB]
+Get:20 http://ch.archive.ubuntu.com/ubuntu/ precise/universe libsnmp-info-perl all 2.06-1 [515 kB]
+Get:21 http://ch.archive.ubuntu.com/ubuntu/ precise/main libtime-modules-perl all 2011.0517-1 [34.7 kB]
+Get:22 http://ch.archive.ubuntu.com/ubuntu/ precise/main libgd-gd2-perl i386 1:2.46-3build1 [186 kB]
+Get:23 http://ch.archive.ubuntu.com/ubuntu/ precise/main libgd-text-perl all 0.86-8 [38.2 kB]
+Get:24 http://ch.archive.ubuntu.com/ubuntu/ precise/main libgd-graph-perl all 1.44-6 [371 kB]
+Fetched 6,807 kB in 7s (914 kB/s)                                                        
+Selecting previously unselected package ttf-dejavu-core.
+(Reading database ... 52458 files and directories currently installed.)
+Unpacking ttf-dejavu-core (from .../ttf-dejavu-core_2.33-2ubuntu1_all.deb) ...
+Selecting previously unselected package fontconfig-config.
+Unpacking fontconfig-config (from .../fontconfig-config_2.8.0-3ubuntu9.1_all.deb) ...
+Selecting previously unselected package libfontconfig1.
+Unpacking libfontconfig1 (from .../libfontconfig1_2.8.0-3ubuntu9.1_i386.deb) ...
+Selecting previously unselected package libjpeg-turbo8.
+Unpacking libjpeg-turbo8 (from .../libjpeg-turbo8_1.1.90+svn733-0ubuntu4.1_i386.deb) ...
+Selecting previously unselected package libjpeg8.
+Unpacking libjpeg8 (from .../libjpeg8_8c-2ubuntu7_i386.deb) ...
+Selecting previously unselected package libxpm4.
+Unpacking libxpm4 (from .../libxpm4_1%3a3.5.9-4_i386.deb) ...
+Selecting previously unselected package libgd2-xpm.
+Unpacking libgd2-xpm (from .../libgd2-xpm_2.0.36~rc1~dfsg-6ubuntu2_i386.deb) ...
+Selecting previously unselected package libyaml-syck-perl.
+Unpacking libyaml-syck-perl (from .../libyaml-syck-perl_1.19-1_i386.deb) ...
+Selecting previously unselected package libcarp-clan-perl.
+Unpacking libcarp-clan-perl (from .../libcarp-clan-perl_6.04-1_all.deb) ...
+Selecting previously unselected package libbit-vector-perl.
+Unpacking libbit-vector-perl (from .../libbit-vector-perl_7.1-1build2_i386.deb) ...
+Selecting previously unselected package libdate-calc-perl.
+Unpacking libdate-calc-perl (from .../libdate-calc-perl_6.3-1_all.deb) ...
+Selecting previously unselected package libdate-calc-xs-perl.
+Unpacking libdate-calc-xs-perl (from .../libdate-calc-xs-perl_6.2-1build1_i386.deb) ...
+Selecting previously unselected package libdate-manip-perl.
+Unpacking libdate-manip-perl (from .../libdate-manip-perl_6.25-1_all.deb) ...
+Selecting previously unselected package libdigest-hmac-perl.
+Unpacking libdigest-hmac-perl (from .../libdigest-hmac-perl_1.03+dfsg-1_all.deb) ...
+Selecting previously unselected package libnet-ip-perl.
+Unpacking libnet-ip-perl (from .../libnet-ip-perl_1.25-3_all.deb) ...
+Selecting previously unselected package libnet-dns-perl.
+Unpacking libnet-dns-perl (from .../libnet-dns-perl_0.66-2ubuntu3_i386.deb) ...
+Selecting previously unselected package libnet-ping-external-perl.
+Unpacking libnet-ping-external-perl (from .../libnet-ping-external-perl_0.13-1_all.deb) ...
+Selecting previously unselected package libparallel-forkmanager-perl.
+Unpacking libparallel-forkmanager-perl (from .../libparallel-forkmanager-perl_0.7.5-2_all.deb) ...
+Selecting previously unselected package libsnmp-perl.
+Unpacking libsnmp-perl (from .../libsnmp-perl_5.4.3~dfsg-2.4ubuntu1.1_i386.deb) ...
+Selecting previously unselected package libsnmp-info-perl.
+Unpacking libsnmp-info-perl (from .../libsnmp-info-perl_2.06-1_all.deb) ...
+Selecting previously unselected package libtime-modules-perl.
+Unpacking libtime-modules-perl (from .../libtime-modules-perl_2011.0517-1_all.deb) ...
+Selecting previously unselected package libgd-gd2-perl.
+Unpacking libgd-gd2-perl (from .../libgd-gd2-perl_1%3a2.46-3build1_i386.deb) ...
+Selecting previously unselected package libgd-text-perl.
+Unpacking libgd-text-perl (from .../libgd-text-perl_0.86-8_all.deb) ...
+Selecting previously unselected package libgd-graph-perl.
+Unpacking libgd-graph-perl (from .../libgd-graph-perl_1.44-6_all.deb) ...
+Processing triggers for man-db ...
+Setting up ttf-dejavu-core (2.33-2ubuntu1) ...
+Setting up fontconfig-config (2.8.0-3ubuntu9.1) ...
+Setting up libfontconfig1 (2.8.0-3ubuntu9.1) ...
+Setting up libjpeg-turbo8 (1.1.90+svn733-0ubuntu4.1) ...
+Setting up libjpeg8 (8c-2ubuntu7) ...
+Setting up libxpm4 (1:3.5.9-4) ...
+Setting up libgd2-xpm (2.0.36~rc1~dfsg-6ubuntu2) ...
+Setting up libyaml-syck-perl (1.19-1) ...
+Setting up libcarp-clan-perl (6.04-1) ...
+Setting up libbit-vector-perl (7.1-1build2) ...
+Setting up libdate-calc-perl (6.3-1) ...
+Setting up libdate-calc-xs-perl (6.2-1build1) ...
+Setting up libdate-manip-perl (6.25-1) ...
+Setting up libdigest-hmac-perl (1.03+dfsg-1) ...
+Setting up libnet-ip-perl (1.25-3) ...
+Setting up libnet-dns-perl (0.66-2ubuntu3) ...
+Setting up libnet-ping-external-perl (0.13-1) ...
+Setting up libparallel-forkmanager-perl (0.7.5-2) ...
+Setting up libsnmp-perl (5.4.3~dfsg-2.4ubuntu1.1) ...
+Setting up libsnmp-info-perl (2.06-1) ...
+Setting up libtime-modules-perl (2011.0517-1) ...
+Setting up libgd-gd2-perl (1:2.46-3build1) ...
+Setting up libgd-text-perl (0.86-8) ...
+Setting up libgd-graph-perl (1.44-6) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+
+
+SNMP::Info needs the Netdisco MIBs to be installed
+Setup can download MIB files (11MB) and install it under /usr/share/gestioip/mibs
+
+If Netdisco MIBs are already installed on this server type "no" and
+specify path to MIBs via frontend Web (manage->GestioIP) after finishing
+the installation
+
+Do you wish that Setup installs required MIBs now [y]/n?
+Downloading Netdisco MIBs (this may take several minutes)... OK
+Installation of Netdisco MIBs SUCCESSFUL
+
+
++----------------------------------------------------------+
+| Checking for required Perl Modules...                    |
++----------------------------------------------------------+
+
+
+Checking for DBI PERL module...
+Found that PERL module DBI is available.
+
+Checking for DBD-mysql PERL module...
+Found that PERL module DBD-mysql is available.
+
+Checking for Net::IP PERL module...
+Found that PERL module Net::IP is available.
+
+Checking for Net::Ping::External PERL module...
+Found that PERL module Net::Ping::External is available.
+
+Checking for Parallel::ForkManager PERL module...
+Found that PERL module Parallel::ForkManager is available.
+
+Checking for SNMP PERL module...
+Found that PERL module SNMP is available.
+
+Checking for SNMP::Info PERL module...
+Found that PERL module SNMP::Info is available.
+
+Checking for Mail::Mailer PERL module...
+Found that PERL module Mail::Mailer is available.
+
+Checking for Time::HiRes PERL module...
+Found that PERL module Time::HiRes is available.
+
+Checking for Date::Calc PERL module...
+Found that PERL module Date::Calc is available.
+
+Checking for Date::Manip PERL module...
+Found that PERL module Date::Manip is available.
+
+Checking for Net::DNS PERL module...
+Found that PERL module Net::DNS is available.
+
+
+Checking for GD::Graph::pie PERL module...
+Found that PERL module GD::Graph::pie is available.
+
+
+Found all required Perl Modules for GestioIP - Good!
+
+
++----------------------------------------------------------+
+| Configuration of Apache Web Server...                    |
++----------------------------------------------------------+
+
+Which is the Apache DocumentRoot directory [/var/www]? 
+OK, using Apache DocumentRoot /var/www
+
+Where is htpasswd [/usr/bin/htpasswd]? 
+OK, using htpasswd /usr/bin/htpasswd
+
+Which should be the read-only (ro) user [gipoper]? 
+OK, using ro user gipoper
+
+Which should be the read-write (rw) user [gipadmin]? 
+OK, using rw user gipadmin
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++
+Now open a new shell and execute the following two
+commands LIKE ROOT to create the GestioIP apache users:
++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sudo /usr/bin/htpasswd -c /etc/apache2/users-gestioip gipoper
+sudo /usr/bin/htpasswd /etc/apache2/users-gestioip gipadmin
+
+ro user (gipoper) successfully created
+rw user (gipadmin) successfully created
+
+
+Under which directory should GestioIP's script files be installed [/usr/share/gestioip]?
+OK, using script base directory /usr/share/gestioip
+
++-------------------------------------------------------+
+|                                                       |
+|    Installation of GestioIP successfully finished!    |
+|                                                       |
+|   Please, review /etc/apache2/conf.d/gestioip.conf
+|            to ensure all is good and                  |
+|                                                       |
+|              RESTART Apache daemon!                   |
+|                                                       |
+|            Then, point your browser to                |
+|                                                       |
+|           http://server/gestioip/install
+|                                                       |
+|          to configure the database server.            |
+|         Access with user "gipadmin" and the
+|        the password which you created before          |
+|                                                       |
++-------------------------------------------------------+
+
+root@wosmgr1-ipam:~/gestioip_3.0# service apache2 restart
+
+// pw von gestioip auf mysql: Quai6ahp8sheing
+
+
+
+
+connecting to the database...OK
+creating the new database gestioip...OK
+GRANT ALL ON gestioip.* to gestioip@127.0.0.1 IDENTIFIED BY "********"...OK
+creating tables in the new database...OK
+
+The Mysql database was successfully created
+
+
+
+
+root@wosmgr1-ipam:~/gestioip_3.0# rm -r /var/www/gestioip/install
+
+
+
