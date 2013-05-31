@@ -1,0 +1,34 @@
+root@wosmgr1-ipam:/usr/share/gestioip/mibs/cisco# snmpwalk -v 1 -c public 10.0.10.1 CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."20:05:20:13:00:ff:00:a0:00:00:00:00:00:00:00:01" = OID: 
+CISCO-IETF-IP-MIB::cIpAddressPfxOrigin.10001.ipv6."20:05:20:13:00:ff:00:a0:00:00:00:00:00:00:00:00".64
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."20:05:20:13:00:ff:0a:10:00:00:00:00:00:00:00:01" = OID: 
+CISCO-IETF-IP-MIB::cIpAddressPfxOrigin.10.ipv6."20:05:20:13:00:ff:0a:10:00:00:00:00:00:00:00:00".64
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."20:05:20:13:00:ff:0a:20:00:00:00:00:00:00:00:01" = OID: 
+CISCO-IETF-IP-MIB::cIpAddressPfxOrigin.20.ipv6."20:05:20:13:00:ff:0a:20:00:00:00:00:00:00:00:00".64
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."20:05:20:13:00:ff:0a:30:00:00:00:00:00:00:00:01" = OID: 
+CISCO-IETF-IP-MIB::cIpAddressPfxOrigin.30.ipv6."20:05:20:13:00:ff:0a:30:00:00:00:00:00:00:00:00".64
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."20:05:20:13:00:ff:0a:40:00:00:00:00:00:00:00:01" = OID: 
+CISCO-IETF-IP-MIB::cIpAddressPfxOrigin.40.ipv6."20:05:20:13:00:ff:0a:40:00:00:00:00:00:00:00:00".64
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."fe:80:00:00:00:00:00:00:02:1f:9d:ff:fe:9e:32:c1" = OID: SNMPv2-SMI::zeroDotZero
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."fe:80:00:00:00:00:00:00:02:1f:9d:ff:fe:9e:32:c2" = OID: SNMPv2-SMI::zeroDotZero
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."fe:80:00:00:00:00:00:00:02:1f:9d:ff:fe:9e:32:c3" = OID: SNMPv2-SMI::zeroDotZero
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."fe:80:00:00:00:00:00:00:02:1f:9d:ff:fe:9e:32:c4" = OID: SNMPv2-SMI::zeroDotZero
+CISCO-IETF-IP-MIB::cIpAddressPrefix.ipv6."fe:80:00:00:00:00:00:00:02:1f:9d:ff:fe:9e:32:c5" = OID: SNMPv2-SMI::zeroDotZero
+
+
+root@wosmgr1-ipam:/usr/share/gestioip/mibs/cisco# snmpwalk -v 1 -c public 10.0.10.1 CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."20:05:20:13:00:ff:0a:10:00:00:00:00:00:00:00:21" = STRING: 0:50:56:bc:0:ee:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."20:05:20:13:00:ff:0a:10:65:75:3c:3e:19:96:ba:e2" = STRING: 0:50:56:bc:0:ee:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."20:05:20:13:00:ff:0a:10:65:ae:46:a9:06:75:53:d5" = STRING: 0:50:56:bc:15:6b:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."fe:80:00:00:00:00:00:00:00:f2:be:a2:15:30:20:34" = STRING: 3c:97:e:76:d7:d5:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."fe:80:00:00:00:00:00:00:02:50:56:ff:fe:bc:15:6b" = STRING: 0:50:56:bc:15:6b:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."fe:80:00:00:00:00:00:00:3e:97:0e:ff:fe:03:98:24" = STRING: 3c:97:e:3:98:24:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10.ipv6."fe:80:00:00:00:00:00:00:65:75:3c:3e:19:96:ba:e2" = STRING: 0:50:56:bc:0:ee:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.20.ipv6."20:05:20:13:00:ff:0a:20:81:f1:1d:c3:29:b5:25:c3" = STRING: 0:50:56:bc:0:eb:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.20.ipv6."20:05:20:13:00:ff:0a:20:85:cf:56:0c:75:f2:51:de" = STRING: 0:50:56:bc:0:eb:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.20.ipv6."fe:80:00:00:00:00:00:00:81:f1:1d:c3:29:b5:25:c3" = STRING: 0:50:56:bc:0:eb:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.40.ipv6."20:05:20:13:00:ff:0a:40:59:72:ef:37:0c:85:fc:4f" = STRING: 0:50:56:bc:0:ed:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.40.ipv6."20:05:20:13:00:ff:0a:40:74:e4:ee:01:00:b4:d9:71" = STRING: 0:50:56:bc:0:ed:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.40.ipv6."fe:80:00:00:00:00:00:00:74:e4:ee:01:00:b4:d9:71" = STRING: 0:50:56:bc:0:ed:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10001.ipv6."20:05:20:13:00:ff:00:a0:00:00:00:00:00:00:00:02" = STRING: a4:4c:11:bb:3d:ad:0:0
+CISCO-IETF-IP-MIB::cInetNetToMediaPhysAddress.10001.ipv6."fe:80:00:00:00:00:00:00:a6:4c:11:ff:fe:bb:3d:ad" = STRING: a4:4c:11:bb:3d:ad:0:0
