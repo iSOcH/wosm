@@ -946,7 +946,12 @@ Die Software holt sich die Informationen über VLANs, Netzwerke und Hosts über 
 \item{Community Key = public}
 \end{itemize}
 
-\textbf{Probleme Discovery IPv6}\\
+\subsubsection{Probleme Discovery IPv6}
+Das automatische Erkennen der IPv6 Netzwerke und Hosts ist mit unserer Hardware (Catalyst 3560 und ASA 5505) nicht gelungen. Die Ursache dieses Problems liegt in den von GestioIP verwendeten OIDs. \\
+Zitat Dokumentation GestioIP Kapitel 10.1.3 : \glqq{}IPv6 based network import depends on either the OID inetCidrRouteProto or the OID ipv6RouteProtocol.\grqq{}\\
+Unsere Hardware unterstützt diese SNMP OIDs jedoch nicht, wie anhand der Cisco Website \url{http://www.cisco.com/public/sw-center/netmgmt/cmtk/mibs.shtml} überprüft werden kann. \\
+Folgende SNMP Abfragen zeigen jedoch, dass die Hardware IPv6 Informationen wie Nachbarschaften und IP-Adressen übermitteln könnte. GestioIP holt diese Informationen leider nicht und somit ist  das Erkennen von IPv6 Netzwerken und Hosts nicht möglich.
+\lstinputlisting{Phase3/netzinfo_via_snmp.txt}
 
 \subsubsection{Reporting}
 Wir zeigen hier die möglichen Reports, welche das Tool generieren kann. Der erste Report in Abbildung \ref{fig:anzahlhosts} ist eine Statistik über die Anzahl Netze, VLANs und Hosts.
@@ -987,14 +992,15 @@ Neben den üblichen Statistiken bietet das Tool noch visuelle Reports an(Abbildu
 \label{fig:visual_host}
 \end{figure}
 
-
-
-
 \subsubsection{Management}
-Lerch
+\textbf{Benutzer-Management}\\
+GestioIP hat ein sehr einfaches Benutzermanagement, welches nicht angepasst werden kann. Für den Zugriff auf das Web-Interface gibt es zwei Benutzer. Der Benutzer \glqq{}gipadmin\grqq{} hat Schreib- und Lesezugriff auf Ansichten und Einstellungen. Der Benutzer \glqq{}gipoper\grqq{} hat jeweils nur Lesezugriff. Die Authentifizierung erfolgt über das bei der Installation eingegebene Passwort. \\
+\\
+\textbf{Host-Management}\\
+Ein Host-Management hat GestioIP eigentlich nid. Die Netzwerke, VLANs und jeweiligen Hosts können  angezeigt, gesucht und gefiltert werden. Die Zuteilung, Erneuerung, Rücknahme oder Sperrung der IP-Adresse kann aber damit nicht gemacht werden. Das Tool ist somit für eine Inventarisierung und Überwachung einsetztbar, jedoch muss die Fehlerbehebung immernoch direkt auf den DHCP- bzw. DNS-Servern erfolgen.  
 \subsubsection{Fazit}
 
-\textit{Optional}
+\textit{Mandatory}
 
 \newpage
 \appendix
