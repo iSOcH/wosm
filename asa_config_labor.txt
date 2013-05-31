@@ -1,3 +1,4 @@
+
 : Saved
 :
 ASA Version 9.1(1)
@@ -154,9 +155,21 @@ user-identity default-domain LOCAL
 aaa authentication ssh console LOCAL
 http server enable 12443
 http 209.165.50.0 255.255.255.0 outside
+snmp-server host inside 10.0.10.22 community *****
 no snmp-server location
 no snmp-server contact
+snmp-server community *****
 snmp-server enable traps snmp authentication linkup linkdown coldstart warmstart
+snmp-server enable traps syslog
+snmp-server enable traps ipsec start stop
+snmp-server enable traps entity config-change fru-insert fru-remove
+snmp-server enable traps memory-threshold
+snmp-server enable traps interface-threshold
+snmp-server enable traps remote-access session-threshold-exceeded
+snmp-server enable traps connection-limit-reached
+snmp-server enable traps cpu threshold rising
+snmp-server enable traps ikev2 start stop
+snmp-server enable traps nat packet-discard
 crypto ipsec ikev1 transform-set ESP-3DES-SHA esp-3des esp-sha-hmac
 crypto ipsec security-association pmtu-aging infinite
 crypto dynamic-map outside_dyn_map 10 set ikev1 transform-set ESP-3DES-SHA
@@ -320,5 +333,6 @@ call-home
   subscribe-to-alert-group inventory periodic monthly
   subscribe-to-alert-group configuration periodic monthly
   subscribe-to-alert-group telemetry periodic daily
-Cryptochecksum:53b6a11588d99d09b1df980b10df78d0
+Cryptochecksum:9d824efa01f760e939ba7cb96263685e
 : end
+
