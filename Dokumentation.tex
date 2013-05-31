@@ -867,7 +867,56 @@ Die KO-Kriterien wurden mit 100 Punkte bewertet. Alle anderen Kriterien haben zu
 Für die Implementation in der Laborumgebung verwenden wir das Tool GestióIP, welches bei unserer Bewertung am besten abgeschnitten hat.
 
 \subsubsection{Installation}
-Schwarz
+GestioIP ist eine in Perl geschriebene Webanwendung. Wir haben daher mit den folgenden Befehlen unter Ubuntu einen Apache-Webserver mit einigen Modulen sowie einen MySQL-Datenbankserver installiert:
+
+\begin{lstlisting}
+root@wosmgr1-ipam:~# apt-get install apache2 mysql-server perl snmp libapache2-mod-perl2
+root@wosmgr1-ipam:~# service apache2 restart
+\end{lstlisting}
+
+Nach dem Herunterladen und Entpacken von GestioIP kann die Anwendung über ein mitgeliefertes Setup-Script (gemäss Dokumentation unterstützt es die folgenden Distributionen: Debian, Ubuntu, Fedora, Redhat, CentOS, SuSE) eingerichtet werden. Der Befehl lautet folgendermassen:
+
+\begin{lstlisting}
+root@wosmgr1-ipam:~/gestioip_3.0# ./setup_gestioip.sh 
+
+This script will install GestioIP 3.0 on this computer
+
+Do you wish to continue [y]/n? 
+Starting installation
+
+Starting GestioIP setup from folder /root/gestioip_3.0
+Storing log in file /root/gestioip_3.0/20130527220414.setup.log
+
+[div. weiterer Output und Fragen...]
+\end{lstlisting}
+
+Das Script fragt nach diversen Pfaden (u.A. zu Apache Binary, Config Dir, ...), installiert über das Package-Management weitere Abhängigkeiten und lädt auch MIBs für SNMP herunter. Gegen Ende der Installation muss man manuell noch Einträge in ein htpasswd-File schreiben, damit die Benutzer (gipoper und gipadmin) sich über HTTP-Authentifizierung am Webinterface anmelden können.
+
+Am Ende des Setup-Scripts erscheint folgende Ausgabe:
+
+\begin{lstlisting}
++-------------------------------------------------------+
+|                                                       |
+|    Installation of GestioIP successfully finished!    |
+|                                                       |
+|   Please, review /etc/apache2/conf.d/gestioip.conf
+|            to ensure all is good and                  |
+|                                                       |
+|              RESTART Apache daemon!                   |
+|                                                       |
+|            Then, point your browser to                |
+|                                                       |
+|           http://server/gestioip/install
+|                                                       |
+|          to configure the database server.            |
+|         Access with user "gipadmin" and the
+|        the password which you created before          |
+|                                                       |
++-------------------------------------------------------+
+\end{lstlisting}
+
+Auf der Webseite werden Webanwendungs-typisch Anmeldedaten für MySQL abgefragt und automatisch eine Datenbank erstellt. Danach muss noch des Install-Unterverzeichnis entfernt werden, was die Installation abschliesst.
+
 
 \subsubsection{Konfiguration}
 \textbf{Netzwerkkomponente}\\
@@ -900,7 +949,7 @@ Die Software holt sich die Informationen über VLANs, Netzwerke und Hosts über 
 \textbf{Probleme Discovery IPv6}\\
 
 \subsubsection{Reporting}
-Wir zeigen hier die möglichen Reports, welche das Tool generieren kann. Der erste Report in Abbildung \ref{fig:anzahl_hosts} ist eine Statistik über die Anzahl Netze, VLANs und Hosts.
+Wir zeigen hier die möglichen Reports, welche das Tool generieren kann. Der erste Report in Abbildung \ref{fig:anzahlhosts} ist eine Statistik über die Anzahl Netze, VLANs und Hosts.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.5\textwidth]{Phase3/Report_Anzahl_Netze_Hosts.PNG}
