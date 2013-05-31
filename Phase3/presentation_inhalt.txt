@@ -1,0 +1,18 @@
+Inhalt
+	Auflistung 5 Tools
+	Bewertungsmatrix
+	Installation 
+		Probleme Installation MIBS
+	Konfiguration
+		Einstellungen
+		Discovery
+			Problem IPv6 MIB/SNMP keine unterstützung von 3560 Switch
+			SNMP / ZonenTransfer
+		Hosts Übersicht
+	Reporting
+		Visualisierung
+		Logs
+	Management
+		2 benutzer RO/RW
+	Fazit
+		+ / -
