@@ -865,10 +865,40 @@ Da nicht alle Features und Funktionen gleich wichtig sind, haben wir für die ve
 Die KO-Kriterien wurden mit 100 Punkte bewertet. Alle anderen Kriterien haben zusammen nicht mehr Gewicht als 100 Punkte. Tauglich sind nur jene Tools, welche mindestens 700 Punkte erreicht haben. In der Abbildung  \ref{fig:matrix_2} sind die KO-Kriterien ersichtlich, sowie die verteilung der Punkte und die effektiv erreichten Punkte.
 \subsection{Implementation in Laborumgebung}
 Für die Implementation in der Laborumgebung verwenden wir das Tool GestióIP, welches bei unserer Bewertung am besten abgeschnitten hat.
+
 \subsubsection{Installation}
 Schwarz
+
 \subsubsection{Konfiguration}
-Lerch
+\textbf{Netzwerkkomponente}\\
+Damit die SNMP Informationen abgerufen werden können, muss auf den Cisco Geräten der SNMP Server konfiguriert werden. Auf dem Layer-3 Switch muss dafür lediglich der Community Schlüssel sowie die Zugriffsrechte konfiguriert werden.
+\begin{lstlisting}
+snmp-server community public RO
+\end{lstlisting}
+Auf der ASA-Firewall kann die Sicherheit zusätzlich erhöht werden, in dem die SNMP Abfragen auf einen einzelnen Host eingeschränkt werden kann. 
+\begin{lstlisting}
+snmp-server host inside 10.0.10.22 community *****
+snmp-server community *****
+\end{lstlisting}
+\textbf{GestioIP}\\
+Die GestioIP Software hat nur sehr wenige Einstellungsmöglichkeiten. Im Menü \glqq{}Manage GestioIP\grqq{} müssen nur folgende Einstellungen angepasst werden.
+\begin{itemize}
+\item{IPv4 only mode = no}
+\item{DNS Servers = 10.0.10.21}
+\end{itemize}
+
+\subsubsection{Discovery}
+Die Software holt sich die Informationen über VLANs, Netzwerke und Hosts über SNMP und DNS Abfragen. Beim Discovery-Vorgang müssen folgende Einstellungen gemacht werden.
+\begin{itemize}
+\item{Network devices = 10.0.10.1, 10.100.0.2}
+\item{Import networks IP version = v4 \& v6}
+\item{Import routes learned from = local, static, other}
+\item{SNMP Version = v2c}
+\item{Community Key = public}
+\end{itemize}
+
+\textbf{Probleme Discovery IPv6}\\
+
 \subsubsection{Reporting}
 Wir zeigen hier die möglichen Reports, welche das Tool generieren kann. Der erste Report in Abbildung \ref{fig:anzahl_hosts} ist eine Statistik über die Anzahl Netze, VLANs und Hosts.
 \begin{figure}[H]
