@@ -672,11 +672,177 @@ Neben den genannten Möglichkeiten und Vorteilen weist IPAM aber auch Schwächen
 Die kommerziellen, kostenpflichtigen Tools sind teilweise auch ziemlich teuer und es fällt schwer, sich vorzustellen, wie die Kosten dieser Tools durch deren Nutzen (abhängig von der Umgebung) wiedergewonnen werden sollen. Ebenfalls bedingt die Nutzung eines zusätzlichen Werkzeugs auch eine Ausbildung der Nutzer/Administratoren, die damit arbeiten sollen.
 
 \subsection{IPAM Tools}
+Wir haben alle möglichen Tools analysiert und bereits zu beginn alle ausgeschlossen, welche kein IPv6 unterstützen. Anschliessend haben wir alle weiteren ausgeschlossen, die nicht gratis sind. Wir haben dann die überigen Tools ein wenig genauer unter die Lupe genommen und die besten 5 für eine detailierte Analyse ausgewählt.
 \subsubsection{GestióIP}
+GestióIP ist eine automatisierte, Web basierte IPv4/IPv6 Adressen Verwaltungs-Software (IP address management - IPAM). Es verfügt über leistungsstarke Netzwerk Erkundungs-Funktionen und eine automatische Aktualisierung, sowie über Such- und Filterfunktionen für Netzwerke und für Hosts. Damit kann auf Informationen, die Administratoren in ihre täglichen Arbeit häufig benötigen, schnell und einfach zugegriffen werden. 
+
+GestióIP läuft unter (GPLv3) und ist somit gratis.
+
+Bei Problemen kann man sich an die Hersteller wenden oder in einem zur Verfügung gestellten Forum Hilfe suchen.
+
+Folgende Features versprechen die Hersteller:
+\begin{itemize}
+\item{Intuitives Interface und übersichtliche Darstellung der Daten}
+\item{Volle Unterstützung für IPv4 und IPv6}
+\item{Leistungstarke Suchfunktionen für Netzwerke und Hosts von allen Seiten aus verfügbar (unterstützt Internet-Suchmaschinen äquivalente Ausdrücke wie 'exact match' oder -zu ignorieren)}
+\item{Unabhängige Verwaltung von verschiedenen Klienten mit sich überschneidenden Adress Bereichen}
+\item{Ein integriertes, automatisiertes VLAN Management System}
+\item{Ein integriertes Verwaltungs System für leased or dial-up Linien}
+\item{Ein integriertes Verwaltungs System für Autonome Systeme}
+\item{Netzwerk- und VLAN Erkundung via SNMP}
+\item{Host Erkundung via SNMP und DNS}
+\item{DNS Zone File Generator (mit Unterstützung für BIND und tinydns)}
+\item{Zeigt den Host Status an}
+\item{Ein-Click-Check ob eine IP-Adresse auf 'ping' antwortet und ob DNS PTR und A Einträge konfiguriert sind}
+\item{Interfaces um Netzwerke zu teilen/zusammenzufassen/vergrössern oder zu verkleinern (Hosteinträge können beibehalten werden)}
+\item{Zeigt freie Netzwerk-Ränge an}
+\item{Integrierter Subnet Calculator (werfen Sie einen Blick auf die online Version)}
+\item{Reservierung von Adress-Bereichen für besondere Verwendung}
+\item{Web Formular zur einfachen Migration von Spreadsheet (.xls - MS Excel) basierter IP Adressen Verwaltung}
+\item{Web Formular um Netzwerke via SNMP query zu importieren}
+\item{Export Funktionen für Netzwerke und Host (nach CSV)}
+\item{Automatische Aktualisierung der Netzwerke gegen SNMP}
+\item{Automatische Aktualisierung der Netzwerke gegen DNS}
+\item{Automatische Aktualisierung der Netzwerke gegen OCS Inventory NG}
+\item{Statistiken}
+\item{Voll auditierbar}
+\item{Gut dokumentiert}
+\item{Mehrsprachig (Chinesisch (traditionell und modern), Deutsch, Englisch, Französisch, Holländisch, Italienisch, Katalanisch, Portugiesisch, Russisch, Spanisch)}
+\end{itemize}
+
 \subsubsection{Netmagis}
+Netmagis benutzt eine Datenbank um das Netzwerk abzubilden, die Berechtigungen zu verwalten, DHCP Profile zu bestimmten Ranges oder Hosts abzuspeichern und weiteres. Netmagis ist im Prinzip ein Netzwerk Information System.
+
+Netmagis läuft unter CeCILL-B (kompatibel mit BSD) und ist somit gratis.
+
+Bei Problemen kann ein Ticket eröffnet werden oder die Online Dokumentation eingesehen werden.
+
+Folgende Features versprechen die Hersteller:
+\begin{itemize}
+\item{manage IPv4 and IPv6 addresses;}
+\item{generate data for your DNS server and get BIND zone files always up to date and consistant;}
+\item{delegate DNS management to other network administrators or every non-specialist of DNS management;}
+\item{specify groups of users and very fine access privileges on address (even until every IPv4 or IPv6 address), on domains, etc;}
+\item{manage DHCP allocations (both static or dynamic) with profiles to parametrize network boot;}
+\item{use your existing LDAP directory to manage accounts, or manage accounts with the Netmagis database;}
+\item{manage a large number of networks, users domains, DHCP profiles, etc.;}
+\item{visualize with automatically generated network maps your network topology (switched or routed);}
+\item{give access on these maps to users;}
+\item{assign VLAN to equipment interfaces via a simple Web interface (for Cisco, HP or Juniper equipments);}
+\item{delegate VLAN assignment to other network administrators or every non-specialist of equipment management;}
+\item{access to traffic graphs that you have specified on your equipments.}
+\item{locate hosts by IP address, MAC address or network equipement port}
+\end{itemize}
+
 \subsubsection{NIPAP}
+
+Der Neat IP Address Planner (NIPAP) ist ein IP Adressen Planer, welcher eine sehr schnelle Suche anbietet. IPv4 und IPv6 werden beide komplett unterstützt. Es wird eine Webapplikation sowie ein CLI zur Verwaltung angeboten.
+
+NIPAP läuft unter BSD und ist somit gratis.
+
+Bei Problemen kann ein Ticket eröffnet werden oder die Online Dokumentation eingesehen werden. Ein Kontaktformular steht ebenfalls zur Verfügung.
+
+Folgende Features versprechen die Hersteller:
+\begin{itemize}
+\item{Very fast and scalable to hundreds of thousands of prefixes}
+\item{A stylish and intuitive web interface}
+\item{Native support for IPv6 (full feature parity with IPv4)}
+\item{CLI for the hardcore user}
+\item{Native VRF support, allowing overlapping prefixes in different VRFs}
+\item{Support for documenting individual hosts}
+\item{Very powerful search function}
+\item{Integrated audit log}
+\item{IP address request system for automatically assigning suitable prefixes}
+\item{XML-RPC middleware, allowing easy integration with other applications or writing}
+\item{Flexible authentication using SQLite and/or LDAP}
+\end{itemize}
+
 \subsubsection{OpenNetAdmin}
+OpenNetAdmin bietet ein Datenbank-basiertes IP Adress Management an. Jedes Subnetz, jeder Host und jede IP kann ermittelt werden über ein AJAX basierte Webapplikation. Ein CLI Interface ist verfügbar für Skripting and Massenmutationen.
+
+OpenNetAdmin läuft unter (GPLv2) und ist somit gratis.
+
+Bei Problemen kann die Online Community angefragt werden oder die ausführliche Dokumentation eingesehen werden. Zudem steht ein Chat zur Verfügung.
+
+Folgende Features versprechen die Hersteller:
+\begin{itemize}
+\item{Storage of network attributes such as (subnets, IP address, Mac address, DNS names etc)}
+\item{IPv6 addressing for subnets, interfaces and DNS records.}
+\item{It's not a spreadsheet}
+\item{Plugin framework that allows new functionality to be added by 3rd party plugins.}
+\item{Plugin framework for various authentication backends. Currently available auth backends are LDAP and local.}
+\item{DNS record support (A, CNAME, PTR, NS, MX, TXT, SRV, More to come)}
+\item{DNS view support. Allows you to track overlapping namespaces for situations such as publicand private DNS services}
+\item{Multiple contexts. Simply allows one OpenNetAdmin installation utilize two seperate sets of database backends that can easily be switched between. This can be used to track MPLS networks that would otherwise have overlapping information in them.}
+\item{AJAX enabled web frontend, provides a responsive desktop-like experience}
+\item{ADODB Database abstraction layer. Allows you to use many database backends for data. (only tested with MySQL)}
+\item{Full command line interface for scripting and batch maintenance. Local or remote capabilities.}
+\item{Templated configuration generation from data stored in the database. Utilizes the template\_merge process.}
+\item{Ohh, and it's not a spreadsheet}
+\item{Generation of DNS and DHCP server configuration, can manage distributed servers.}
+\item{Scalability: we have run this system with the following data on a 400mhz PPC server with 2 gigs of memory}
+\item{Subnets	40,000+}
+\item{Hosts	670,000+}
+\item{IP Interfaces	721,000+}
+\item{DNS zones	2700+}
+\item{Historical Cisco configuration archives	13,000+ devices}
+\item{Track CIDR blocks as well as arbitrary IP address ranges for categorizing sections of your network.}
+\item{Track VLAN Campuses (VTP/VMPS domains) and VLAN assignments per subnet.}
+\item{Manage your own custom list of device manufacturers and models that relate to your environment. Or use pre-defined lists of common devices (more device 'packs' to come).}
+\item{Track a 'role' for your devices. I.E. a cisco 6500 could have a role of 'switch', 'router', 'router/switch', 'corporate core' or any other role you decide to allocate.}
+\item{Track DHCP pool failover groups. You can assign servers to any number of failover group pairings, then assign the appropriate subnets to those failover groups.}
+\item{BIND-DLZ support. Allows BIND to perform lookups against your ONA database directly in real-time.}
+\item{Track per device configuration archives with the ability to store many entries and compare them usinga syntax highlighting 'diff' comparison. I.E. archive the contents of a 'show run' or 'show version' command for each router to keep configuration history. Similar to Rancid. Click here for an example}
+\item{Locally stored user and group authentication and authorization. You can define your own groups with pre-determined access rights for common tasks such as adding or deleting hosts.}
+\item{Track 'Shared IPs' such as those in use by HSRP, VRRP, CARP and other virtual interfaces that could be associated with multiple hosts at the same time.}
+\item{Support for quickly moving an IP address from one host to another, no need to delete then re-add.}
+\item{Subnets display a quick usage bar indicating a percentage and count of the utilization of that subnetbased on hosts and pool allocations.}
+\item{Subnet maps for highlevel block allocation views. Also allows you to drag the view window (think google maps) to see what is allocated.}
+\item{Manage multiple DHCP pools per subnet.}
+\item{Per device or subnet messages to track events. For instance, you can tie an alerting system or any other type of notification to a host to create a message that would be visible if someone selects that device.}
+\item{System wide messages to alert all users in the system of important information. All messages include a timestamp, username and severity as well as an expiration date.}
+\item{Create your own 'host actions'. Host actions are user defined URL links to other applications with primary host name or IP address as part of the URL. Allows you to directly link a host lookup within Splunk, Nagios, Cacti, Base, etc.}
+\item{External linking is available to link from external apps directly into a specific record. For example http://localhost/ona/?search=host1.example.com will pull up the display for host1.example.com.}
+\item{Per record DNS TTLs or let it default to the domains default TTL.}
+\item{Quick filter any of the list dialogs. For example, if you have done a search on the subnet name 'LAN-\%' you can then filter that resulting list further by entering .desktop. in the filter box. As you type the list will automaticallyfilter via the AJAX backend system.}
+\item{All MAC address maintenance will take any MAC format such as '12:34:56:AB:CD:EF', '1234.56AB.CDEF', '12-34-56-AB-CD-EF', or '123456ABCDEF'. No more re-formating the text in the edit form, simply cut and paste and it will be converted to a consistent format automatically.}
+\item{Reference subnet masks in either the full octet based format or their CIDR representation.}
+\item{Manage your own DHCP Option types or use one of the built in standard options.}
+\item{Most tasks are one or two clicks away. No need to navigate all through the interface to do one simpletask. Many tasks can be done without even leaving the current screen or display.}
+\item{NAT translation tracking}
+\item{Custom attribute tracking}
+\item{Simple location tracking per device. Location name, street address, etc}
+\item{Rack management plugin. Track your servers location within your datacenter racks.}
+\item{A user definable reporting engine to display various sets of information defined for your needs. Currently SQL queries can be written and stored with a simple interface for creating and displaying the results. More work to be done on this item however.}
+\end{itemize}
+
 \subsubsection{phpIPAM}
+phpipam ist ein Open-Source IPAM Tool, welches über ein Webinterface verwaltet werden kann. Das Ziel ist es, ein möglichst leichtes und einfaches Tool zur Verwaltung von IP Adressen bereitzustellen. Es ist AJAX basiert und verwendet die jQueryis Bibliothek, PHP Skripts, Javaskript und einige HTML5/CSS3 Features.
+
+phpipam läuft unter (GPLv3) und ist somit gratis.
+
+Bei Problemen kann man ein Support Ticket beim Hersteller eröffnen oder ein Mail an die Mailing-List senden.
+
+Folgende Features versprechen die Hersteller:
+\begin{itemize}
+\item{demo: demo.phpipam.net}
+\item{Domain authentication (AD) / OpenLDAP authentication}
+\item{IPv4 / IPv6 address management}
+\item{Nested subnets}
+\item{IPv4 / IPv6 address calculator}
+\item{VRF support}
+\item{VLAN management}
+\item{Switch management}
+\item{RIPE import}
+\item{Import / export XLS files}
+\item{User management}
+\item{E-Mail notification with IP details}
+\item{IP database search}
+\item{IP request module}
+\item{IP range adding / editing / deleting}
+\item{Custom IP address fields}
+\end{itemize}
+
 \subsubsection{Bewertungsmatrix}
 Wir haben eine Bewertungsmatrix mit einigen wichtigen Kriterien erstellt und anschliessend ausgefüllt.
 
