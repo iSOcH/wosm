@@ -772,7 +772,7 @@ Folgende Features versprechen die Hersteller:
 \item{Plugin framework that allows new functionality to be added by 3rd party plugins.}
 \item{Plugin framework for various authentication backends. Currently available auth backends are LDAP and local.}
 \item{DNS record support (A, CNAME, PTR, NS, MX, TXT, SRV, More to come)}
-\item{DNS view support. Allows you to track overlapping namespaces for situations such as publicand private DNS services}
+\item{DNS view support. Allows you to track overlapping namespaces for situations such as public and private DNS services}
 \item{Multiple contexts. Simply allows one OpenNetAdmin installation utilize two seperate sets of database backends that can easily be switched between. This can be used to track MPLS networks that would otherwise have overlapping information in them.}
 \item{AJAX enabled web frontend, provides a responsive desktop-like experience}
 \item{ADODB Database abstraction layer. Allows you to use many database backends for data. (only tested with MySQL)}
@@ -924,7 +924,7 @@ Damit die SNMP Informationen abgerufen werden können, muss auf den Cisco Gerät
 \begin{lstlisting}
 snmp-server community public RO
 \end{lstlisting}
-Auf der ASA-Firewall kann die Sicherheit zusätzlich erhöht werden, in dem die SNMP Abfragen auf einen einzelnen Host eingeschränkt werden kann. 
+Auf der ASA-Firewall wurde die Sicherheit zusätzlich erhöht, in dem die SNMP Abfragen auf einen einzelnen Host eingeschränkt wurden.
 \begin{lstlisting}
 snmp-server host inside 10.0.10.22 community *****
 snmp-server community *****
@@ -932,25 +932,29 @@ snmp-server community *****
 \textbf{GestioIP}\\
 Die GestioIP Software hat nur sehr wenige Einstellungsmöglichkeiten. Im Menü \glqq{}Manage GestioIP\grqq{} müssen nur folgende Einstellungen angepasst werden.
 \begin{itemize}
-\item{IPv4 only mode = no}
-\item{DNS Servers = 10.0.10.21}
+	\item{IPv4 only mode = no}
+	\item{DNS Servers = 10.0.10.21}
 \end{itemize}
 
 \subsubsection{Discovery}
 Die Software holt sich die Informationen über VLANs, Netzwerke und Hosts über SNMP und DNS Abfragen. Beim Discovery-Vorgang müssen folgende Einstellungen gemacht werden.
 \begin{itemize}
-\item{Network devices = 10.0.10.1, 10.100.0.2}
-\item{Import networks IP version = v4 \& v6}
-\item{Import routes learned from = local, static, other}
-\item{SNMP Version = v2c}
-\item{Community Key = public}
+	\item{Network devices = 10.0.10.1, 10.100.0.2}
+	\item{Import networks IP version = v4 \& v6}
+	\item{Import routes learned from = local, static, other}
+	\item{SNMP Version = v2c}
+	\item{Community Key = public}
 \end{itemize}
 
 \subsubsection{Probleme Discovery IPv6}
-Das automatische Erkennen der IPv6 Netzwerke und Hosts ist mit unserer Hardware (Catalyst 3560 und ASA 5505) nicht gelungen. Die Ursache dieses Problems liegt in den von GestioIP verwendeten OIDs. \\
-Zitat Dokumentation GestioIP Kapitel 10.1.3 : \glqq{}IPv6 based network import depends on either the OID inetCidrRouteProto or the OID ipv6RouteProtocol.\grqq{}\\
-Unsere Hardware unterstützt diese SNMP OIDs jedoch nicht, wie anhand der Cisco Website \url{http://www.cisco.com/public/sw-center/netmgmt/cmtk/mibs.shtml} überprüft werden kann. \\
+Das automatische Erkennen der IPv6 Netzwerke und Hosts ist mit unserer Hardware (Catalyst 3560 und ASA 5505) nicht gelungen. Die Ursache dieses Problems liegt in den von GestioIP verwendeten OIDs.
+
+Zitat Dokumentation GestioIP Kapitel 10.1.3 : \glqq{}IPv6 based network import depends on either the OID inetCidrRouteProto or the OID ipv6RouteProtocol.\grqq{}
+
+Unsere Hardware unterstützt diese SNMP OIDs jedoch nicht, wie anhand der Cisco Website \url{http://www.cisco.com/public/sw-center/netmgmt/cmtk/mibs.shtml} überprüft werden kann.
+
 Folgende SNMP Abfragen zeigen jedoch, dass die Hardware IPv6 Informationen wie Nachbarschaften und IP-Adressen übermitteln könnte. GestioIP holt diese Informationen leider nicht und somit ist  das Erkennen von IPv6 Netzwerken und Hosts nicht möglich.
+
 \lstinputlisting{Phase3/netzinfo_via_snmp.txt}
 
 \subsubsection{Reporting}
@@ -994,12 +998,12 @@ Neben den üblichen Statistiken bietet das Tool noch visuelle Reports an(Abbildu
 
 \subsubsection{Management}
 \textbf{Benutzer-Management}\\
-GestioIP hat ein sehr einfaches Benutzermanagement, welches nicht angepasst werden kann. Für den Zugriff auf das Web-Interface gibt es zwei Benutzer. Der Benutzer \glqq{}gipadmin\grqq{} hat Schreib- und Lesezugriff auf Ansichten und Einstellungen. Der Benutzer \glqq{}gipoper\grqq{} hat jeweils nur Lesezugriff. Die Authentifizierung erfolgt über das bei der Installation eingegebene Passwort. \\
-\\
+GestioIP hat ein sehr einfaches Benutzermanagement, welches nicht angepasst werden kann. Für den Zugriff auf das Web-Interface gibt es zwei Benutzer. Der Benutzer \glqq{}gipadmin\grqq{} hat Schreib- und Lesezugriff auf Ansichten und Einstellungen. Der Benutzer \glqq{}gipoper\grqq{} hat jeweils nur Lesezugriff. Die Authentifizierung erfolgt über das bei der Installation eingegebene Passwort.
+
 \textbf{Host-Management}\\
 Ein Host-Management hat GestioIP eigentlich nid. Die Netzwerke, VLANs und jeweiligen Hosts können  angezeigt, gesucht und gefiltert werden. Die Zuteilung, Erneuerung, Rücknahme oder Sperrung der IP-Adresse kann aber damit nicht gemacht werden. Das Tool ist somit für eine Inventarisierung und Überwachung einsetztbar, jedoch muss die Fehlerbehebung immernoch direkt auf den DHCP- bzw. DNS-Servern erfolgen.  
-\subsubsection{Fazit}
 
+\subsubsection{Fazit}
 \textit{Mandatory}
 
 \newpage
