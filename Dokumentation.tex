@@ -947,6 +947,7 @@ Die Software holt sich die Informationen über VLANs, Netzwerke und Hosts über 
 \end{itemize}
 
 \subsubsection{Probleme Discovery IPv6}
+\label{gestio-ipv6-discovery-snmp}
 Das automatische Erkennen der IPv6 Netzwerke und Hosts ist mit unserer Hardware (Catalyst 3560 und ASA 5505) nicht gelungen. Die Ursache dieses Problems liegt in den von GestioIP verwendeten OIDs.
 
 Zitat Dokumentation GestioIP Kapitel 10.1.3 : \glqq{}IPv6 based network import depends on either the OID inetCidrRouteProto or the OID ipv6RouteProtocol.\grqq{}
@@ -1003,8 +1004,14 @@ GestioIP hat ein sehr einfaches Benutzermanagement, welches nicht angepasst werd
 \textbf{Host-Management}\\
 Ein Host-Management hat GestioIP eigentlich nid. Die Netzwerke, VLANs und jeweiligen Hosts können  angezeigt, gesucht und gefiltert werden. Die Zuteilung, Erneuerung, Rücknahme oder Sperrung der IP-Adresse kann aber damit nicht gemacht werden. Das Tool ist somit für eine Inventarisierung und Überwachung einsetztbar, jedoch muss die Fehlerbehebung immernoch direkt auf den DHCP- bzw. DNS-Servern erfolgen.  
 
-\subsubsection{Fazit}
-\textit{Mandatory}
+\subsection{Fazit}
+Unser Test von GestioIP und der Vergleich der Funktionalität mit anderen frei verfügbaren IP-Address-Management-Tools hat gezeigt, dass die freie Software in diesem Bereich noch einige Probleme aufweist und unausgereift erscheint.
+
+Die in der Aufgabenstellung geforderten Funktionalitäten (z.B. \glqq{}Verwaltung aller verwendeten IP-Adressen (Zuteilung, Erneuerung, Rücknahme, Sperrung etc.\grqq{} oder \glqq{}Differenzierte Rechteverwaltung für die Verwendung des IPAM-Tools\grqq{}) erfüllt gemäss unseren Recherchen keines der frei verfügbaren Tools. Bei den visuell ansprechenderen Werkzeugen handelt es sich teilweise auch um reine Datenbanken, die über überhaupt keine Anbindung an die Infrastruktur für die Adressvergabe verfügen.
+
+GestioIP haben wir auch deshalb ausgewählt, weil wir uns durch die versprochene Unterstützung von SNMP erhofft haben, die aktuelle Nutzung der vorhandenen Adressbereiche jeweils aktuell darstellen zu können. Die in Abschnitt \ref{gestio-ipv6-discovery-snmp} beschriebenen Probleme haben uns, neben anderen Einschränkungen, dann aber enttäuscht.
+
+Insgesamt kommen wir zum Schluss, dass die freien IP-Adress-Management-Werkzeuge für grosse Umgebungen untauglich erscheinen und zu kostenpflichtigen Alternativen gegriffen werden muss. In kleinen Umgebungen hingegen werden sie kaum zum Einsatz kommen, da der Nutzen von IPAM mit einem separaten Werkzeug für eine geringe Anzahl von Adressen und Adressbereichen den Aufwand nicht rechtfertigt.
 
 \newpage
 \appendix
